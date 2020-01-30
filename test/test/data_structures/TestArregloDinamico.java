@@ -7,6 +7,8 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.sun.xml.internal.ws.policy.spi.AssertionCreationException;
+
 public class TestArregloDinamico {
 
 	private ArregloDinamico arreglo;
@@ -26,12 +28,29 @@ public class TestArregloDinamico {
 	@Test
 	public void testArregloDinamico() {
 		// TODO
+		
+		assertNotNull("El arreglo debería estar creado",arreglo);
+		assertEquals(100, arreglo.darCapacidad());
+		assertEquals(0,arreglo.darTamano());
 	}
 
 	@Test
 	public void testDarElemento() {
 		setUp2();
 		// TODO
+		assertNotNull("El arreglo debería estar creado",arreglo);
+		assertEquals(200, arreglo.darCapacidad());
+		assertEquals(200,arreglo.darTamano());
+		
+		assertNull("Debería ser null",arreglo.darElemento(200));
+		
+		String elemento = null;		
+		for (int i = 0; i < arreglo.darTamano(); i++) 
+		{
+			elemento = (String)arreglo.darElemento(i);
+			assertTrue("El elemento en la posición "+i+" debería ser "+i+" pero es "+elemento+".", elemento.equals(""+i));
+		}
+		
 	}
 
 }

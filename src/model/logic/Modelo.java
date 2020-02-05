@@ -19,7 +19,7 @@ import model.data_structures.ListaEncadenada;
  * Definicion del modelo del mundo
  *
  */
-public class Modelo {
+public class Modelo { 
 	/**
 	 * Atributos del modelo del mundo
 	 */

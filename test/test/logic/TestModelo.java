@@ -1,105 +1,158 @@
 package test.logic;
 
-import static org.junit.Assert.*;
-import model.logic.Modelo;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import java.io.FileNotFoundException;
+import java.util.Iterator;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import model.logic.Comparendo;
+import model.logic.Modelo;
+
 public class TestModelo {
 	
 	private Modelo modelo;
-	private static int CAPACIDAD=100;
+	public final static String RUTA = "./data/comparendos_dei_2018_small.geojson";
 	
 	@Before
 	public void setUp1() {
-		modelo= new Modelo(CAPACIDAD);
+		modelo= new Modelo();
 	}
 
-	public void setUp2() {
-		for(int i =0; i< CAPACIDAD;i++){
-			modelo.agregar(i);
-		}
+	public void setUp2() throws FileNotFoundException {
+		modelo.cargarComparendos(RUTA);
 	}
 
 	@Test
 	public void testModelo() {
 		assertTrue(modelo!=null);
-		assertEquals(0, modelo.darTamano());  // Modelo con 0 elementos presentes.
+		assertEquals(0, modelo.darLongitud());  // Modelo con 0 elementos presentes.
 	}
 
 	@Test
-	public void testDarTamano() {
+	public void testDarLongitud() {
 		// TODO
-		assertEquals(0, modelo.darTamano());
+		assertEquals(0, modelo.darLongitud());
 		
-		setUp2();
-		assertNotNull("El arreglo debería existir",modelo);
-		assertEquals(100, modelo.darTamano());
+		try
+		{
+			setUp2();
+			assertNotNull("El arreglo debería existir",modelo);
+			assertEquals(20, modelo.darLongitud());
+			
+			Iterator<Comparendo> it = modelo.darLista().iterator();
+			
+			int i = 0;
+			Comparendo c = null;
+			while(it.hasNext())
+			{
+				i++;
+				c = it.next();
+			}
+			
+			assertEquals(i, modelo.darLongitud());
+
+		}
+		catch(FileNotFoundException e)
+		{
+			assertEquals(0, modelo.darLongitud());
+		}
 		
 	}
 
 	@Test
 	public void testAgregar() {
 		// TODO Completar la prueba
-		assertEquals(0, modelo.darTamano());
+		assertEquals(0, modelo.darLongitud());
 		
-		modelo.agregar(0);
-		assertEquals(1,modelo.darTamano());
-		assertTrue("Debería retornar 0 pero retorna "+modelo.buscar(0)+".",modelo.buscar(0).equals(0));
+		Comparendo c = new Comparendo(0, "", "", "", "", "", "", null);
+		modelo.agregar(c);
+		assertEquals(1,modelo.darLongitud());
+		assertTrue("Debería retornar 0 pero retorna "+modelo.buscar(c)+".",modelo.buscar(c).equals(c));
 
 		for (int i = 1; i < 200; i++) 
 		{
-			modelo.agregar(i);
-			assertEquals(i+1,modelo.darTamano());
-			assertTrue("Debería retornar "+i+ " pero retorna "+modelo.buscar(i)+".",modelo.buscar(i).compareTo(i)==0);
+			c = new Comparendo(i, "", "", "", "", "", "", null);
+			modelo.agregar(c);
+			assertEquals(i+1,modelo.darLongitud());
+			assertTrue("Debería retornar "+i+ " pero retorna "+modelo.buscar(c)+".",modelo.buscar(c).compareTo(c)==0);
 		}
 		
 	}
 
 	@Test
 	public void testBuscar() {
-		setUp2();
 		// TODO Completar la prueba
-		assertNotNull("El arreglo debería existir",modelo);
-		assertEquals(100, modelo.darTamano());
-		
-		assertNull("Debería ser null", modelo.buscar(1000000));
-		
-		assertTrue("Debería retornar 1 pero retorna "+modelo.buscar(1)+".",modelo.buscar(1).compareTo(1)==0);
-
-		
-		for (int i = 0; i < modelo.darTamano(); i++) 
+		try
 		{
-			assertTrue("Debería retornar "+i+ " pero retorna "+modelo.buscar(i)+".",modelo.buscar(i).compareTo(i)==0);
+			setUp2();
+			assertNotNull("El arreglo debería existir",modelo);
+			assertEquals(20, modelo.darLongitud());
+			
+			assertNull("Debería ser null", modelo.buscar(new Comparendo(1, "", "", "", "", "", "", null)));
+			
+			Comparendo c = new Comparendo(29042, "", "", "", "", "", "", null);
+			assertNotNull("No debería ser null", modelo.buscar(c));
+
+			assertTrue("Debería retornar el comparento con el ID 29042 pero retorna el comparendo con ID "+modelo.buscar(c).darId()+".",modelo.buscar(c).compareTo(c)==0);
+			c = new Comparendo(29042, "", "", "", "", "", "", null);
+			assertTrue("Debería retornar el comparento con el ID 29042 pero retorna el comparendo con ID "+modelo.buscar(c).darId()+".",modelo.buscar(c).compareTo(c)==0);
+		}
+		catch(Exception e)
+		{
+			assertEquals(0, modelo.darLongitud());
 		}
 
 	}
 
 	@Test
 	public void testEliminar() {
-		setUp2();
 		// TODO Completar la prueba
-		assertNotNull("El arreglo debería existir",modelo);
-		assertEquals(100, modelo.darTamano());
 		
-		Integer eliminar = modelo.eliminar(1000000);
-		assertNull("Debería ser null", eliminar);
-		assertEquals(100, modelo.darTamano());
-		
-		Integer dato = modelo.buscar(1);
-		eliminar = modelo.eliminar(1);
-		assertTrue("Deberían ser el mismo dato",dato.equals(eliminar));
-		assertEquals(99, modelo.darTamano());
-		assertNull("Debeía ser null", modelo.buscar(1));
-		
-		int numero = 0;
-		for (int i = 0; i < modelo.darTamano(); i++) 
+		try
 		{
-			numero++;
-		}
-		assertEquals(modelo.darTamano(), numero);
+			setUp2();
 
+			assertNotNull("El arreglo debería existir",modelo);
+			assertEquals(20, modelo.darLongitud());
+			
+			Comparendo c = new Comparendo(0, "", "", "", "", "", "", null);
+
+			Comparendo eliminar = modelo.eliminar(c);
+			assertNull("Debería ser null", eliminar);
+			assertEquals(20, modelo.darLongitud());
+			
+			c = new Comparendo(29049, "", "", "", "", "", "", null); 
+			
+			Comparendo dato = modelo.buscar(c);
+			eliminar = modelo.eliminar(c);
+			assertTrue("Deberían ser el mismo dato",dato.equals(eliminar));
+			assertEquals(19, modelo.darLongitud());
+			assertNull("Debeía ser null", modelo.buscar(c));
+			
+			Iterator<Comparendo> it = modelo.darLista().iterator();
+			
+			int i = 0;
+			Comparendo co = null;
+			while(it.hasNext())
+			{
+				i++;
+				co = it.next();
+			}
+			
+			assertEquals(i, modelo.darLongitud());
+
+		}
+		catch(Exception e)
+		{
+			assertEquals(0, modelo.darLongitud());
+		}
+		
 		
 	}
 

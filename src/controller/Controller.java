@@ -1,5 +1,6 @@
 package controller;
 
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 import model.logic.Comparendo;
@@ -14,7 +15,7 @@ public class Controller {
 	/* Instancia de la Vista*/
 	private View view;
 	
-	public final static String RUTA = "./data/comparendos_dei_2018_small.geojson";
+	public final static String RUTA = "./data/comparendos_dei_2018.geojson";
 
 	
 	/**
@@ -40,7 +41,7 @@ public class Controller {
 			int option = lector.nextInt();				
 			switch(option){
 				case 1:
-					view.printMessage("--------- \nCrear Lista de comparendoss ");
+					view.printMessage("--------- \nCrear Lista de comparendos ");
 				    try
 				    {
 				    	modelo.cargarComparendos(RUTA);
@@ -50,7 +51,7 @@ public class Controller {
 				    	id=modelo.darUltimoComparendo().darId();
 				    	view.printMessage("ÚLTIMO: \n"+modelo.infoComparendoId(id));
 				    }
-				    catch(Exception e)
+				    catch(FileNotFoundException e)
 				    {
 				    	view.printMessage("No se pudo crear la lista porque no existe el archivo de comparendos");
 				    }
@@ -63,7 +64,7 @@ public class Controller {
 					c =  modelo.infoComparendoId(id);
 					if ( c != null)
 					{
-						view.printMessage("Comparendo Encontrado encontrado: \n"+ c);
+						view.printMessage("Comparendo Encontrado: \n"+ c);
 					}
 					else
 					{

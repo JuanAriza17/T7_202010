@@ -2,6 +2,7 @@ package controller;
 
 import java.util.Scanner;
 
+import model.logic.Comparendo;
 import model.logic.Modelo;
 import view.View;
 
@@ -12,6 +13,9 @@ public class Controller {
 	
 	/* Instancia de la Vista*/
 	private View view;
+	
+	public final static String RUTA = "./data/comparendos_dei_2018_small.geojson";
+
 	
 	/**
 	 * Crear la vista y el modelo del proyecto
@@ -27,8 +31,8 @@ public class Controller {
 	{
 		Scanner lector = new Scanner(System.in);
 		boolean fin = false;
-		Integer dato = 0;
-		Integer respuesta = 0;
+		int id = 0;
+		String c = "";
 
 		while( !fin ){
 			view.printMenu();
@@ -36,62 +40,43 @@ public class Controller {
 			int option = lector.nextInt();				
 			switch(option){
 				case 1:
-					view.printMessage("--------- \nCrear Arreglo \nDar capacidad inicial del arreglo: ");
-				    int capacidad = lector.nextInt();
-				    modelo = new Modelo(capacidad); 
-				    view.printMessage("Arreglo Dinamico creado");
-				    view.printMessage("Numero actual de elementos " + modelo.darTamano() + "\n---------");						
-					break;
+					view.printMessage("--------- \nCrear Lista de comparendoss ");
+				    try
+				    {
+				    	modelo.cargarComparendos(RUTA);
+				    	view.printMessage("Lista de comparendos creada");
+				    	id = modelo.darPrimerComparendo().darId();
+				    	view.printMessage("PRIMERO: \n"+modelo.infoComparendoId(id));
+				    	id=modelo.darUltimoComparendo().darId();
+				    	view.printMessage("ÚLTIMO: \n"+modelo.infoComparendoId(id));
+				    }
+				    catch(Exception e)
+				    {
+				    	view.printMessage("No se pudo crear la lista porque no existe el archivo de comparendos");
+				    }
+				    view.printMessage("Numero actual de comparendos " + modelo.darLongitud() + "\n---------");						
+				    break;
 
 				case 2:
-					view.printMessage("--------- \nDar Integer a ingresar: ");
-					dato = lector.nextInt();
-					modelo.agregar(dato);
-					view.printMessage("Dato agregado");
-					view.printMessage("Numero actual de elementos " + modelo.darTamano() + "\n---------");						
-					break;
-
-				case 3:
-					view.printMessage("--------- \nDar Integer a buscar: ");
-					dato = lector.nextInt();
-					respuesta = modelo.buscar(dato);
-					if ( respuesta != null)
+					view.printMessage("--------- \nDar ID del comparendo a buscar: ");
+					id = lector.nextInt();
+					c =  modelo.infoComparendoId(id);
+					if ( c != null)
 					{
-						view.printMessage("Dato encontrado: "+ respuesta);
+						view.printMessage("Comparendo Encontrado encontrado: \n"+ c);
 					}
 					else
 					{
-						view.printMessage("Dato NO encontrado");
+						view.printMessage("Comparendo NO encontrado");
 					}
-					view.printMessage("Numero actual de elementos " + modelo.darTamano() + "\n---------");						
+					view.printMessage("Numero actual de comparendos " + modelo.darLongitud() + "\n---------");						
 					break;
-
-				case 4:
-					view.printMessage("--------- \nDar Integer a eliminar: ");
-					dato = lector.nextInt();
-					respuesta = modelo.eliminar(dato);
-					if ( respuesta != null)
-					{
-						view.printMessage("Dato eliminado "+ respuesta);
-					}
-					else
-					{
-						view.printMessage("Dato NO eliminado");							
-					}
-					view.printMessage("Numero actual de elementos " + modelo.darTamano() + "\n---------");						
-					break;
-
-				case 5: 
-					view.printMessage("--------- \nContenido del Arreglo: ");
-					view.printModelo(modelo);
-					view.printMessage("Numero actual de elementos " + modelo.darTamano() + "\n---------");						
-					break;	
 					
-				case 6: 
+				case 3: 
 					view.printMessage("--------- \n Hasta pronto !! \n---------"); 
 					lector.close();
 					fin = true;
-					break;	
+					break;
 
 				default: 
 					view.printMessage("--------- \n Opcion Invalida !! \n---------");

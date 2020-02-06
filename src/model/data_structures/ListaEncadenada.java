@@ -9,64 +9,94 @@ public class ListaEncadenada<T extends Comparable<T>> implements IListaEncadenad
 	
 	private NodoLista<T> primero;
 	
+	private NodoLista<T> actual;
+	
+	private NodoLista<T> ultimo;
+
+	
 	public ListaEncadenada()
 	{
 		longitud = 0;
 		primero = null;
+		actual = null;
 	}
-
-	public boolean agregar(T dato)
+	
+	public void agregarFinal(T dato)
 	{
-		boolean agregado = false;
-		if(primero == null)
+		NodoLista<T> nuevo = new NodoLista<T>(dato);
+
+		if(primero!=null)
 		{
-			primero = new NodoLista<T>(dato);
-			agregado = true;
+			ultimo.cambiarSiguiente(nuevo);
+			ultimo = nuevo;
 			longitud++;
 		}
 		else
 		{
-			NodoLista<T> actual = primero;
+			primero = nuevo;
+			ultimo = primero;
+			longitud++;
+		}
+	}
+
+	public void agregar(T dato)
+	{
+		if(primero == null)
+		{
+			primero = new NodoLista<T>(dato);
+			longitud++;
+		}
+		else
+		{
+			NodoLista<T> act = primero;
 			
-			while(actual!=null&&actual.darSiguiente()!=null)
+			while(act!=null&&act.darSiguiente()!=null)
 			{
-				actual = actual.darSiguiente();
+				act = act.darSiguiente();
 			}
 			
 			NodoLista<T> nuevo = new NodoLista<T>(dato);
-			actual.cambiarSiguiente(nuevo);
-			agregado = true;
+			if(act.darSiguiente()==null)
+			{
+				ultimo = nuevo;
+			}
+			act.cambiarSiguiente(nuevo);
 			longitud++;
 		}
-		return agregado;
 	}
 
+	public void agregarInicio(T dato)
+	{
+		NodoLista<T> nuevo = new NodoLista<T>(dato);
+
+		if(primero==null)
+		{
+			primero = nuevo;
+			ultimo = primero;
+			longitud++;
+		}
+		else
+		{
+			nuevo.cambiarSiguiente(primero);
+			primero = nuevo;
+			longitud++;
+		}
+		
+	}
 	public T buscar(T dato) 
 	{
 		T elemento = null;
-		NodoLista<T> actual = primero;
+		NodoLista<T> act = primero;
 
-		while(actual!=null&&actual.darElemento().compareTo(dato)!=0)
+		while(act!=null&&act.darElemento().compareTo(dato)!=0)
 		{
-			actual = actual.darSiguiente();
+			act = act.darSiguiente();
 		}
-		if(actual!=null)
+		if(act!=null)
 		{
-			elemento = actual.darElemento();
+			elemento = act.darElemento();
 		}
 		return elemento;
-	}
-
-	public Object[] darArreglo() 
-	{
-		Object[] arreglo = new Object[longitud];
-		NodoLista<T> actual = primero;
-		for (int i = 0; i < arreglo.length&&actual!=null; i++) 
-		{
-			arreglo[i]=actual;
-			actual = actual.darSiguiente();
-		}
-		return arreglo;
 	}
 
 	public int darLongitud() 
@@ -87,16 +117,18 @@ public class ListaEncadenada<T extends Comparable<T>> implements IListaEncadenad
 			}
 			else
 			{
-				NodoLista<T> actual = primero;
+				NodoLista<T> act = primero;
 				NodoLista<T> anterior = null;
 				
-				while(actual!=null&&actual.darElemento().compareTo(elemento)!=0)
+				while(act!=null&&act.darElemento().compareTo(elemento)!=0)
 				{
-					anterior = actual;
-					actual = actual.darSiguiente();
+					anterior = act;
+					act = act.darSiguiente();
 				}
 				
-				anterior.cambiarSiguiente(actual.darSiguiente());
+				anterior.cambiarSiguiente(act.darSiguiente());
+				if(ultimo==actual)
+					ultimo = anterior;
 				longitud--;	
 			}
 		}
@@ -106,19 +138,83 @@ public class ListaEncadenada<T extends Comparable<T>> implements IListaEncadenad
 	
 	public T darPrimero()
 	{
-		return primero.darElemento();
+		T elemento = null;
+		if(primero!=null)
+		{
+			elemento = primero.darElemento();
+		}
+		return elemento;
 	}
 	
 	public T darUltimo()
 	{
-		NodoLista<T> actual = primero;
+		T elemento = null;
+
+		if(primero!=null)
+		{
+			NodoLista<T> act = primero;
+			
+			while(act!=null&&act.darSiguiente()!=null)
+			{
+				act = act.darSiguiente();
+			}
+			
+			elemento = act.darElemento();
+		}
 		
-		while(actual!=null&&actual.darSiguiente()!=null)
+		
+		return elemento;
+	}
+	
+	public T darElemento(int posicion)
+	{
+		T elemento = null;
+		
+		if(primero!=null&&posicion<longitud)
+		{
+			int pos = 0;
+			NodoLista<T> act = primero;
+			while(act!=null&&posicion!=pos)
+			{
+				act = act.darSiguiente();
+				pos++;
+			}
+			
+			elemento = act.darElemento();
+			
+		}
+		
+		return elemento;
+	}
+	
+	public T elementoActual()
+	{
+		return actual!=null?actual.darElemento():null;
+	}
+	
+	public void iniciarRecorrido()
+	{
+		actual = primero;
+	}
+	
+	public void avanzarActual()
+	{
+		if(actual!=null)
 		{
 			actual = actual.darSiguiente();
 		}
+	}
+	public void retrocederActual()
+	{
+		NodoLista<T> ant = primero;
 		
-		return actual.darElemento();
+		while(ant!=null&&ant.darSiguiente()!=actual)
+		{
+			ant= ant.darSiguiente();
+		}
+		
+		actual = ant;
+		
 	}
 
 	public Iterator<T> iterator() 

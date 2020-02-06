@@ -25,7 +25,16 @@ public class TestModelo {
 	}
 
 	public void setUp2() throws FileNotFoundException {
+		modelo = new Modelo();
 		modelo.cargarComparendos(RUTA);
+	}
+	
+	public void setUp3() {
+		modelo = new Modelo();
+		for (int i = 0; i < 10; i++) 
+		{
+			modelo.agregar(new Comparendo(i, "", "", "", "", "", "", null));
+		}
 	}
 
 	@Test
@@ -63,6 +72,10 @@ public class TestModelo {
 			assertEquals(0, modelo.darLongitud());
 		}
 		
+		setUp3();
+		assertNotNull("El arreglo debería existir",modelo);
+		assertEquals(10, modelo.darLongitud());
+		
 	}
 
 	@Test
@@ -70,14 +83,14 @@ public class TestModelo {
 		// TODO Completar la prueba
 		assertEquals(0, modelo.darLongitud());
 		
-		Comparendo c = new Comparendo(0, "", "", "", "", "", "", null);
+		Comparendo c = new Comparendo(0, "", "", "", "", "", "", new double[2]);
 		modelo.agregar(c);
 		assertEquals(1,modelo.darLongitud());
-		assertTrue("Debería retornar 0 pero retorna "+modelo.buscar(c)+".",modelo.buscar(c).equals(c));
+		assertTrue("Debería retornar el comparendo pero retorna "+modelo.buscar(c)+".",modelo.buscar(c).compareTo(c)==0);
 
 		for (int i = 1; i < 200; i++) 
 		{
-			c = new Comparendo(i, "", "", "", "", "", "", null);
+			c = new Comparendo(i, "", "", "", "", "", "",  new double[2]);
 			modelo.agregar(c);
 			assertEquals(i+1,modelo.darLongitud());
 			assertTrue("Debería retornar "+i+ " pero retorna "+modelo.buscar(c)+".",modelo.buscar(c).compareTo(c)==0);
@@ -107,6 +120,17 @@ public class TestModelo {
 		{
 			assertEquals(0, modelo.darLongitud());
 		}
+		
+		setUp3();
+		assertNotNull("El arreglo debería existir",modelo);
+		assertEquals(10, modelo.darLongitud());
+		
+		assertNotNull("No debería ser null", modelo.buscar(new Comparendo(1, "", "", "", "", "", "", null)));
+		assertNull("Debería ser null", modelo.buscar(new Comparendo(2000, "", "", "", "", "", "", null)));
+		
+		assertTrue("Debería retornar el comparento con el ID 1 pero retorna el comparendo con ID "+modelo.buscar(new Comparendo(1, "", "", "", "", "", "", null)).darId()+".",modelo.buscar(new Comparendo(1, "", "", "", "", "", "", null)).compareTo(new Comparendo(1, "", "", "", "", "", "", null))==0);
+
+
 
 	}
 
@@ -150,7 +174,7 @@ public class TestModelo {
 		}
 		catch(Exception e)
 		{
-			assertEquals(0, modelo.darLongitud());
+			assertEquals(20, modelo.darLongitud());
 		}
 		
 		

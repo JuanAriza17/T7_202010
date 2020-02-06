@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.FileNotFoundException;
+import java.net.DatagramPacket;
 import java.util.Scanner;
 
 import model.logic.Comparendo;
@@ -15,7 +16,7 @@ public class Controller {
 	/* Instancia de la Vista*/
 	private View view;
 	
-	public final static String RUTA = "./data/comparendos_dei_2018.geojson";
+	public final static String RUTA = "./data/comparendos_dei_2018_small.geojson";
 
 	
 	/**
@@ -33,7 +34,7 @@ public class Controller {
 		Scanner lector = new Scanner(System.in);
 		boolean fin = false;
 		int id = 0;
-		String c = "";
+		Comparendo c = null;
 
 		while( !fin ){
 			view.printMenu();
@@ -41,15 +42,13 @@ public class Controller {
 			int option = lector.nextInt();				
 			switch(option){
 				case 1:
-					view.printMessage("--------- \nCrear Lista de comparendos ");
+					view.printMessage("--------- \nCargando lista de comparendos en  la lista ");
 				    try
 				    {
 				    	modelo.cargarComparendos(RUTA);
 				    	view.printMessage("Lista de comparendos creada");
-				    	id = modelo.darPrimerComparendo().darId();
-				    	view.printMessage("PRIMERO: \n"+modelo.infoComparendoId(id));
-				    	id=modelo.darUltimoComparendo().darId();
-				    	view.printMessage("ÚLTIMO: \n"+modelo.infoComparendoId(id));
+				    	view.printMessage("PRIMERO: \n"+modelo.darPrimerComparendo().toString());
+				    	view.printMessage("ÚLTIMO: \n"+modelo.darUltimoComparendo().toString());
 				    }
 				    catch(FileNotFoundException e)
 				    {
@@ -61,10 +60,10 @@ public class Controller {
 				case 2:
 					view.printMessage("--------- \nDar ID del comparendo a buscar: ");
 					id = lector.nextInt();
-					c =  modelo.infoComparendoId(id);
+					c =  modelo.buscar(new Comparendo(id,"","","","","","",null));
 					if ( c != null)
 					{
-						view.printMessage("Comparendo Encontrado: \n"+ c);
+						view.printMessage("Comparendo Encontrado: \n"+ c.toString());
 					}
 					else
 					{

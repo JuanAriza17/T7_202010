@@ -3,6 +3,7 @@ package model.logic;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.InputStreamReader;
 
 import com.google.gson.JsonArray;
@@ -48,13 +49,32 @@ public class Modelo {
 	}
 
 	/**
+	 * Agregar dato al inicio
+	 * @param dato
+	 */
+	public void agregarInicio(Comparendo dato)
+	{	
+		listaComparendos.agregarInicio(dato);
+	}
+	
+	/**
+	 * Agregar dato al final
+	 * @param dato
+	 */
+	public void agregarFinal(Comparendo dato)
+	{
+		listaComparendos.agregarInicio(dato);
+	}
+	
+	/**
 	 * Requerimiento de agregar dato
 	 * @param dato
 	 */
 	public void agregar(Comparendo dato)
-	{	
+	{
 		listaComparendos.agregar(dato);
 	}
+	
 	
 	/**
 	 * Requerimiento buscar dato
@@ -66,37 +86,6 @@ public class Modelo {
 		return listaComparendos.buscar(dato);
 	}
 	
-	public String infoComparendoId(int id)
-	{
-		String mensaje = "";
-		
-		Comparendo c = buscar(new Comparendo(id,"","","","","","",null));
-		if(c!=null)
-		{
-			String f = c.darFecha();
-			String v = c.darVehiculo();
-			String s = c.darServicio();
-			String i = c.darInfraccion();
-			String d = c.darDescripcion();
-			String l = c.darLocalidad();
-			
-			double[] coords = c.darCoordenadas();
-			double x = coords[0];
-			double y = coords[1];
-			double z = coords[2];
-			
-			mensaje ="ID del Comparendo: "+ id+"\n Fecha Comparendo: "+f+"\n Vehículo Comparendo: "+v+
-					 "\n Servicio del Vehículo: "+s+"\n Código Infracción: "+i+"\n Localidad: "+l+
-					 "\n Coordenadas: "+"["+x+","+y+","+z+"]"+"\n";
-
-		}
-		else
-		{
-			mensaje = "El Comparendo con el ID "+id+" NO se encuentra en la lista";
-		}
-		
-		return mensaje;
-	}
 	
 	/**
 	 * Requerimiento eliminar dato
@@ -108,30 +97,43 @@ public class Modelo {
 		return listaComparendos.eliminar(dato);
 	}
 	
+	/**
+	 * Da el primer comparendo de la lista
+	 * @return primer dato
+	 */
 	public Comparendo darPrimerComparendo()
 	{
 		return listaComparendos.darPrimero();
 	}
 	
+	/**
+	 * Da el ultimo comparendo de la lista
+	 * @return ultimo dato
+	 */
 	public Comparendo darUltimoComparendo()
 	{
 		return listaComparendos.darUltimo();
 	}
 
+	/**
+	 * Método que carga los comparendos
+	 * @param ruta Rita archivo con los comparendos
+	 * @throws FileNotFoundException si no encuentra el archivo
+	 */
 	public void cargarComparendos(String ruta) throws FileNotFoundException
 	{
 		 File archivo = new File(ruta);
 		 
-		 JsonReader reader = new JsonReader(new InputStreamReader(new FileInputStream(archivo)));
-		 JsonObject objGson = JsonParser.parseReader(reader).getAsJsonObject();
 		 
-		 JsonArray arregloComparendos = objGson.get("features").getAsJsonArray();  
+		 JsonReader lector = new JsonReader(new FileReader(archivo));
+		 JsonObject obj = JsonParser.parseReader(lector).getAsJsonObject();
 		 
-		 for (JsonElement e:arregloComparendos) 
+		 JsonArray arregloComparendos = obj.get("features").getAsJsonArray();  
+		 
+		 for (JsonElement e: arregloComparendos) 	
 		 {
-			JsonObject objeto = e.getAsJsonObject();
 			
-			JsonObject propiedades = objeto.get("properties").getAsJsonObject();
+			JsonObject propiedades = e.getAsJsonObject().get("properties").getAsJsonObject();
 			
 			int id = propiedades.get("OBJECTID").getAsInt();
 			String fecha = propiedades.get("FECHA_HORA").getAsString();
@@ -141,18 +143,18 @@ public class Modelo {
 			String descripcion = propiedades.get("DES_INFRAC").getAsString();
 			String localidad = propiedades.get("LOCALIDAD").getAsString();
 
-			objeto = objeto.get("geometry").getAsJsonObject();
-			JsonArray coords = objeto.get("coordinates").getAsJsonArray();
-			double[] coordenadas = new double[3];
+			JsonObject geometria = e.getAsJsonObject().get("geometry").getAsJsonObject();
+			JsonArray coords = geometria.get("coordinates").getAsJsonArray();
+			double[] coordenadas = new double[2];
 			
-			for (int i = 0; i < coordenadas.length; i++) 
+			for (int j = 0; j < coordenadas.length; j++) 
 			{
-				coordenadas[i]=coords.get(i).getAsDouble();
+				coordenadas[j]=coords.get(j).getAsDouble();
 			}
 						
 			Comparendo comparendo = new Comparendo(id, fecha, vehiculo, servicio, infraccion, descripcion, localidad,coordenadas);
 			
-			listaComparendos.agregar(comparendo);
+			agregarFinal(comparendo);
 		 }
 	}
 

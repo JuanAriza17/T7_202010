@@ -63,7 +63,7 @@ public class Modelo {
 	 */
 	public void agregarFinal(Comparendo dato)
 	{
-		listaComparendos.agregarInicio(dato);
+		listaComparendos.agregarFinal(dato);
 	}
 	
 	/**

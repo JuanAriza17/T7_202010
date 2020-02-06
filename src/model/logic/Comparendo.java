@@ -60,6 +60,7 @@ public class Comparendo implements Comparable<Comparendo>
 		vehiculo = pVehiculo;
 		servicio = pServicio;
 		infraccion = pInfraccion;
+		des_infrac = pDescripcion;
 		localidad = pLocalidad;
 		coordenadas = pCoordenadas;
 	}

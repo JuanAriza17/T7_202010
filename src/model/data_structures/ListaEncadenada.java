@@ -28,6 +28,7 @@ public class ListaEncadenada<T extends Comparable<T>> implements IListaEncadenad
 		if(primero!=null)
 		{
 			ultimo.cambiarSiguiente(nuevo);
+			nuevo.cambiarAnterior(ultimo);
 			ultimo = nuevo;
 			longitud++;
 		}
@@ -61,6 +62,7 @@ public class ListaEncadenada<T extends Comparable<T>> implements IListaEncadenad
 				ultimo = nuevo;
 			}
 			act.cambiarSiguiente(nuevo);
+			nuevo.cambiarAnterior(act);
 			longitud++;
 		}
 	}
@@ -78,6 +80,7 @@ public class ListaEncadenada<T extends Comparable<T>> implements IListaEncadenad
 		else
 		{
 			nuevo.cambiarSiguiente(primero);
+			primero.cambiarAnterior(nuevo);
 			primero = nuevo;
 			longitud++;
 		}
@@ -126,7 +129,11 @@ public class ListaEncadenada<T extends Comparable<T>> implements IListaEncadenad
 					act = act.darSiguiente();
 				}
 				
+				if(actual.darSiguiente()!=null)
+					actual.darSiguiente().cambiarAnterior(anterior);
+				
 				anterior.cambiarSiguiente(act.darSiguiente());
+				
 				if(ultimo==actual)
 					ultimo = anterior;
 				longitud--;	
@@ -136,34 +143,14 @@ public class ListaEncadenada<T extends Comparable<T>> implements IListaEncadenad
 		return elemento;
 	}
 	
-	public T darPrimero()
+	public NodoLista<T> darPrimero()
 	{
-		T elemento = null;
-		if(primero!=null)
-		{
-			elemento = primero.darElemento();
-		}
-		return elemento;
+		return primero;
 	}
 	
-	public T darUltimo()
-	{
-		T elemento = null;
-
-		if(primero!=null)
-		{
-			NodoLista<T> act = primero;
-			
-			while(act!=null&&act.darSiguiente()!=null)
-			{
-				act = act.darSiguiente();
-			}
-			
-			elemento = act.darElemento();
-		}
-		
-		
-		return elemento;
+	public NodoLista<T> darUltimo()
+	{		
+		return ultimo;
 	}
 	
 	public T darElemento(int posicion)
@@ -220,6 +207,56 @@ public class ListaEncadenada<T extends Comparable<T>> implements IListaEncadenad
 	public Iterator<T> iterator() 
 	{
 		return new IteratorLista<T>(primero);
+	}
+	
+	public T eliminarUltimo()
+	{
+		T elemento = null;
+		
+
+		if(primero!=null)
+		{
+			elemento=ultimo.darElemento();
+			
+			if(primero==ultimo)
+			{
+				primero = null;
+			}
+			else
+			{
+				ultimo.darAnterior().cambiarSiguiente(ultimo.darSiguiente());
+			}
+			ultimo = ultimo.darAnterior();
+			
+			longitud--;
+		}
+		
+		return elemento;
+	}
+	
+	public T eliminarPrimero()
+	{
+		T elemento = null;
+		
+		if(primero!=null)
+		{
+			elemento=primero.darElemento();
+			
+			if(primero==ultimo)
+			{
+				ultimo = null;
+			}
+			else
+			{
+				primero.darSiguiente().cambiarAnterior(primero.darAnterior());
+			}
+			primero = primero.darSiguiente();
+			
+			longitud--;
+			
+		}
+		
+		return elemento;
 	}
 
 }

@@ -17,9 +17,10 @@ public class View
 	    
 		public void printMenu()
 		{
-			System.out.println("1. Cargar Comparendos en la Lista.");
-			System.out.println("2. Buscar Comparendos por ID");
-			System.out.println("3. Exit");
+			System.out.println("1. Cargar Comparendos en la Pila y la Cola.");
+			System.out.println("2. Dar cola con la mayor cantidad de comparendos con la misma infracción seguida.");
+			System.out.println("3. Dar pila con la mayor cantidad de comparendos con la misma infracción seguida.");
+			System.out.println("4. Exit");
 			System.out.println("Dar el numero de opcion a resolver, luego oprimir tecla Return: (e.g., 1):");
 		}
 
@@ -31,11 +32,10 @@ public class View
 		public void printModelo(Modelo modelo)
 		{
 			// TODO implementar
-			Iterator<Comparendo> lista = modelo.darLista().iterator();
 			
-			while(lista.hasNext())
+			while(!modelo.darStack().isEmpty())
 			{
-				System.out.println(lista.next().darId());
+				System.out.println(modelo.eliminarStack().toString()+"\n");
 			}
 		}
 }

@@ -39,6 +39,10 @@ public interface IListaEncadenada<T extends Comparable<T>> extends Iterable<T>
 	 * @return dato eliminado
 	 */
 	T eliminar( T dato );
+	
+	T eliminarUltimo();
+	
+	T eliminarPrimero();
 		
 	/**
 	 * Da la cantidad de elementos de la lista.
@@ -50,13 +54,13 @@ public interface IListaEncadenada<T extends Comparable<T>> extends Iterable<T>
 	 * Da el primer elemento de la lista
 	 * @return primer elemento lista
 	 */
-	T darPrimero();
+	NodoLista<T> darPrimero();
 	
 	/**
 	 * Da el último elemento de la lista
 	 * @return último elemento lista
 	 */
-	T darUltimo();
+	NodoLista<T> darUltimo();
 	
 	/**
 	 * Da el elemento en la posicion dada por parámetro

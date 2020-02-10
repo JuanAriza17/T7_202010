@@ -1,9 +1,10 @@
 package controller;
 
 import java.io.FileNotFoundException;
-import java.net.DatagramPacket;
 import java.util.Scanner;
 
+import model.data_structures.IQueue;
+import model.data_structures.IStack;
 import model.logic.Comparendo;
 import model.logic.Modelo;
 import view.View;
@@ -34,7 +35,6 @@ public class Controller {
 		Scanner lector = new Scanner(System.in);
 		boolean fin = false;
 		int id = 0;
-		Comparendo c = null;
 
 		while( !fin ){
 			view.printMenu();
@@ -42,11 +42,11 @@ public class Controller {
 			int option = lector.nextInt();				
 			switch(option){
 				case 1:
-					view.printMessage("--------- \nCargando lista de comparendos en  la lista ");
+					view.printMessage("--------- \nCargando lista de comparendos en la pila y en la cola ");
 				    try
 				    {
 				    	modelo.cargarComparendos(RUTA);
-				    	view.printMessage("Lista de comparendos creada");
+				    	view.printMessage("Pila y Cola de comparendos creada");
 				    	view.printMessage("PRIMERO: \n"+modelo.darPrimerComparendo().toString());
 				    	view.printMessage("ÚLTIMO: \n"+modelo.darUltimoComparendo().toString());
 				    }
@@ -54,25 +54,53 @@ public class Controller {
 				    {
 				    	view.printMessage("No se pudo crear la lista porque no existe el archivo de comparendos");
 				    }
-				    view.printMessage("Numero actual de comparendos " + modelo.darLongitud() + "\n---------");						
+				    view.printMessage("\n---------\n" + "Numero actual de comparendos en la pila " + modelo.darTamanoPila()+"\n");	
+				    view.printMessage("Numero actual de comparendos en la cola " + modelo.darTamanoCola() + "\n---------");	
 				    break;
 
 				case 2:
-					view.printMessage("--------- \nDar ID del comparendo a buscar: ");
-					id = lector.nextInt();
-					c =  modelo.buscar(new Comparendo(id,"","","","","","",null));
-					if ( c != null)
+					view.printMessage("--------- \n ");
+					IQueue<Comparendo> cola = modelo.darColaInfracciones();
+					
+					if(cola==null)
 					{
-						view.printMessage("Comparendo Encontrado: \n"+ c.toString());
+						view.printMessage("La cola está vacía");
 					}
 					else
 					{
-						view.printMessage("Comparendo NO encontrado");
+						view.printMessage("Hay un total de "+cola.size()+" comparendos seguidos con la infracción "+ cola.pick().darInfraccion()+"\n");	
+						while(!cola.isEmpty())
+						{
+							view.printMessage(cola.dequeue().toString()+"\n");
+						}
 					}
-					view.printMessage("Numero actual de comparendos " + modelo.darLongitud() + "\n---------");						
-					break;
 					
-				case 3: 
+					view.printMessage("Numero actual de comparendos en la cola " + modelo.darTamanoCola() + "\n---------");						
+					break;
+				
+				case 3:
+					view.printMessage("--------- \n ");
+					IStack<Comparendo> pila = modelo.darPilaInfracciones();
+					
+					if(pila==null)
+					{
+						view.printMessage("La pila está vacía");
+					}
+					else
+					{
+						view.printMessage("Hay un total de "+pila.size()+" comparendos seguidos con la infracción "+ pila.pick().darInfraccion()+"\n");	
+						while(!pila.isEmpty())
+						{
+							view.printMessage(pila.pop().toString()+"\n");
+						}
+					}
+					view.printMessage("Numero actual de comparendos en la pila " + modelo.darTamanoPila() + "\n---------");
+					break;
+				
+				
+				
+					
+				case 4: 
 					view.printMessage("--------- \n Hasta pronto !! \n---------"); 
 					lector.close();
 					fin = true;

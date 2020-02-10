@@ -161,9 +161,7 @@ public class Comparendo implements Comparable<Comparendo>
 	 */
 	public String toString()
 	{
-		return " ID del Comparendo: "+ id+"\n Fecha Comparendo: "+fecha+"\n Vehículo Comparendo: "+vehiculo+
-				 "\n Servicio del Vehículo: "+servicio+"\n Código Infracción: "+infraccion+"\n Descripción Infracción: "+des_infrac+"\n Localidad: "+localidad+
-				 "\n Coordenadas [Longitud,Latitud]: "+"["+coordenadas[0]+","+coordenadas[1]+"]"+"\n";
+		return infraccion+", "+id+", "+fecha+", "+vehiculo+", "+servicio+", "+localidad+".";
 	}
 
 	

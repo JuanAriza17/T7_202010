@@ -1,10 +1,8 @@
 package model.logic;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.InputStreamReader;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -13,7 +11,11 @@ import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 
 import model.data_structures.IListaEncadenada;
+import model.data_structures.IQueue;
+import model.data_structures.IStack;
 import model.data_structures.ListaEncadenada;
+import model.data_structures.Queue;
+import model.data_structures.Stack;
 
 
 /**
@@ -24,66 +26,59 @@ public class Modelo {
 	/**
 	 * Atributos del modelo del mundo
 	 */
-	private IListaEncadenada<Comparendo> listaComparendos;
+	private IStack<Comparendo> stackComparendos;
+	
+	private IQueue<Comparendo> queueComparendos;
 		
 	/**
 	 * Constructor del modelo del mundo con capacidad predefinida
 	 */
 	public Modelo()
 	{
-		listaComparendos = new ListaEncadenada<Comparendo>();
+		stackComparendos = new Stack<Comparendo>();
+		queueComparendos = new Queue<Comparendo>();
 	}
 
-	public IListaEncadenada<Comparendo> darLista()
+	public IStack<Comparendo> darStack()
 	{
-		return listaComparendos;
+		return stackComparendos;
+	}
+	
+	public IQueue<Comparendo> darQueue()
+	{
+		return queueComparendos;
 	}
 	
 	/**
 	 * Servicio de consulta de numero de elementos presentes en el modelo 
 	 * @return numero de elementos presentes en el modelo
 	 */
-	public int darLongitud()
+	public int darTamanoPila()
 	{
-		return listaComparendos.darLongitud();
+		return stackComparendos.size();
 	}
-
+	
+	public int darTamanoCola()
+	{
+		return queueComparendos.size();
+	}
+	
 	/**
-	 * Agregar dato al inicio
+	 * Requerimiento de agregar datos a la pila
 	 * @param dato
 	 */
-	public void agregarInicio(Comparendo dato)
-	{	
-		listaComparendos.agregarInicio(dato);
+	public void agregarStack(Comparendo dato)
+	{
+		stackComparendos.push(dato);
 	}
 	
 	/**
-	 * Agregar dato al final
+	 * Requerimiento de agregar datos a la cola
 	 * @param dato
 	 */
-	public void agregarFinal(Comparendo dato)
+	public void agregarQueue(Comparendo dato)
 	{
-		listaComparendos.agregarFinal(dato);
-	}
-	
-	/**
-	 * Requerimiento de agregar dato
-	 * @param dato
-	 */
-	public void agregar(Comparendo dato)
-	{
-		listaComparendos.agregar(dato);
-	}
-	
-	
-	/**
-	 * Requerimiento buscar dato
-	 * @param dato Dato a buscar
-	 * @return dato encontrado
-	 */
-	public Comparendo buscar(Comparendo dato)
-	{
-		return listaComparendos.buscar(dato);
+		queueComparendos.enqueue(dato);
 	}
 	
 	
@@ -92,9 +87,14 @@ public class Modelo {
 	 * @param dato Dato a eliminar
 	 * @return dato eliminado
 	 */
-	public Comparendo eliminar(Comparendo dato)
+	public Comparendo eliminarStack()
 	{
-		return listaComparendos.eliminar(dato);
+		return stackComparendos.pop();
+	}
+	
+	public Comparendo eliminarQueue()
+	{
+		return queueComparendos.dequeue();
 	}
 	
 	/**
@@ -103,7 +103,7 @@ public class Modelo {
 	 */
 	public Comparendo darPrimerComparendo()
 	{
-		return listaComparendos.darPrimero();
+		return queueComparendos.pick();
 	}
 	
 	/**
@@ -112,7 +112,83 @@ public class Modelo {
 	 */
 	public Comparendo darUltimoComparendo()
 	{
-		return listaComparendos.darUltimo();
+		return stackComparendos.pick();
+	}
+	
+	public IQueue<Comparendo> darColaInfracciones()
+	{
+		
+		if(queueComparendos.isEmpty())
+		{
+			return null;
+		}
+		IQueue<Comparendo> cola = null;
+		IQueue<Comparendo> temporal = new Queue<Comparendo>();
+		Comparendo comparendo = queueComparendos.pick();
+		String inf = comparendo.darInfraccion();
+		int tamano = 0;
+		
+		while(!queueComparendos.isEmpty())
+		{
+			Comparendo c = queueComparendos.dequeue();	
+			if(c!=null)
+			{
+				if(c.darInfraccion().equals(inf))
+				{
+					temporal.enqueue(c);
+				}
+				else
+				{
+					inf = c.darInfraccion();
+					temporal = new Queue<Comparendo>();
+					temporal.enqueue(c);
+				}
+			}	
+			if(temporal.size()>tamano)
+			{
+				cola = temporal;
+				tamano = temporal.size();
+			}
+		}
+		return cola;
+	}
+	
+	public IStack<Comparendo> darPilaInfracciones()
+	{
+		if(stackComparendos.isEmpty())
+		{
+			return null;
+		}
+		IStack<Comparendo> pila = null;
+		IStack<Comparendo> temporal = new Stack<Comparendo>();
+		Comparendo comparendo = stackComparendos.pick();
+		String inf = comparendo.darInfraccion();
+		int tamano = 0;
+		
+		while(!stackComparendos.isEmpty())
+		{
+			Comparendo c = stackComparendos.pop();			
+			if(c!=null)
+			{
+				if(c.darInfraccion().equals(inf))
+				{
+					temporal.push(c);
+				}
+				else
+				{
+					inf = c.darInfraccion();
+					temporal = new Stack<Comparendo>();
+					temporal.push(c);
+				}
+			}
+			
+			if(temporal.size()>tamano)
+			{
+				pila = temporal;
+				tamano = temporal.size();
+			}
+		}
+		return pila;
 	}
 
 	/**
@@ -154,7 +230,8 @@ public class Modelo {
 						
 			Comparendo comparendo = new Comparendo(id, fecha, vehiculo, servicio, infraccion, descripcion, localidad,coordenadas);
 			
-			agregarFinal(comparendo);
+			agregarQueue(comparendo);
+			agregarStack(comparendo);
 		 }
 	}
 

@@ -39,5 +39,17 @@ public class Stack<T extends Comparable<T>> implements IStack<T>
 
 		return elemento!=null?elemento.darElemento():null;	
 	}
+	
+	public String darLista()
+	{
+		String mensaje="";
+		
+		for (int i = 0; i < elementos.darLongitud(); i++)
+		{
+			mensaje+=elementos.darElemento(i).toString()+"\n";
+		}
+		
+		return mensaje;
+	}
 
 }

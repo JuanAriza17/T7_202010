@@ -12,5 +12,7 @@ public interface IQueue<T extends Comparable<T>>
 	
 	T pick();
 	
+	String darLista();
+	
 
 }

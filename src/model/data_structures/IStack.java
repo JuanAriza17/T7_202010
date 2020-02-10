@@ -12,4 +12,5 @@ public interface IStack<T extends Comparable<T>>
 	
 	T pick();
 	
+	String darLista();
 }

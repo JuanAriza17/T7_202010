@@ -69,10 +69,7 @@ public class Controller {
 					else
 					{
 						view.printMessage("Hay un total de "+cola.size()+" comparendos seguidos con la infracción "+ cola.pick().darInfraccion()+"\n");	
-						while(!cola.isEmpty())
-						{
-							view.printMessage(cola.dequeue().toString()+"\n");
-						}
+						view.printMessage(cola.darLista()+"\n");
 					}
 					
 					view.printMessage("Numero actual de comparendos en la cola " + modelo.darTamanoCola() + "\n---------");						
@@ -89,10 +86,7 @@ public class Controller {
 					else
 					{
 						view.printMessage("Hay un total de "+pila.size()+" comparendos seguidos con la infracción "+ pila.pick().darInfraccion()+"\n");	
-						while(!pila.isEmpty())
-						{
-							view.printMessage(pila.pop().toString()+"\n");
-						}
+						view.printMessage(pila.darLista()+"\n");
 					}
 					view.printMessage("Numero actual de comparendos en la pila " + modelo.darTamanoPila() + "\n---------");
 					break;

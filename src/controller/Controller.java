@@ -78,9 +78,9 @@ public class Controller {
 				
 				case 3:
 					view.printMessage("--------- \n ");
-					view.printMessage("Ingrese el comparendo que desee buscar");
+					view.printMessage("Ingrese el comparendo que desee buscar: ");
 					String inf = lector.next().trim();
-					view.printMessage("Ingrese la cantidad de comparendos que quiere");
+					view.printMessage("Ingrese la cantidad de comparendos que quiere: ");
 					int valor = lector.nextInt(); 
 					
 					cola = modelo.darColaNUltimos(valor, inf);

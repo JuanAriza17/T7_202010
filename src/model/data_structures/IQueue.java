@@ -10,7 +10,7 @@ public interface IQueue<T extends Comparable<T>>
 	
 	int size();
 	
-	T pick();
+	T peek();
 	
 	String darLista();
 	

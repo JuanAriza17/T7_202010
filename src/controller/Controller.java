@@ -33,6 +33,7 @@ public class Controller {
 	public void run() 
 	{
 		Scanner lector = new Scanner(System.in);
+		IQueue<Comparendo> cola = null;
 		boolean fin = false;
 		int id = 0;
 
@@ -60,7 +61,7 @@ public class Controller {
 
 				case 2:
 					view.printMessage("--------- \n ");
-					IQueue<Comparendo> cola = modelo.darColaInfracciones();
+					cola = modelo.darColaInfracciones();
 					
 					if(cola==null)
 					{
@@ -68,7 +69,7 @@ public class Controller {
 					}
 					else
 					{
-						view.printMessage("Hay un total de "+cola.size()+" comparendos seguidos con la infracción "+ cola.pick().darInfraccion()+"\n");	
+						view.printMessage("Hay un total de "+cola.size()+" comparendos seguidos con la infracción "+ cola.peek().darInfraccion()+"\n");	
 						view.printMessage(cola.darLista()+"\n");
 					}
 					
@@ -77,16 +78,32 @@ public class Controller {
 				
 				case 3:
 					view.printMessage("--------- \n ");
-					IStack<Comparendo> pila = modelo.darPilaInfracciones();
+					view.printMessage("Ingrese el comparendo que desee buscar");
+					String inf = lector.next().trim();
+					view.printMessage("Ingrese la cantidad de comparendos que quiere");
+					int valor = lector.nextInt(); 
 					
-					if(pila==null)
+					cola = modelo.darColaNUltimos(valor, inf);
+					
+					if(cola==null)
 					{
 						view.printMessage("La pila está vacía");
 					}
 					else
 					{
-						view.printMessage("Hay un total de "+pila.size()+" comparendos seguidos con la infracción "+ pila.pick().darInfraccion()+"\n");	
-						view.printMessage(pila.darLista()+"\n");
+						if(cola.size()==valor)
+						{
+							view.printMessage("Se encontraron los  "+cola.size()+" comparendos con la infracción "+ cola.peek().darInfraccion()+"\n");	
+						}
+						else if(cola.size()==0)
+						{
+							view.printMessage("No se encontraron comparendos con la infracción "+inf);
+						}
+						else
+						{
+							view.printMessage("Solamente se encontraron "+cola.size()+" comparendos con la infraccion "+inf);
+						}
+						view.printMessage(cola.darLista()+"\n");
 					}
 					view.printMessage("Numero actual de comparendos en la pila " + modelo.darTamanoPila() + "\n---------");
 					break;

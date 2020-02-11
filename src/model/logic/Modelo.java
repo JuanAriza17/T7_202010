@@ -103,7 +103,7 @@ public class Modelo {
 	 */
 	public Comparendo darPrimerComparendo()
 	{
-		return queueComparendos.pick();
+		return queueComparendos.peek();
 	}
 	
 	/**
@@ -112,7 +112,7 @@ public class Modelo {
 	 */
 	public Comparendo darUltimoComparendo()
 	{
-		return stackComparendos.pick();
+		return stackComparendos.peek();
 	}
 	
 	public IQueue<Comparendo> darColaInfracciones()
@@ -124,7 +124,7 @@ public class Modelo {
 		}
 		IQueue<Comparendo> cola = null;
 		IQueue<Comparendo> temporal = new Queue<Comparendo>();
-		Comparendo comparendo = queueComparendos.pick();
+		Comparendo comparendo = queueComparendos.peek();
 		String inf = comparendo.darInfraccion();
 		int tamano = 0;
 		
@@ -153,42 +153,27 @@ public class Modelo {
 		return cola;
 	}
 	
-	public IStack<Comparendo> darPilaInfracciones()
+	public IQueue<Comparendo> darColaNUltimos(int numeroComp, String inf)
 	{
 		if(stackComparendos.isEmpty())
 		{
 			return null;
 		}
-		IStack<Comparendo> pila = null;
-		IStack<Comparendo> temporal = new Stack<Comparendo>();
-		Comparendo comparendo = stackComparendos.pick();
-		String inf = comparendo.darInfraccion();
-		int tamano = 0;
+		IQueue<Comparendo> cola = new Queue<Comparendo>();
 		
-		while(!stackComparendos.isEmpty())
+		while(!stackComparendos.isEmpty()&&cola.size()!=numeroComp)
 		{
-			Comparendo c = stackComparendos.pop();			
+			Comparendo c = stackComparendos.pop();
+			
 			if(c!=null)
 			{
 				if(c.darInfraccion().equals(inf))
 				{
-					temporal.push(c);
+					cola.enqueue(c);
 				}
-				else
-				{
-					inf = c.darInfraccion();
-					temporal = new Stack<Comparendo>();
-					temporal.push(c);
-				}
-			}
-			
-			if(temporal.size()>tamano)
-			{
-				pila = temporal;
-				tamano = temporal.size();
 			}
 		}
-		return pila;
+		return cola;
 	}
 
 	/**

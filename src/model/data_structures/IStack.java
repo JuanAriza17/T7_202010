@@ -10,7 +10,7 @@ public interface IStack<T extends Comparable<T>>
 	
 	int size();
 	
-	T pick();
+	T peek();
 	
 	String darLista();
 }

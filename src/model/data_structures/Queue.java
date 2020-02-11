@@ -33,7 +33,7 @@ public class Queue<T extends Comparable<T>> implements IQueue<T>
 		return elementos.darLongitud();
 	}
 
-	public T pick() 
+	public T peek() 
 	{
 		NodoLista<T> elemento = elementos.darPrimero();
 

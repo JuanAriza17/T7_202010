@@ -33,7 +33,7 @@ public class Stack<T extends Comparable<T>> implements IStack<T>
 		return elementos.darLongitud();
 	}
 
-	public T pick() 
+	public T peek() 
 	{
 		NodoLista<T> elemento = elementos.darUltimo();
 

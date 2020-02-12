@@ -139,16 +139,17 @@ public class Modelo {
 				}
 				else
 				{
+					if(temporal.size()>tamano)
+					{
+						cola = temporal;
+						tamano = temporal.size();
+					}
+					
 					inf = c.darInfraccion();
 					temporal = new Queue<Comparendo>();
 					temporal.enqueue(c);
 				}
 			}	
-			if(temporal.size()>tamano)
-			{
-				cola = temporal;
-				tamano = temporal.size();
-			}
 		}
 		return cola;
 	}

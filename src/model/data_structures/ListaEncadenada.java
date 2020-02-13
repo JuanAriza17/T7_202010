@@ -130,8 +130,8 @@ public class ListaEncadenada<T extends Comparable<T>> implements IListaEncadenad
 					act = act.darSiguiente();
 				}
 				
-				if(actual.darSiguiente()!=null)
-					actual.darSiguiente().cambiarAnterior(anterior);
+				if(act.darSiguiente()!=null)
+					act.darSiguiente().cambiarAnterior(anterior);
 				
 				anterior.cambiarSiguiente(act.darSiguiente());
 				

@@ -7,20 +7,21 @@ import static org.junit.Assert.assertNull;
 import org.junit.Before;
 import org.junit.Test;
 
+import model.data_structures.Queue;
 import model.logic.Comparendo;
 public class TestQueue {
 
 	/**
 	 * Queue utilizada para las pruebas.
 	 */
-	private model.data_structures.Queue<Comparendo> queue;
+	private Queue<Comparendo> queue;
 
 	/**
 	 * Escenario 1 de prueba, declara un queue vacío.
 	 */
 	@Before
 	public void setUp1() {
-		queue= new model.data_structures.Queue<Comparendo>();
+		queue= new Queue<Comparendo>();
 	}
 
 	/**

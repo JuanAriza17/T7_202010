@@ -45,6 +45,7 @@ public class ListaEncadenada<T extends Comparable<T>> implements IListaEncadenad
 		if(primero == null)
 		{
 			primero = new NodoLista<T>(dato);
+			ultimo = primero;
 			longitud++;
 		}
 		else

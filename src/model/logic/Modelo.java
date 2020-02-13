@@ -192,6 +192,9 @@ public class Modelo {
 		 
 		 JsonArray arregloComparendos = obj.get("features").getAsJsonArray();  
 		 
+		 stackComparendos = new Stack<Comparendo>();
+		 queueComparendos = new Queue<Comparendo>();	
+		 
 		 for (JsonElement e: arregloComparendos) 	
 		 {
 			

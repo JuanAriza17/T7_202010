@@ -3,6 +3,9 @@ package model.logic;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -11,11 +14,8 @@ import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 
 import model.data_structures.IListaEncadenada;
-import model.data_structures.IQueue;
-import model.data_structures.IStack;
 import model.data_structures.ListaEncadenada;
-import model.data_structures.Queue;
-import model.data_structures.Stack;
+import model.data_structures.Ordenamientos;
 
 
 /**
@@ -26,75 +26,96 @@ public class Modelo {
 	/**
 	 * Atributos del modelo del mundo
 	 */
-	private IStack<Comparendo> stackComparendos;
+	private IListaEncadenada<Comparendo> listaComparendos;
 	
-	private IQueue<Comparendo> queueComparendos;
 		
 	/**
 	 * Constructor del modelo del mundo con capacidad predefinida
 	 */
 	public Modelo()
 	{
-		stackComparendos = new Stack<Comparendo>();
-		queueComparendos = new Queue<Comparendo>();
+		listaComparendos = new ListaEncadenada<Comparendo>();
 	}
 
-	public IStack<Comparendo> darStack()
+	public IListaEncadenada<Comparendo> darLista()
 	{
-		return stackComparendos;
-	}
-	
-	public IQueue<Comparendo> darQueue()
-	{
-		return queueComparendos;
+		return listaComparendos;
 	}
 	
 	/**
 	 * Servicio de consulta de numero de elementos presentes en el modelo 
 	 * @return numero de elementos presentes en el modelo
 	 */
-	public int darTamanoPila()
+	public int darLongitud()
 	{
-		return stackComparendos.size();
+		return listaComparendos.darLongitud();
 	}
-	
-	public int darTamanoCola()
-	{
-		return queueComparendos.size();
-	}
-	
+		
 	/**
-	 * Requerimiento de agregar datos a la pila
+	 * Agregar dato al inicio
 	 * @param dato
 	 */
-	public void agregarStack(Comparendo dato)
-	{
-		stackComparendos.push(dato);
+	public void agregarInicio(Comparendo dato)
+	{	
+		listaComparendos.agregarInicio(dato);
 	}
 	
 	/**
-	 * Requerimiento de agregar datos a la cola
+	 * Agregar dato al final
 	 * @param dato
 	 */
-	public void agregarQueue(Comparendo dato)
+	public void agregarFinal(Comparendo dato)
 	{
-		queueComparendos.enqueue(dato);
+		listaComparendos.agregarFinal(dato);
+	}
+	
+	/**
+	 * Requerimiento de agregar dato
+	 * @param dato
+	 */
+	public void agregar(Comparendo dato)
+	{
+		listaComparendos.agregar(dato);
 	}
 	
 	
 	/**
-	 * Requerimiento eliminar dato
+	 * Requerimiento buscar dato
+	 * @param dato Dato a buscar
+	 * @return dato encontrado
+	 */
+	public Comparendo buscar(Comparendo dato)
+	{
+		return listaComparendos.buscar(dato);
+	}
+	
+	
+	/**
+	 * Elimina un dato
 	 * @param dato Dato a eliminar
 	 * @return dato eliminado
 	 */
-	public Comparendo eliminarStack()
+	public Comparendo eliminar(Comparendo dato)
 	{
-		return stackComparendos.pop();
+		return listaComparendos.eliminar(dato);
 	}
 	
-	public Comparendo eliminarQueue()
+	/**
+	 * Elimina el ultimo dato
+	 * @return dato eliminado
+	 */
+	public Comparendo eliminarUltimo()
 	{
-		return queueComparendos.dequeue();
+		return listaComparendos.eliminarUltimo();
+	}
+	
+	/**
+	 * Elimina el primer dato
+	 * @return dato eliminado
+	 */
+	public Comparendo eliminarPrimero()
+	{
+		return listaComparendos.eliminarPrimero();
 	}
 	
 	/**
@@ -103,7 +124,7 @@ public class Modelo {
 	 */
 	public Comparendo darPrimerComparendo()
 	{
-		return queueComparendos.peek();
+		return listaComparendos.darPrimero().darElemento();
 	}
 	
 	/**
@@ -112,77 +133,34 @@ public class Modelo {
 	 */
 	public Comparendo darUltimoComparendo()
 	{
-		return stackComparendos.peek();
+		return listaComparendos.darUltimo().darElemento();
 	}
 	
-	public IQueue<Comparendo> darColaInfracciones()
-	{
-		
-		if(queueComparendos.isEmpty())
-		{
-			return null;
-		}
-		IQueue<Comparendo> cola = null;
-		IQueue<Comparendo> temporal = new Queue<Comparendo>();
-		Comparendo comparendo = queueComparendos.peek();
-		String inf = comparendo.darInfraccion();
-		int tamano = 0;
-		
-		while(!queueComparendos.isEmpty())
-		{
-			Comparendo c = queueComparendos.dequeue();	
-			if(c!=null)
-			{
-				if(c.darInfraccion().equals(inf))
-				{
-					temporal.enqueue(c);
-				}
-				else
-				{
-					if(temporal.size()>tamano)
-					{
-						cola = temporal;
-						tamano = temporal.size();
-					}
-					
-					inf = c.darInfraccion();
-					temporal = new Queue<Comparendo>();
-					temporal.enqueue(c);
-				}
-			}	
-		}
-		return cola;
+	public Comparable[] copiarComparendos()
+	{		
+		return listaComparendos.darArreglo();
 	}
 	
-	public IQueue<Comparendo> darColaNUltimos(int numeroComp, String inf)
+	public void shellSort(Comparable[] a)
 	{
-		if(stackComparendos.isEmpty())
-		{
-			return null;
-		}
-		IQueue<Comparendo> cola = new Queue<Comparendo>();
-		
-		while(!stackComparendos.isEmpty()&&cola.size()!=numeroComp)
-		{
-			Comparendo c = stackComparendos.pop();
-			
-			if(c!=null)
-			{
-				if(c.darInfraccion().equals(inf))
-				{
-					cola.enqueue(c);
-				}
-			}
-		}
-		return cola;
+		Ordenamientos.shellSort(a);
 	}
-
+	
+	public void mergeSort(Comparable[] a)
+	{
+		Ordenamientos.mergeSort(a);
+	}
+	
+	public void quickSort(Comparable[] a)
+	{
+		Ordenamientos.quickSort(a);
+	}
 	/**
 	 * Método que carga los comparendos
 	 * @param ruta Rita archivo con los comparendos
 	 * @throws FileNotFoundException si no encuentra el archivo
 	 */
-	public void cargarComparendos(String ruta) throws FileNotFoundException
+	public void cargarComparendos(String ruta) throws FileNotFoundException, ParseException 
 	{
 		 File archivo = new File(ruta);
 		 
@@ -192,8 +170,9 @@ public class Modelo {
 		 
 		 JsonArray arregloComparendos = obj.get("features").getAsJsonArray();  
 		 
-		 stackComparendos = new Stack<Comparendo>();
-		 queueComparendos = new Queue<Comparendo>();	
+		 listaComparendos = new ListaEncadenada<Comparendo>();
+		 
+		 SimpleDateFormat parser = new SimpleDateFormat("yyyy/MM/dd");
 		 
 		 for (JsonElement e: arregloComparendos) 	
 		 {
@@ -201,7 +180,8 @@ public class Modelo {
 			JsonObject propiedades = e.getAsJsonObject().get("properties").getAsJsonObject();
 			
 			int id = propiedades.get("OBJECTID").getAsInt();
-			String fecha = propiedades.get("FECHA_HORA").getAsString();
+			String f = propiedades.get("FECHA_HORA").getAsString();
+			Date fecha = parser.parse(f);
 			String vehiculo = propiedades.get("CLASE_VEHI").getAsString();
 			String servicio = propiedades.get("TIPO_SERVI").getAsString();
 			String infraccion = propiedades.get("INFRACCION").getAsString();
@@ -219,8 +199,7 @@ public class Modelo {
 						
 			Comparendo comparendo = new Comparendo(id, fecha, vehiculo, servicio, infraccion, descripcion, localidad,coordenadas);
 			
-			agregarQueue(comparendo);
-			agregarStack(comparendo);
+			agregarInicio(comparendo);
 		 }
 	}
 

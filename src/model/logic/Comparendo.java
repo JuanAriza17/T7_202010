@@ -1,5 +1,7 @@
 package model.logic;
 
+import java.util.Date;
+
 public class Comparendo implements Comparable<Comparendo>
 {
 	/**
@@ -10,7 +12,7 @@ public class Comparendo implements Comparable<Comparendo>
 	/**
 	 * Fecha comparendo
 	 */
-	private String fecha;
+	private Date fecha;
 
 	/**
 	 * Vehiculo comparedo
@@ -53,7 +55,7 @@ public class Comparendo implements Comparable<Comparendo>
 	 * @param pLocalidad localidad comparendo
 	 * @param pCoordenadas coordenadas comparendo
 	 */
-	public Comparendo(int pId, String pFecha, String pVehiculo, String pServicio, String pInfraccion, String pDescripcion, String pLocalidad, double[] pCoordenadas)
+	public Comparendo(int pId, Date pFecha, String pVehiculo, String pServicio, String pInfraccion, String pDescripcion, String pLocalidad, double[] pCoordenadas)
 	{
 		id = pId;
 		fecha = pFecha;
@@ -77,7 +79,7 @@ public class Comparendo implements Comparable<Comparendo>
 	 * Da la fecha del comparendo
 	 * @return Fecha comparendo
 	 */
-	public String darFecha() {
+	public Date darFecha() {
 		return fecha;
 	}
 
@@ -152,7 +154,19 @@ public class Comparendo implements Comparable<Comparendo>
 	 * Compara los comparendos por codigo
 	 */
 	public int compareTo(Comparendo o) {
-		return id-o.darId();
+		
+		int compare = 0;
+		
+		if(fecha!=null&&o.darFecha()!=null)
+		{
+			compare = fecha.compareTo(o.darFecha());
+		}
+		
+		if(compare==0)
+		{
+			compare = id-o.darId();
+		}
+		return compare;
 	}
 	
 	@Override
@@ -161,7 +175,7 @@ public class Comparendo implements Comparable<Comparendo>
 	 */
 	public String toString()
 	{
-		return infraccion+", "+id+", "+fecha+", "+vehiculo+", "+servicio+", "+localidad+".";
+		return  id+", "+fecha+", "+infraccion+" ,"+vehiculo+", "+servicio+", "+localidad+".";
 	}
 
 	

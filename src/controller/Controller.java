@@ -1,10 +1,10 @@
 package controller;
 
 import java.io.FileNotFoundException;
+import java.text.ParseException;
 import java.util.Scanner;
 
 import model.data_structures.IQueue;
-import model.data_structures.IStack;
 import model.logic.Comparendo;
 import model.logic.Modelo;
 import view.View;
@@ -34,7 +34,11 @@ public class Controller {
 	{
 		Scanner lector = new Scanner(System.in);
 		IQueue<Comparendo> cola = null;
+		Comparable[] c = null;
 		boolean fin = false;
+		long startTime = 0;
+		long endTime = 0;
+		long duration = 0;
 		int id = 0;
 
 		while( !fin ){
@@ -56,70 +60,54 @@ public class Controller {
 					    {
 					    	view.printMessage("No se pudo crear la lista porque no existe el archivo de comparendos");
 					    }
-					    view.printMessage("\n---------\n" + "Numero actual de comparendos en la pila " + modelo.darTamanoPila()+"\n");	
-					    view.printMessage("Numero actual de comparendos en la cola " + modelo.darTamanoCola() + "\n---------");	
+					    catch(ParseException e)
+					    {
+					    	view.printMessage(e.getMessage());
+					    }
+					    view.printMessage("\n---------\n" + "Numero actual de comparendos en la lista " + modelo.darLongitud()+"\n");	
 					    break;
 
 					case 2:
 						view.printMessage("--------- \n ");
-						cola = modelo.darColaInfracciones();
+						c = modelo.copiarComparendos();
+						startTime = System.currentTimeMillis();
+						modelo.shellSort(c);
+						endTime = System.currentTimeMillis();
+						duration = endTime-startTime;
 						
-						if(cola==null)
-						{
-							view.printMessage("La cola está vacía");
-						}
-						else
-						{
-							view.printMessage("Hay un total de "+cola.size()+" comparendos seguidos con la infracción "+ cola.peek().darInfraccion()+"\n");	
-							view.printMessage(cola.darLista()+"\n");
-						}
-						
-						view.printMessage("Numero actual de comparendos en la cola " + modelo.darTamanoCola() + "\n---------");						
+						view.printMessage("Tiempo de ordenamiento: "+duration+ " milisegundos\n");
+						view.printUltimosYPrimeros(c);
+						view.printMessage("Numero actual de comparendos en la lista " + modelo.darLongitud() + "\n---------");						
 						break;
 					
 					case 3:
 						view.printMessage("--------- \n ");
-						view.printMessage("Ingrese el comparendo que desee buscar: ");
-						String inf = lector.next().trim();
-						view.printMessage("Ingrese la cantidad de comparendos que quiere: ");
+						c = modelo.copiarComparendos();
+						startTime = System.currentTimeMillis();
+						modelo.mergeSort(c);
+						endTime = System.currentTimeMillis();
+						duration = endTime-startTime;
 						
-						try
-						{
-							int valor = Integer.parseInt(lector.next());
-							cola = modelo.darColaNUltimos(valor, inf);
-							
-							if(cola==null)
-							{
-								view.printMessage("La pila está vacía");
-							}
-							else
-							{
-								if(cola.size()==valor)
-								{
-									view.printMessage("Se encontraron los  "+cola.size()+" comparendos con la infracción "+ cola.peek().darInfraccion()+"\n");	
-								}
-								else if(cola.size()==0)
-								{
-									view.printMessage("No se encontraron comparendos con la infracción "+inf);
-								}
-								else
-								{
-									view.printMessage("Solamente se encontraron "+cola.size()+" comparendos con la infraccion "+inf);
-								}
-								view.printMessage(cola.darLista()+"\n");
-							}
-						}
-						catch(NumberFormatException e)
-						{
-							view.printMessage("Ingrese un número válido de comparendos");
-						}
-						view.printMessage("Numero actual de comparendos en la pila " + modelo.darTamanoPila() + "\n---------");
+						view.printMessage("Tiempo de ordenamiento: "+duration+ " milisegundos\n");
+						view.printUltimosYPrimeros(c);
+						view.printMessage("Numero actual de comparendos en la lista " + modelo.darLongitud() + "\n---------");
 						break;
 					
-					
+					case 4:
+						view.printMessage("--------- \n ");
+						c = modelo.copiarComparendos();
+					    startTime = System.currentTimeMillis();
+						modelo.quickSort(c);
+						endTime = System.currentTimeMillis();
+						duration = endTime-startTime;
+						
+						view.printMessage("Tiempo de ordenamiento: "+duration+ " milisegundos\n");
+						view.printUltimosYPrimeros(c);
+						view.printMessage("Numero actual de comparendos en la lista " + modelo.darLongitud() + "\n---------");
+						break;
 					
 						
-					case 4: 
+					case 5: 
 						view.printMessage("--------- \n Hasta pronto !! \n---------"); 
 						lector.close();
 						fin = true;
@@ -134,6 +122,7 @@ public class Controller {
 			{
 				view.printMessage("Por favor ingrese un número");
 			}
+			
 			
 		}
 	}	

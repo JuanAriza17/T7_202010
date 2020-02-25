@@ -89,5 +89,7 @@ public interface IListaEncadenada<T extends Comparable<T>> extends Iterable<T>
 	 * Cambia el actual por el anterior
 	 */
 	void retrocederActual();
+	
+	Comparable[] darArreglo();
 
 }

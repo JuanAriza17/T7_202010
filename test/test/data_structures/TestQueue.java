@@ -31,7 +31,7 @@ public class TestQueue {
 		queue = new model.data_structures.Queue<Comparendo>();
 		for (int i = 0; i < 10; i++) 
 		{
-			queue.enqueue(new Comparendo(i, "", "", "", "", "", "", null));
+			queue.enqueue(new Comparendo(i, null, "", "", "", "", "", null));
 		}
 	}
 
@@ -49,7 +49,7 @@ public class TestQueue {
 		//Revisa el segundo escenario.
 		setUp2();
 		assertNotNull("La lista debería existir", queue);
-		assertEquals(new Comparendo(0, "", "", "", "", "", "", null).darId(), queue.peek().darId());
+		assertEquals(new Comparendo(0, null, "", "", "", "", "", null).darId(), queue.peek().darId());
 		assertEquals(10, queue.size());
 		assertEquals(false, queue.isEmpty());
 	}
@@ -65,7 +65,7 @@ public class TestQueue {
 
 		//Caso agregando otros elementos.
 		setUp2();
-		queue.enqueue(new Comparendo(11, "", "", "", "", "", "", null));
+		queue.enqueue(new Comparendo(11, null, "", "", "", "", "", null));
 		assertEquals(11,queue.size());
 
 	}
@@ -79,18 +79,18 @@ public class TestQueue {
 		//Comprobamos tamaño y que la lista este vacía
 		assertEquals(true, queue.isEmpty());
 		assertEquals(0, queue.size());
-		queue.enqueue(new Comparendo(0, "", "", "", "", "", "", null));
+		queue.enqueue(new Comparendo(0, null, "", "", "", "", "", null));
 
 		//Comprobamos que se haya agregado correctamente, se comprueba el caso de un solo elemento en la lista.
 		assertEquals(false, queue.isEmpty());
 		assertEquals(1, queue.size());
-		assertEquals(new Comparendo(0, "", "", "", "", "", "", null).darId(), queue.peek().darId());
+		assertEquals(new Comparendo(0, null, "", "", "", "", "", null).darId(), queue.peek().darId());
 
 		//Comprobamos que se haya agregado correctamente, se comprueba cualquier otro caso de la lista.
 		setUp2();
 		assertEquals(false, queue.isEmpty());
 		assertEquals(10, queue.size());
-		assertEquals(new Comparendo(0, "", "", "", "", "", "", null).darId(), queue.peek().darId());
+		assertEquals(new Comparendo(0, null, "", "", "", "", "", null).darId(), queue.peek().darId());
 	}
 	
 	/**
@@ -103,7 +103,7 @@ public class TestQueue {
 		assertEquals(true, queue.isEmpty());
 		
 		//Se agrega un elemento para comprobar si deja de estar vacía
-		queue.enqueue(new Comparendo(0, "", "", "", "", "", "", null));
+		queue.enqueue(new Comparendo(0, null, "", "", "", "", "", null));
 		assertEquals(false, queue.isEmpty());
 		
 		//Se elimina para comprobar el cambio de lista NO vacía a vacía.
@@ -125,7 +125,7 @@ public class TestQueue {
 	{
 		//Se comprueba que se agrega un elemento al inicio.
 		assertEquals(0,queue.size());
-		queue.enqueue(new Comparendo(0, "", "", "", "", "", "", null));
+		queue.enqueue(new Comparendo(0, null, "", "", "", "", "", null));
 		assertEquals(1, queue.size());
 		
 		//Se comprueba que el tamaño disminuye si se elimina el único elemento en la lista.
@@ -138,7 +138,7 @@ public class TestQueue {
 		assertEquals(10,queue.size());
 		queue.dequeue();
 		assertEquals(9, queue.size());
-		queue.enqueue(new Comparendo(11, "", "", "", "", "", "", null));
+		queue.enqueue(new Comparendo(11, null, "", "", "", "", "", null));
 		assertEquals(10, queue.size());
 	}
 	
@@ -154,10 +154,10 @@ public class TestQueue {
 		assertNull(queue.peek());
 
 		//Agregamos un elemento y posteriormente realizamos peek
-		queue.enqueue(new Comparendo(0, "", "", "", "", "", "", null));
+		queue.enqueue(new Comparendo(0, null, "", "", "", "", "", null));
 		assertEquals(false, queue.isEmpty());
 		assertEquals(1, queue.size());
-		assertEquals(new Comparendo(0, "", "", "", "", "", "", null).darId(), queue.peek().darId());
+		assertEquals(new Comparendo(0, null, "", "", "", "", "", null).darId(), queue.peek().darId());
 		assertEquals(false, queue.isEmpty());
 		assertEquals(1, queue.size());
 		
@@ -165,7 +165,7 @@ public class TestQueue {
 		setUp2();
 		assertEquals(false, queue.isEmpty());
 		assertEquals(10, queue.size());
-		assertEquals(new Comparendo(0, "", "", "", "", "", "", null).darId(), queue.peek().darId());
+		assertEquals(new Comparendo(0, null, "", "", "", "", "", null).darId(), queue.peek().darId());
 		assertEquals(10, queue.size());
 	}
 

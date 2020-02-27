@@ -37,7 +37,7 @@ public class View
 			{
 				System.out.println(a[i].toString());
 			}
-			System.out.println("ÚLtimos: ");
+			System.out.println("Últimos: ");
 			for (int i = a.length-11; i < a.length; i++) 
 			{
 				System.out.println(a[i].toString());

@@ -11,33 +11,50 @@ import com.sun.xml.internal.ws.policy.spi.AssertionCreationException;
 
 public class TestArregloDinamico {
 
+	/**
+	 * Atributo de arreglo que será usado en las pruebas
+	 */
 	private ArregloDinamico arreglo;
+	
+	/**
+	 * Tamaño fijo del arreglo para pruebas
+	 */
 	private static int TAMANO=100;
 	
+	/**
+	 * Escenario 1 de pruebas.
+	 */
 	@Before
 	public void setUp1() {
 		arreglo= new ArregloDinamico(TAMANO);
 	}
 
+	/**
+	 * Escenario 2 de pruebas.
+	 */
 	public void setUp2() {
 		for(int i =0; i< TAMANO*2; i++){
 			arreglo.agregar(""+i);
 		}
 	}
 
+	/**
+	 * Método que ejecuta pruebas sobre el método constructor de la clase Arreglo Dinámico.
+	 */
 	@Test
 	public void testArregloDinamico() {
-		// TODO
-		
+			
 		assertNotNull("El arreglo debería estar creado",arreglo);
 		assertEquals(100, arreglo.darCapacidad());
 		assertEquals(0,arreglo.darTamano());
 	}
 
+	/**
+	 * Método que ejecuta pruebas sobre el método constructor de la clase Arreglo Dinámico.
+	 */
 	@Test
 	public void testDarElemento() {
 		setUp2();
-		// TODO
 		assertNotNull("El arreglo debería estar creado",arreglo);
 		assertEquals(200, arreglo.darCapacidad());
 		assertEquals(200,arreglo.darTamano());

@@ -7,13 +7,19 @@ import org.junit.Test;
 
 import model.data_structures.IListaEncadenada;
 import model.data_structures.ListaEncadenada;
-import model.data_structures.Ordenamientos;
+import model.logic.Ordenamientos;
 
 public class TestOrdenamientos 
 {
-	
+	/**
+	 * Atributo de la clase lista que será utilizado en las pruebas.
+	 */
 	private IListaEncadenada<Integer> lista;
 	
+	/**
+	 * Escenario 1 de pruebas.
+	 * Genera una lista de 5000 datos barajada aleatoriamente.
+	 */
 	@Before
 	public void setUpAleatorio() 
 	{
@@ -25,6 +31,10 @@ public class TestOrdenamientos
 		}
 	}
 
+	/**
+	 * Escenario 2 de pruebas.
+	 * Genera una lista de 5000 datos ordenada ascendentemente.
+	 */
 	public void setUpAscendente() 
 	{
 		lista = new ListaEncadenada<Integer>();
@@ -35,6 +45,10 @@ public class TestOrdenamientos
 		}
 	}
 	
+	/**
+	 * Escenario 3 de pruebas.
+	 * Genera una lista de 5000 datos ordenada descendentemente.
+	 */
 	public void setUpDescendentemente() {
 		lista = new ListaEncadenada<Integer>();
 
@@ -44,6 +58,10 @@ public class TestOrdenamientos
 		}
 	}
 	
+	
+	/**
+	 * Test del algoritmo de ordenamiento ShellSort de la clase Ordenamientos.
+	 */
 	@Test
 	public void testShell()
 	{
@@ -90,7 +108,9 @@ public class TestOrdenamientos
 		}
 	}
 
-	
+	/**
+	 * Test del algoritmo de ordenamiento MergeSort de la clase Ordenamientos.
+	 */
 	@Test
 	public void testMerge()
 	{
@@ -137,7 +157,9 @@ public class TestOrdenamientos
 		}
 	}
 	
-	
+	/**
+	 * Test del algoritmo de ordenamiento QuickSort de la clase Ordenamientos.
+	 */
 	@Test
 	public void testQuick()
 	{

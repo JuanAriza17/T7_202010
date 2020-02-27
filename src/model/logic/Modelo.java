@@ -15,7 +15,6 @@ import com.google.gson.stream.JsonReader;
 
 import model.data_structures.IListaEncadenada;
 import model.data_structures.ListaEncadenada;
-import model.data_structures.Ordenamientos;
 
 
 /**
@@ -23,28 +22,34 @@ import model.data_structures.Ordenamientos;
  *
  */
 public class Modelo { 
+	
 	/**
-	 * Atributos del modelo del mundo
+	 * Atributos del modelo del mundo.
 	 */
 	private IListaEncadenada<Comparendo> listaComparendos;
 	
 		
 	/**
-	 * Constructor del modelo del mundo con capacidad predefinida
+	 * Constructor del modelo del mundo con capacidad predefinida.
+	 * @post: Inicializa la lista de comparendos vacía.
 	 */
 	public Modelo()
 	{
 		listaComparendos = new ListaEncadenada<Comparendo>();
 	}
 
+	/**
+	 * Método que retorna la lista de comparendos.
+	 * @return Lista de comaparendos.
+	 */
 	public IListaEncadenada<Comparendo> darLista()
 	{
 		return listaComparendos;
 	}
 	
 	/**
-	 * Servicio de consulta de numero de elementos presentes en el modelo 
-	 * @return numero de elementos presentes en el modelo
+	 * Servicio de consulta de numero de elementos presentes en el modelo .
+	 * @return numero de elementos presentes en el modelo.
 	 */
 	public int darLongitud()
 	{
@@ -52,8 +57,8 @@ public class Modelo {
 	}
 		
 	/**
-	 * Agregar dato al inicio
-	 * @param dato
+	 * Agregar dato al inicio.
+	 * @param dato Comparendo que llega por parámetro.
 	 */
 	public void agregarInicio(Comparendo dato)
 	{	
@@ -61,8 +66,8 @@ public class Modelo {
 	}
 	
 	/**
-	 * Agregar dato al final
-	 * @param dato
+	 * Agregar dato al final.
+	 * @param dato Comparendo que llega por parámetro.
 	 */
 	public void agregarFinal(Comparendo dato)
 	{
@@ -70,8 +75,8 @@ public class Modelo {
 	}
 	
 	/**
-	 * Requerimiento de agregar dato
-	 * @param dato
+	 * Requerimiento de agregar dato.
+	 * @param dato Comparendo que llega por parámetro.
 	 */
 	public void agregar(Comparendo dato)
 	{
@@ -80,9 +85,9 @@ public class Modelo {
 	
 	
 	/**
-	 * Requerimiento buscar dato
-	 * @param dato Dato a buscar
-	 * @return dato encontrado
+	 * Requerimiento buscar dato.
+	 * @param dato Dato a buscar.
+	 * @return dato Comparendo encontrado.
 	 */
 	public Comparendo buscar(Comparendo dato)
 	{
@@ -91,9 +96,9 @@ public class Modelo {
 	
 	
 	/**
-	 * Elimina un dato
-	 * @param dato Dato a eliminar
-	 * @return dato eliminado
+	 * Elimina un dato.
+	 * @param dato Dato a eliminar.
+	 * @return dato Comparendo eliminado.
 	 */
 	public Comparendo eliminar(Comparendo dato)
 	{
@@ -101,7 +106,7 @@ public class Modelo {
 	}
 	
 	/**
-	 * Elimina el ultimo dato
+	 * Elimina el último dato
 	 * @return dato eliminado
 	 */
 	public Comparendo eliminarUltimo()
@@ -136,21 +141,37 @@ public class Modelo {
 		return listaComparendos.darUltimo().darElemento();
 	}
 	
+	/**
+	 * Método que retorna el arreglo de elementos. Dicho arreglo retornado será comparable.
+	 * @return Arreglo de elementos que es comparable.
+	 */
 	public Comparable[] copiarComparendos()
 	{		
 		return listaComparendos.darArreglo();
 	}
 	
+	/**
+	 * Método que ordena por el algoritmo de ShellSort el arreglo comparable que llega por parámetro.
+	 * @param a Arreglo de elementos que es comparable y llega por parámetro.
+	 */
 	public void shellSort(Comparable[] a)
 	{
 		Ordenamientos.shellSort(a);
 	}
 	
+	/**
+	 * Método que ordena por el algoritmo de MergeSort el arreglo comparable que llega por parámetro.
+	 * @param a Arreglo de elementos que es comparable y llega por parámetro.
+	 */
 	public void mergeSort(Comparable[] a)
 	{
 		Ordenamientos.mergeSort(a);
 	}
 	
+	/**
+	 * Método que ordena por el algoritmo de QuickSort el arreglo comparable que llega por parámetro.
+	 * @param a Arreglo de elementos que es comparable y llega por parámetro.
+	 */
 	public void quickSort(Comparable[] a)
 	{
 		Ordenamientos.quickSort(a);
@@ -199,7 +220,7 @@ public class Modelo {
 						
 			Comparendo comparendo = new Comparendo(id, fecha, vehiculo, servicio, infraccion, descripcion, localidad,coordenadas);
 			
-			agregarInicio(comparendo);
+			agregarFinal(comparendo);
 		 }
 	}
 

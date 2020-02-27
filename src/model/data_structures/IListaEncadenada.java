@@ -10,28 +10,28 @@ public interface IListaEncadenada<T extends Comparable<T>> extends Iterable<T>
 	 * @param dato Elemento a agregar
 	 */
 	void agregarFinal(T dato);
-	
+
 	/**
 	 * Agrega un elemento al inicio de la lista
 	 * Si lista esta vacia se vuelve el primero 
 	 * @param dato Elemento a agregar
 	 */
 	void agregarInicio(T dato);
-	
+
 	/**
 	 * Agregar un dato al final de la lista
 	 * Si lista esta vacia se vuelve el primero 
 	 * @param dato nuevo elemento
 	 */
 	public void agregar( T dato );
-		
+
 	/**
 	 * Buscar un dato en el arreglo.
 	 * @param dato Objeto de busqueda en el arreglo
 	 * @return elemento encontrado en el arreglo (si existe). null si no se encontro el dato.
 	 */
 	T buscar(T dato);
-	
+
 	/**
 	 * Eliminar un dato del arreglo.
 	 * Los datos restantes deben quedar "compactos" desde la posicion 0.
@@ -39,36 +39,44 @@ public interface IListaEncadenada<T extends Comparable<T>> extends Iterable<T>
 	 * @return dato eliminado
 	 */
 	T eliminar( T dato );
-	
+
+	/**
+	 * Elimina el último elemento de la lista encadenada.
+	 * @return El último elemento eliminado.
+	 */
 	T eliminarUltimo();
-	
+
+	/**
+	 * Elimina el primer elemento de la lista encadenada.
+	 * @return El primer elemento eliminado.
+	 */
 	T eliminarPrimero();
-		
+
 	/**
 	 * Da la cantidad de elementos de la lista.
 	 * @return tamaño lista
 	 */
 	int darLongitud();
-	
+
 	/**
 	 * Da el primer elemento de la lista
 	 * @return primer elemento lista
 	 */
 	NodoLista<T> darPrimero();
-	
+
 	/**
 	 * Da el último elemento de la lista
 	 * @return último elemento lista
 	 */
 	NodoLista<T> darUltimo();
-	
+
 	/**
 	 * Da el elemento en la posicion dada por parámetro
 	 * @param posicion Posición del elemento, posicion>=0
 	 * @return
 	 */
 	T darElemento(int posicion);
-	
+
 	/**
 	 * Da el elemento actual
 	 * @return elemento actual
@@ -89,7 +97,11 @@ public interface IListaEncadenada<T extends Comparable<T>> extends Iterable<T>
 	 * Cambia el actual por el anterior
 	 */
 	void retrocederActual();
-	
+
+	/**
+	 * Método que retorna un arreglo de la lista.
+	 * @return Retorna arreglo de la lista.
+	 */
 	Comparable[] darArreglo();
 
 }

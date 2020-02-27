@@ -11,15 +11,22 @@ import view.View;
 
 public class Controller {
 
-	/* Instancia del Modelo*/
+	/**
+	 * Atributo del modelo.
+	 */
 	private Modelo modelo;
-	
-	/* Instancia de la Vista*/
-	private View view;
-	
-	public final static String RUTA = "./data/comparendos_dei_2018_small.geojson";
 
-	
+	/**
+	 * Atributo de la vista.
+	 */
+	private View view;
+
+	/**
+	 * Constante con la ruta del archivo que guarda los comparnedos.
+	 */
+	public final static String RUTA = "./data/comparendos_dei_2018.geojson";
+
+
 	/**
 	 * Crear la vista y el modelo del proyecto
 	 * @param capacidad tamaNo inicial del arreglo
@@ -29,7 +36,7 @@ public class Controller {
 		view = new View();
 		modelo = new Modelo();
 	}
-		
+
 	public void run() 
 	{
 		Scanner lector = new Scanner(System.in);
@@ -47,83 +54,83 @@ public class Controller {
 			{
 				int option = Integer.parseInt(lector.next());				
 				switch(option){
-					case 1:
-						view.printMessage("--------- \nCargando lista de comparendos en la pila y en la cola ");
-					    try
-					    {
-					    	modelo.cargarComparendos(RUTA);
-					    	view.printMessage("Pila y Cola de comparendos creada");
-					    	view.printMessage("PRIMERO: \n"+modelo.darPrimerComparendo().toString());
-					    	view.printMessage("ÚLTIMO: \n"+modelo.darUltimoComparendo().toString());
-					    }
-					    catch(FileNotFoundException e)
-					    {
-					    	view.printMessage("No se pudo crear la lista porque no existe el archivo de comparendos");
-					    }
-					    catch(ParseException e)
-					    {
-					    	view.printMessage(e.getMessage());
-					    }
-					    view.printMessage("\n---------\n" + "Numero actual de comparendos en la lista " + modelo.darLongitud()+"\n");	
-					    break;
+				case 1:
+					view.printMessage("--------- \nCargando lista de comparendos");
+					try
+					{
+						modelo.cargarComparendos(RUTA);
+						view.printMessage("Lista de comparendos creada");
+						view.printMessage("PRIMERO: \n"+modelo.darPrimerComparendo().toString());
+						view.printMessage("ÚLTIMO: \n"+modelo.darUltimoComparendo().toString());
+					}
+					catch(FileNotFoundException e)
+					{
+						view.printMessage("No se pudo crear la lista porque no existe el archivo de comparendos");
+					}
+					catch(ParseException e)
+					{
+						view.printMessage(e.getMessage());
+					}
+					view.printMessage("\n---------\n" + "Número actual de comparendos en la lista " + modelo.darLongitud()+"\n");	
+					break;
 
-					case 2:
-						view.printMessage("--------- \n ");
-						c = modelo.copiarComparendos();
-						startTime = System.currentTimeMillis();
-						modelo.shellSort(c);
-						endTime = System.currentTimeMillis();
-						duration = endTime-startTime;
-						
-						view.printMessage("Tiempo de ordenamiento: "+duration+ " milisegundos\n");
-						view.printUltimosYPrimeros(c);
-						view.printMessage("Numero actual de comparendos en la lista " + modelo.darLongitud() + "\n---------");						
-						break;
-					
-					case 3:
-						view.printMessage("--------- \n ");
-						c = modelo.copiarComparendos();
-						startTime = System.currentTimeMillis();
-						modelo.mergeSort(c);
-						endTime = System.currentTimeMillis();
-						duration = endTime-startTime;
-						
-						view.printMessage("Tiempo de ordenamiento: "+duration+ " milisegundos\n");
-						view.printUltimosYPrimeros(c);
-						view.printMessage("Numero actual de comparendos en la lista " + modelo.darLongitud() + "\n---------");
-						break;
-					
-					case 4:
-						view.printMessage("--------- \n ");
-						c = modelo.copiarComparendos();
-					    startTime = System.currentTimeMillis();
-						modelo.quickSort(c);
-						endTime = System.currentTimeMillis();
-						duration = endTime-startTime;
-						
-						view.printMessage("Tiempo de ordenamiento: "+duration+ " milisegundos\n");
-						view.printUltimosYPrimeros(c);
-						view.printMessage("Numero actual de comparendos en la lista " + modelo.darLongitud() + "\n---------");
-						break;
-					
-						
-					case 5: 
-						view.printMessage("--------- \n Hasta pronto !! \n---------"); 
-						lector.close();
-						fin = true;
-						break;
+				case 2:
+					view.printMessage("--------- \n ");
+					c = modelo.copiarComparendos();
+					startTime = System.currentTimeMillis();
+					modelo.shellSort(c);
+					endTime = System.currentTimeMillis();
+					duration = endTime-startTime;
 
-					default: 
-						view.printMessage("--------- \n Opcion Invalida !! \n---------");
-						break;
+					view.printMessage("Tiempo de ordenamiento: "+duration+ " milisegundos\n");
+					view.printUltimosYPrimeros(c);
+					view.printMessage("Número actual de comparendos en la lista " + modelo.darLongitud() + "\n---------");						
+					break;
+
+				case 3:
+					view.printMessage("--------- \n ");
+					c = modelo.copiarComparendos();
+					startTime = System.currentTimeMillis();
+					modelo.mergeSort(c);
+					endTime = System.currentTimeMillis();
+					duration = endTime-startTime;
+
+					view.printMessage("Tiempo de ordenamiento: "+duration+ " milisegundos\n");
+					view.printUltimosYPrimeros(c);
+					view.printMessage("Número actual de comparendos en la lista " + modelo.darLongitud() + "\n---------");
+					break;
+
+				case 4:
+					view.printMessage("--------- \n ");
+					c = modelo.copiarComparendos();
+					startTime = System.currentTimeMillis();
+					modelo.quickSort(c);
+					endTime = System.currentTimeMillis();
+					duration = endTime-startTime;
+
+					view.printMessage("Tiempo de ordenamiento: "+duration+ " milisegundos\n");
+					view.printUltimosYPrimeros(c);
+					view.printMessage("Número actual de comparendos en la lista " + modelo.darLongitud() + "\n---------");
+					break;
+
+
+				case 5: 
+					view.printMessage("--------- \n Hasta pronto !! \n---------"); 
+					lector.close();
+					fin = true;
+					break;
+
+				default: 
+					view.printMessage("--------- \n Opción Invalida !! \n---------");
+					break;
 				}
 			}
 			catch(NumberFormatException e)
 			{
 				view.printMessage("Por favor ingrese un número");
 			}
-			
-			
+
+
 		}
 	}	
 }

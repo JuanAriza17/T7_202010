@@ -4,17 +4,17 @@ package model.data_structures;
 public interface IArregloDinamico<T extends Comparable<T>>
 {
 	/**
-	 * Retornar el numero de elementos maximo en el arreglo
-	 * @return
+	 * Retornar el numero de elementos maximo en el arreglo.
+	 * @return Capacidad del arreglo.
 	 */
 	int darCapacidad( );
 
 	/**
-	 * Retornar el numero de elementos presentes en el arreglo
-	 * @return
+	 * Retornar el numero de elementos presentes en el arreglo.
+	 * @return Tamaño del arreglo.
 	 */
 	int darTamano( );
-	
+
 	/**
 	 * Retornar el elemento en la posicion i
 	 * @param i posicion de consulta
@@ -28,14 +28,14 @@ public interface IArregloDinamico<T extends Comparable<T>>
 	 * @param dato nuevo elemento
 	 */
 	public void agregar( T dato );
-		
+
 	/**
 	 * Buscar un dato en el arreglo.
 	 * @param dato Objeto de busqueda en el arreglo
 	 * @return elemento encontrado en el arreglo (si existe). null si no se encontro el dato.
 	 */
 	T buscar(T dato);
-	
+
 	/**
 	 * Eliminar un dato del arreglo.
 	 * Los datos restantes deben quedar "compactos" desde la posicion 0.

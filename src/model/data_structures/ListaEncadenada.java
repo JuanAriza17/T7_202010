@@ -153,6 +153,7 @@ public class ListaEncadenada<T extends Comparable<T>> implements IListaEncadenad
 	 * @param dato T genérico que será eliminado.
 	 * @return  Dato T eliminado.
 	 */
+
 	public T eliminar(T dato) 
 	{
 		T elemento = buscar(dato);
@@ -346,11 +347,15 @@ public class ListaEncadenada<T extends Comparable<T>> implements IListaEncadenad
 
 		return elemento;
 	}
-	
+
+	/**
+	 * Método que retorna un arreglo de la lista.
+	 * @return Retorna arreglo de la lista.
+	 */
 	public Comparable[] darArreglo()
 	{
 		Comparable[] comparable = new Comparable[longitud];
-		
+
 		NodoLista<T> actual = primero;
 		int i =0;
 		while(actual!=null)
@@ -359,7 +364,7 @@ public class ListaEncadenada<T extends Comparable<T>> implements IListaEncadenad
 			actual=actual.darSiguiente();
 			i++;
 		}
-		
+
 		return comparable;
 	}
 }

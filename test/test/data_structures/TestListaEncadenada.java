@@ -166,7 +166,6 @@ public class TestListaEncadenada
 		assertEquals(10, lista.darLongitud());
 	}
 
-	//TODO ARIZA Revisar eliminar.
 	/**
 	 * Prueba del método eliminar de la clase ListaEncadenada.
 	 */
@@ -331,7 +330,6 @@ public class TestListaEncadenada
 		assertTrue("Actual debería ser el siguiente del primero", lista.elementoActual()==lista.darElemento(1));
 	}
 
-	//TODO ARIZA Retroceder actual
 	/**
 	 * Prueba del método retroceder actual.
 	 */

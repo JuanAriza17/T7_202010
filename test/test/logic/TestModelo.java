@@ -16,18 +16,18 @@ import model.logic.Comparendo;
 import model.logic.Modelo;
 
 public class TestModelo {
-	
-	
+
+
 	/**
 	 * Atributo del modelo
 	 */
 	private Modelo modelo;
-	
+
 	/**
 	 * Ruta archivo
 	 */
 	public final static String RUTA = "./data/comparendos_dei_2018_small.geojson";
-	
+
 	/**
 	 * Escenario 1
 	 */
@@ -37,7 +37,8 @@ public class TestModelo {
 	}
 
 	/**
-	 * Escenario 2
+	 * Escenario 2.
+	 * Carga de los comparendos
 	 * @throws FileNotFoundException
 	 * @throws ParseException
 	 */
@@ -45,9 +46,10 @@ public class TestModelo {
 		modelo = new Modelo();
 		modelo.cargarComparendos(RUTA);
 	}
-	
+
 	/**
-	 * Escenario 3
+	 * Escenario 3.
+	 * Agrega a la lista comparendos.
 	 */
 	public void setUp3() {
 		modelo = new Modelo();
@@ -71,17 +73,16 @@ public class TestModelo {
 	 */
 	@Test
 	public void testDarLongitud() {
-		// TODO
 		assertEquals(0, modelo.darLongitud());
-		
+
 		try
 		{
 			setUp2();
 			assertNotNull("El arreglo debería existir",modelo);
 			assertEquals(20, modelo.darLongitud());
-			
+
 			Iterator<Comparendo> it = modelo.darLista().iterator();
-			
+
 			int i = 0;
 			Comparendo c = null;
 			while(it.hasNext())
@@ -89,7 +90,7 @@ public class TestModelo {
 				i++;
 				c = it.next();
 			}
-			
+
 			assertEquals(i, modelo.darLongitud());
 
 		}
@@ -101,21 +102,20 @@ public class TestModelo {
 		{
 			e.printStackTrace();
 		}
-		
+
 		setUp3();
 		assertNotNull("El arreglo debería existir",modelo);
 		assertEquals(10, modelo.darLongitud());
-		
+
 	}
 
 	/**
-	 * Test que comprueba la creación de comparendos
+	 * Test que comprueba la creación de comparendos.
 	 */
 	@Test
 	public void testAgregar() {
-		// TODO Completar la prueba
 		assertEquals(0, modelo.darLongitud());
-		
+
 		Comparendo c = new Comparendo(0, null, "", "", "", "", "", new double[2]);
 		modelo.agregar(c);
 		assertEquals(1,modelo.darLongitud());
@@ -128,20 +128,22 @@ public class TestModelo {
 			assertEquals(i+1,modelo.darLongitud());
 			assertTrue("Debería retornar "+i+ " pero retorna "+modelo.buscar(c)+".",modelo.buscar(c).compareTo(c)==0);
 		}
-		
+
 	}
 
+	/**
+	 * Test que comprueba la búsqueda de un comparendo.
+	 */
 	@Test
 	public void testBuscar() {
-		// TODO Completar la prueba
 		try
 		{
 			setUp2();
 			assertNotNull("El arreglo debería existir",modelo);
 			assertEquals(20, modelo.darLongitud());
-			
+
 			assertNull("Debería ser null", modelo.buscar(new Comparendo(1, null, "", "", "", "", "", null)));
-			
+
 			Comparendo c = new Comparendo(29042, null, "", "", "", "", "", null);
 			assertNotNull("No debería ser null", modelo.buscar(c));
 
@@ -154,50 +156,49 @@ public class TestModelo {
 			e.printStackTrace();
 			assertEquals(0, modelo.darLongitud());
 		}
-		
+
 		setUp3();
 		assertNotNull("El arreglo debería existir",modelo);
 		assertEquals(10, modelo.darLongitud());
-		
+
 		assertNotNull("No debería ser null", modelo.buscar(new Comparendo(1, null, "", "", "", "", "", null)));
 		assertNull("Debería ser null", modelo.buscar(new Comparendo(2000, null, "", "", "", "", "", null)));
-		
+
 		assertTrue("Debería retornar el comparento con el ID 1 pero retorna el comparendo con ID "+modelo.buscar(new Comparendo(1, null, "", "", "", "", "", null)).darId()+".",modelo.buscar(new Comparendo(1, null, "", "", "", "", "", null)).compareTo(new Comparendo(1, null, "", "", "", "", "", null))==0);
 
 
 
 	}
-	
-/**
- * Test de eliminar
- */
+
+	/**
+	 * Test del método eliminar de la clase Modelo.
+	 */
 	@Test
 	public void testEliminar() {
-		// TODO Completar la prueba
-		
+
 		try
 		{
 			setUp2();
 
 			assertNotNull("El arreglo debería existir",modelo);
 			assertEquals(20, modelo.darLongitud());
-			
+
 			Comparendo c = new Comparendo(0, null, "", "", "", "", "", null);
 
 			Comparendo eliminar = modelo.eliminar(c);
 			assertNull("Debería ser null", eliminar);
 			assertEquals(20, modelo.darLongitud());
-			
+
 			c = new Comparendo(29049, null, "", "", "", "", "", null); 
-			
+
 			Comparendo dato = modelo.buscar(c);
 			eliminar = modelo.eliminar(c);
 			assertTrue("Deberían ser el mismo dato",dato.equals(eliminar));
 			assertEquals(19, modelo.darLongitud());
 			assertNull("Debeía ser null", modelo.buscar(c));
-			
+
 			Iterator<Comparendo> it = modelo.darLista().iterator();
-			
+
 			int i = 0;
 			Comparendo co = null;
 			while(it.hasNext())
@@ -205,7 +206,7 @@ public class TestModelo {
 				i++;
 				co = it.next();
 			}
-			
+
 			assertEquals(i, modelo.darLongitud());
 
 		}
@@ -213,8 +214,8 @@ public class TestModelo {
 		{
 			assertEquals(20, modelo.darLongitud());
 		}
-		
-		
+
+
 	}
 
 }

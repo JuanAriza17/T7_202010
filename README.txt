@@ -5,4 +5,4 @@ Sergio Zona
 201914936
 202010
 
-La ruta es la del archivo small, se encuentra en Controller.
+La ruta es la del archivo grande, se encuentra en Controller.

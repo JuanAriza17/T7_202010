@@ -1,21 +1,21 @@
 package model.data_structures;
 
-public class MaxColaCP<T extends Comparable<T>> implements IMaxColaCP {
+public class MaxHeapCP<T extends Comparable<T>> implements IMaxHeapCP {
 
 	/**
 	 * Arreglo dinámico que maneja la cola de prioridad.
 	 */
-	public IArregloDinamico cola;
+	public IArregloDinamico heap;
 	
 	/**
 	 * Número de elementos presentes en la cola de prioridad.
 	 */
 	public int numPresentes; 
 	
-	public MaxColaCP()
+	public MaxHeapCP()
 	{
 		numPresentes=0;
-		cola=new ArregloDinamico(100);
+		heap=new ArregloDinamico(100);
 	}
 	/**
 	 * Método que retorna el número de elementos presentes en la cola de prioridad.

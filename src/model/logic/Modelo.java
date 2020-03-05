@@ -193,7 +193,8 @@ public class Modelo {
 		 
 		 listaComparendos = new ListaEncadenada<Comparendo>();
 		 
-		 SimpleDateFormat parser = new SimpleDateFormat("yyyy/MM/dd");
+		 SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+		 		
 		 
 		 for (JsonElement e: arregloComparendos) 	
 		 {
@@ -203,10 +204,10 @@ public class Modelo {
 			int id = propiedades.get("OBJECTID").getAsInt();
 			String f = propiedades.get("FECHA_HORA").getAsString();
 			Date fecha = parser.parse(f);
-			String vehiculo = propiedades.get("CLASE_VEHI").getAsString();
-			String servicio = propiedades.get("TIPO_SERVI").getAsString();
+			String vehiculo = propiedades.get("CLASE_VEHICULO").getAsString();
+			String servicio = propiedades.get("TIPO_SERVICIO").getAsString();
 			String infraccion = propiedades.get("INFRACCION").getAsString();
-			String descripcion = propiedades.get("DES_INFRAC").getAsString();
+			String descripcion = propiedades.get("DES_INFRACCION").getAsString();
 			String localidad = propiedades.get("LOCALIDAD").getAsString();
 
 			JsonObject geometria = e.getAsJsonObject().get("geometry").getAsJsonObject();

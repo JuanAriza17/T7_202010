@@ -149,23 +149,18 @@ public class Comparendo implements Comparable<Comparendo>
 		return coordenadas[1];
 	}
 
-	@Override
 	/**
-	 * Compara los comparendos por codigo
+	 * Compara los comparendos por latitud.
 	 */
 	public int compareTo(Comparendo o) {
 		
 		int compare = 0;
 		
-		if(fecha!=null&&o.darFecha()!=null)
+		if(coordenadas!=null && o.darCoordenadas()!=null)
 		{
-			compare = fecha.compareTo(o.darFecha());
+			compare = (darLatitud()>o.darLatitud())?1:(darLatitud()<o.darLatitud())?-1:0;
 		}
 		
-		if(compare==0)
-		{
-			compare = id-o.darId();
-		}
 		return compare;
 	}
 	
@@ -175,7 +170,7 @@ public class Comparendo implements Comparable<Comparendo>
 	 */
 	public String toString()
 	{
-		return  id+", "+fecha+", "+infraccion+" ,"+vehiculo+", "+servicio+", "+localidad+".";
+		return  id+", "+fecha+", "+infraccion+", "+vehiculo+", "+servicio+", "+localidad +", "+"LATITUD: "+Double.toString(this.darLatitud())+".";
 	}
 
 	

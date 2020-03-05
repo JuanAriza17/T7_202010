@@ -29,6 +29,7 @@ public class ArregloDinamico<T extends Comparable<T>> implements IArregloDinamic
 	public ArregloDinamico( int max )
 	{
 		elementos = (T[])new Comparable[max];
+		elementos[0]=null;
 		tamanoMax = max;
 		tamanoAct = 0;
 	}
@@ -49,7 +50,6 @@ public class ArregloDinamico<T extends Comparable<T>> implements IArregloDinamic
 			{
 				elementos[i] = copia[i];
 			} 
-			System.out.println("Arreglo lleno: " + tamanoAct + " - Arreglo duplicado: " + tamanoMax);
 		}	
 		elementos[tamanoAct] = dato;
 		tamanoAct++;
@@ -128,5 +128,20 @@ public class ArregloDinamico<T extends Comparable<T>> implements IArregloDinamic
 
 		return elemento;
 	}
+
+	/**
+	 * Intercambia la posición entre dos elementos del arreglo.
+	 * @param i Posición i.
+	 * @param j Posición j.
+	 */
+	public void intercambiarPosiciones(int i, int j) 
+	{
+		T elemento=darElemento(i);
+		elementos[i]=elementos[j];
+		elementos[j]=elemento;
+		
+	}
+	
+	
 
 }

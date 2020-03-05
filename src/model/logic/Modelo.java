@@ -14,7 +14,9 @@ import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 
 import model.data_structures.IListaEncadenada;
+import model.data_structures.IMaxHeapCP;
 import model.data_structures.ListaEncadenada;
+import model.data_structures.MaxHeapCP;
 
 
 /**
@@ -28,6 +30,10 @@ public class Modelo {
 	 */
 	private IListaEncadenada<Comparendo> listaComparendos;
 	
+	/**
+	 * Heap de comparendos.
+	 */
+	private IMaxHeapCP<Comparendo>heap;
 		
 	/**
 	 * Constructor del modelo del mundo con capacidad predefinida.
@@ -36,6 +42,7 @@ public class Modelo {
 	public Modelo()
 	{
 		listaComparendos = new ListaEncadenada<Comparendo>();
+		heap=new MaxHeapCP();
 	}
 
 	/**
@@ -63,6 +70,20 @@ public class Modelo {
 	public void agregarInicio(Comparendo dato)
 	{	
 		listaComparendos.agregarInicio(dato);
+	}
+	
+	/**
+	 * Agrega los comparendos al heap.
+	 * @param dato Comparendo que llega por parámetro.
+	 */
+	public void agregarHeap(Comparendo dato)
+	{
+		heap.agregar(dato);
+	}
+	
+	public IMaxHeapCP darHeap()
+	{
+		return heap;
 	}
 	
 	/**
@@ -222,6 +243,7 @@ public class Modelo {
 			Comparendo comparendo = new Comparendo(id, fecha, vehiculo, servicio, infraccion, descripcion, localidad,coordenadas);
 			
 			agregarFinal(comparendo);
+			heap.agregar(comparendo);
 		 }
 	}
 

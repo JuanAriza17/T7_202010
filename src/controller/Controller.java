@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.util.Scanner;
 
+import model.data_structures.IArregloDinamico;
 import model.data_structures.IQueue;
 import model.logic.Comparendo;
 import model.logic.Modelo;
@@ -81,7 +82,17 @@ public class Controller {
 
 				case 2:
 					view.printMessage("--------- \n ");
-					view.printMessage("No se ha implementado el requerimiento.\n");
+					IArregloDinamico<Comparendo>heap=modelo.darHeap().darArreglo();
+					if(heap.darTamano()==0)
+					{
+						view.printMessage("Por favor inicialice la lista.\n");
+						break;
+					}
+					for(int i=0; i<heap.darTamano();++i)
+					{
+						Comparendo actual=heap.darElemento(i);
+						view.printMessage(actual.toString());
+					}
 					break;
 
 				case 3: 

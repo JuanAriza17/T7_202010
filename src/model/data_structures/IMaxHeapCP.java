@@ -41,5 +41,11 @@ public interface IMaxHeapCP<T extends Comparable<T>>
 	 * Método que envía un elemento de la parte inferior a la superior del heap para preservar el orden.
 	 */
 	public void swim(int pPosicion);
+	
+	/**
+	 * Método que retorna el arreglo dinámico que guarda el heap.
+	 * @return Arreglo dinámico del Heap.
+	 */
+	public IArregloDinamico darArreglo();
 
 }

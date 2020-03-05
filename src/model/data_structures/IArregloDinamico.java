@@ -44,4 +44,10 @@ public interface IArregloDinamico<T extends Comparable<T>>
 	 */
 	T eliminar( T dato );
 
+	/**
+	 * Intercambia la posición entre dos elementos del arreglo.
+	 * @param i Posición i.
+	 * @param j Posición j.
+	 */
+	public void intercambiarPosiciones(int i, int j);
 }

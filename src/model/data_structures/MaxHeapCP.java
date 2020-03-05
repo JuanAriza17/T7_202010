@@ -6,12 +6,12 @@ public class MaxHeapCP<T extends Comparable<T>> implements IMaxHeapCP {
 	 * Arreglo dinámico que maneja la cola de prioridad.
 	 */
 	public IArregloDinamico heap;
-	
+
 	/**
 	 * Número de elementos presentes en la cola de prioridad.
 	 */
 	public int numPresentes; 
-	
+
 	/**
 	 * Método constructor de la clase MaxHeapCP.
 	 * @post:-Inicializa el arreglo dinámico que manejará el heap.
@@ -19,10 +19,11 @@ public class MaxHeapCP<T extends Comparable<T>> implements IMaxHeapCP {
 	 */
 	public MaxHeapCP()
 	{
-		numPresentes=0;
 		heap=new ArregloDinamico(100);
+		numPresentes=heap.darTamano();
+		
 	}
-	
+
 	/**
 	 * Método que retorna el número de elementos presentes en el heap de prioridad.
 	 * @return Número de elementos presentes.
@@ -38,10 +39,12 @@ public class MaxHeapCP<T extends Comparable<T>> implements IMaxHeapCP {
 	 */
 	public void agregar(Comparable elemento)
 	{
-		
+		heap.agregar(elemento);
+		int posicionUltimo=heap.darTamano();
+		swim(posicionUltimo);
 	}
 
-	
+
 	/**
 	 * Saca/atiende el elemento máximo en el heap y lo retorna.
 	 * @return Elemento máximo de la cola. Si la cola está vacía retorna null.
@@ -50,7 +53,7 @@ public class MaxHeapCP<T extends Comparable<T>> implements IMaxHeapCP {
 	{
 		return null;
 	}
-	
+
 	/**
 	 * Obtiene el elemento máximo (sin sacarlo del heap).
 	 * @return  Elemento máximo de la cola. Si la cola esta vacía retorna null.
@@ -59,14 +62,14 @@ public class MaxHeapCP<T extends Comparable<T>> implements IMaxHeapCP {
 	{
 		return null;
 	}
-	
+
 	/**
 	 * Retorna si el heap está vacío o no.
 	 * @return True en caso de que este vacía. False en caso contrario.
 	 */
 	public boolean esVacia()
 	{
-		return false;
+		return numPresentes==0?true:false;
 	}
 
 	/**
@@ -74,8 +77,7 @@ public class MaxHeapCP<T extends Comparable<T>> implements IMaxHeapCP {
 	 */
 	public void sink(int pPosicion) 
 	{
-	
-		
+
 	}
 
 	/**
@@ -83,7 +85,34 @@ public class MaxHeapCP<T extends Comparable<T>> implements IMaxHeapCP {
 	 */
 	public void swim(int pPosicion) 
 	{
-	
-		
+		while (pPosicion > 1 && less(pPosicion/2, pPosicion))
+		{
+			heap.intercambiarPosiciones(pPosicion/2, pPosicion);
+			pPosicion = pPosicion/2;
+		}
+	}
+
+	/**
+	 * Método que retorna el arreglo dinámico que guarda el heap.
+	 * @return Arreglo dinámico del Heap.
+	 */
+	public IArregloDinamico darArreglo() 
+	{
+		return heap;
+	}
+
+	/**
+	 * Método que compara
+	 * @param i
+	 * @param j
+	 * @return
+	 */
+	private boolean less(int i, int j)
+	{ 
+		if(heap.darElemento(j)!=null)
+		{
+			return heap.darElemento(i).compareTo(heap.darElemento(j)) < 0; 
+		}
+		return false;
 	}
 }

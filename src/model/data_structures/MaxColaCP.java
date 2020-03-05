@@ -12,6 +12,11 @@ public class MaxColaCP<T extends Comparable<T>> implements IMaxColaCP {
 	 */
 	public int numPresentes; 
 	
+	/**
+	 * Método constructor de la clase MaxHeapCP.
+	 * @post:-Inicializa el arreglo dinámico que manejará la cola de prioridad.
+	 * 		 -Inicializa en cero el número de elementos presentes en la cola de prioridad.
+	 */
 	public MaxColaCP()
 	{
 		numPresentes=0;

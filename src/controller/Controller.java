@@ -54,7 +54,7 @@ public class Controller {
 			{
 				int option = Integer.parseInt(lector.next());				
 				switch(option){
-				case 1:
+				case 0:
 					view.printMessage("--------- \nCargando lista de comparendos");
 					try
 					{
@@ -74,47 +74,17 @@ public class Controller {
 					view.printMessage("\n---------\n" + "Número actual de comparendos en la lista " + modelo.darLongitud()+"\n");	
 					break;
 
+				case 1:
+					view.printMessage("--------- \n ");
+					view.printMessage("No se ha implementado el requerimiento.\n");
+					break;
+
 				case 2:
 					view.printMessage("--------- \n ");
-					c = modelo.copiarComparendos();
-					startTime = System.currentTimeMillis();
-					modelo.shellSort(c);
-					endTime = System.currentTimeMillis();
-					duration = endTime-startTime;
-
-					view.printMessage("Tiempo de ordenamiento: "+duration+ " milisegundos\n");
-					view.printUltimosYPrimeros(c);
-					view.printMessage("Número actual de comparendos en la lista " + modelo.darLongitud() + "\n---------");						
+					view.printMessage("No se ha implementado el requerimiento.\n");
 					break;
 
-				case 3:
-					view.printMessage("--------- \n ");
-					c = modelo.copiarComparendos();
-					startTime = System.currentTimeMillis();
-					modelo.mergeSort(c);
-					endTime = System.currentTimeMillis();
-					duration = endTime-startTime;
-
-					view.printMessage("Tiempo de ordenamiento: "+duration+ " milisegundos\n");
-					view.printUltimosYPrimeros(c);
-					view.printMessage("Número actual de comparendos en la lista " + modelo.darLongitud() + "\n---------");
-					break;
-
-				case 4:
-					view.printMessage("--------- \n ");
-					c = modelo.copiarComparendos();
-					startTime = System.currentTimeMillis();
-					modelo.quickSort(c);
-					endTime = System.currentTimeMillis();
-					duration = endTime-startTime;
-
-					view.printMessage("Tiempo de ordenamiento: "+duration+ " milisegundos\n");
-					view.printUltimosYPrimeros(c);
-					view.printMessage("Número actual de comparendos en la lista " + modelo.darLongitud() + "\n---------");
-					break;
-
-
-				case 5: 
+				case 3: 
 					view.printMessage("--------- \n Hasta pronto !! \n---------"); 
 					lector.close();
 					fin = true;

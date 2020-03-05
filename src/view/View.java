@@ -17,11 +17,10 @@ public class View
 	    
 		public void printMenu()
 		{
-			System.out.println("1. Cargar Comparendos en la Lista.");
-			System.out.println("2. Ordenar los comparendos con el algoritmo ShellSort.");
-			System.out.println("3. Ordenar los comparendos con el algoritmo MergeSort.");
-			System.out.println("4. Ordenar los comparendos con el algoritmo QuickSort.");
-			System.out.println("5. Exit");
+			System.out.println("0. (Requerimiento 00) Cargar Comparendos en la Lista.");
+			System.out.println("1. (Requerimiento 01) Mostrar los  N comparendos que ocurrieron más al norte con MaxColaCP.");
+			System.out.println("2. (Requerimiento 02) Mostrar los  N comparendos que ocurrieron más al norte con MaxHeapCP.");
+			System.out.println("3. Exit");
 			System.out.println("Dar el numero de opcion a resolver, luego oprimir tecla Return: (e.g., 1):");
 		}
 

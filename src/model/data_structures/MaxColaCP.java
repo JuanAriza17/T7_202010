@@ -1,6 +1,6 @@
 package model.data_structures;
 
-public class MaxColaCP<T extends Comparable<T>> implements IMaxColaCP {
+public class MaxColaCP<T extends Comparable<T>> extends Queue implements IMaxColaCP {
 
 	/**
 	 * Arreglo dinámico que maneja la cola de prioridad.

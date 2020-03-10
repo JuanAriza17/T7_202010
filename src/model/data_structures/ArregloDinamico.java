@@ -140,6 +140,14 @@ public class ArregloDinamico<T extends Comparable<T>> implements IArregloDinamic
 		elementos[j]=elemento;
 	}
 	
+	/**
+	 * Método que vuelve el último elemento del tamaño del arreglo más uno en null.
+	 */
+	public void ultimoNull()
+	{
+		elementos[tamanoAct-1]=null;
+	}
+	
 	
 
 }

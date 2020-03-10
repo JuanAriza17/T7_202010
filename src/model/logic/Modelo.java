@@ -197,6 +197,24 @@ public class Modelo {
 	{
 		Ordenamientos.quickSort(a);
 	}
+	
+	
+	public String darMayor()
+	{
+		double valor=0;
+		String mayor="";
+		for(int i=1; i<heap.darArreglo().darTamano()-1; ++i)
+		{
+			Comparendo elemento=(Comparendo) heap.darArreglo().darElemento(i);
+			if(elemento.darLatitud()>valor)
+			{
+				valor=elemento.darLatitud();
+				mayor=elemento.toString();
+			}
+		}
+		return mayor;
+	}
+	
 	/**
 	 * Método que carga los comparendos
 	 * @param ruta Rita archivo con los comparendos
@@ -246,21 +264,4 @@ public class Modelo {
 			heap.agregar(comparendo);
 		 }
 	}
-	
-	private String darMayor(double pComparendo)
-	{
-		double valor=0;
-		String mayor="";
-		for(int i=0; i<heap.darArreglo().darTamano(); ++i)
-		{
-			Comparendo elemento=(Comparendo) heap.darArreglo().darElemento(i);
-			if(elemento.darLatitud()>valor)
-			{
-				valor=elemento.darLatitud();
-				mayor=elemento.toString();
-			}
-		}
-		return mayor;
-	}
-
 }

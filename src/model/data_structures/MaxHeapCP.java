@@ -22,7 +22,7 @@ public class MaxHeapCP<T extends Comparable<T>> implements IMaxHeapCP {
 	{
 		heap=new ArregloDinamico(550000);
 		numPresentes=heap.darTamano();
-		
+
 	}
 
 	/**
@@ -42,7 +42,9 @@ public class MaxHeapCP<T extends Comparable<T>> implements IMaxHeapCP {
 	{
 		heap.agregar(elemento);
 		int posicionUltimo=heap.darTamano()-1;
+		numPresentes++;
 		swim(posicionUltimo);
+		
 	}
 
 
@@ -52,7 +54,12 @@ public class MaxHeapCP<T extends Comparable<T>> implements IMaxHeapCP {
 	 */
 	public T sacarMax()
 	{
-		return null;
+		T mayor = (T) heap.darElemento(1); 
+		heap.intercambiarPosiciones(0, heap.darTamano()-1);; 
+		heap.ultimoNull(); 
+		sink(0); 
+		--numPresentes;
+		return mayor;
 	}
 
 	/**
@@ -61,7 +68,7 @@ public class MaxHeapCP<T extends Comparable<T>> implements IMaxHeapCP {
 	 */
 	public T darMax()
 	{
-		return null;
+		return (T) heap.darElemento(0);
 	}
 
 	/**
@@ -78,7 +85,15 @@ public class MaxHeapCP<T extends Comparable<T>> implements IMaxHeapCP {
 	 */
 	public void sink(int pPosicion) 
 	{
-
+		pPosicion++;
+		while (2*pPosicion <= heap.darTamano()-1)
+		{
+			int j = 2*pPosicion;
+			if (j < heap.darTamano()-1 && less(j, j+1)) j++;
+			if (!less(pPosicion, j)) break;
+			heap.intercambiarPosiciones(pPosicion, j);
+			pPosicion = j;
+		} 
 	}
 
 	/**
@@ -103,7 +118,7 @@ public class MaxHeapCP<T extends Comparable<T>> implements IMaxHeapCP {
 	}
 
 	/**
-	 * Método que compara
+	 * Método que compara por una característica natural de la clase del elemento comparable.
 	 * @param i
 	 * @param j
 	 * @return
@@ -117,4 +132,10 @@ public class MaxHeapCP<T extends Comparable<T>> implements IMaxHeapCP {
 		}
 		return comparador;
 	}
+	
+	
+
+
+
+
 }

@@ -50,4 +50,9 @@ public interface IArregloDinamico<T extends Comparable<T>>
 	 * @param j Posición j.
 	 */
 	public void intercambiarPosiciones(int i, int j);
+	
+	/**
+	 * Método que vuelve el último elemento del tamaño del arreglo más uno en null.
+	 */
+	public void ultimoNull();
 }

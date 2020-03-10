@@ -193,5 +193,4 @@ public class Ordenamientos
 			a[r]= b;
 		}
 	}
-
 }

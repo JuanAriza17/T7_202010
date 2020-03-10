@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.util.Scanner;
 
+import model.data_structures.ArregloDinamico;
 import model.data_structures.IArregloDinamico;
 import model.data_structures.IQueue;
 import model.logic.Comparendo;
@@ -83,24 +84,21 @@ public class Controller {
 				case 2:
 					view.printMessage("--------- \n ");
 					IArregloDinamico<Comparendo>heap=modelo.darHeap().darArreglo();
+					IArregloDinamico<Comparendo>auxiliar=new ArregloDinamico(550000);
 					if(heap.darTamano()==0)
 					{
 						view.printMessage("Por favor inicialice la lista.\n");
 						break;
 					}
+					System.out.println(heap.darElemento(0)+"\n");
 					for(int i=0; i<heap.darTamano();++i)
 					{
-						Comparendo actual=heap.darElemento(i);
-						view.printMessage(actual.toString());
+						Comparendo actual=(Comparendo) modelo.darHeap().sacarMax();
+						auxiliar.agregar(actual);
 					}
+										
 					view.printMessage("\n");
-					view.printMessage(heap.darElemento(1).toString());
-					view.printMessage(heap.darElemento(2).toString());
-					view.printMessage(heap.darElemento(3).toString());
-					view.printMessage(heap.darElemento(4).toString());
-					view.printMessage(heap.darElemento(5).toString());
-					view.printMessage("\n");
-					view.printMessage(heap.);
+					view.printMessage(modelo.darMayor()+"\n");
 					break;
 
 				case 3: 

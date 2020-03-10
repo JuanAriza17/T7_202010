@@ -26,7 +26,7 @@ public class Controller {
 	/**
 	 * Constante con la ruta del archivo que guarda los comparnedos.
 	 */
-	public final static String RUTA = "./data/comparendos_dei_2018.geojson";
+	public final static String RUTA = "./data/comparendos_dei_2018_small.geojson";
 
 
 	/**

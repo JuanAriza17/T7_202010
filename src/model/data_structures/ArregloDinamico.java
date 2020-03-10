@@ -135,7 +135,7 @@ public class ArregloDinamico<T extends Comparable<T>> implements IArregloDinamic
 	 */
 	public void intercambiarPosiciones(int i, int j) 
 	{
-		T elemento=darElemento(i);
+		T elemento=elementos[i];
 		elementos[i]=elementos[j];
 		elementos[j]=elemento;
 	}

@@ -93,6 +93,7 @@ public class Controller {
 						Comparendo actual=heap.darElemento(i);
 						view.printMessage(actual.toString());
 					}
+					view.printMessage("\n");
 					break;
 
 				case 3: 

@@ -85,7 +85,7 @@ public class MaxHeapCP<T extends Comparable<T>> implements IMaxHeapCP {
 	 */
 	public void swim(int pPosicion) 
 	{
-		while (pPosicion > 1 && less(pPosicion/2, pPosicion))
+		while (pPosicion > 0 && less(pPosicion/2, pPosicion))
 		{
 			heap.intercambiarPosiciones(pPosicion/2, pPosicion);
 			pPosicion = pPosicion/2;
@@ -110,7 +110,6 @@ public class MaxHeapCP<T extends Comparable<T>> implements IMaxHeapCP {
 	private boolean less(int i, int j)
 	{ 
 		boolean comparador=false;
-		--i;
 		if(heap.darElemento(j)!=null)
 		{
 			comparador= heap.darElemento(i).compareTo(heap.darElemento(j)) < 0; 

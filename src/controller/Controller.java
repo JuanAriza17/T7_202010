@@ -90,15 +90,23 @@ public class Controller {
 						view.printMessage("Por favor inicialice la lista.\n");
 						break;
 					}
-					System.out.println(heap.darElemento(0)+"\n");
+					
 					for(int i=0; i<heap.darTamano();++i)
 					{
 						Comparendo actual=(Comparendo) modelo.darHeap().sacarMax();
 						auxiliar.agregar(actual);
 					}
+					view.printMessage(Integer.toString(heap.darTamano()));
+					for(int i=heap.darTamano()-2; i>0; --i)
+					{
+						Comparendo actual= (Comparendo) modelo.darHeap().darArreglo().darElemento(i);
+						view.printMessage(actual.toString());
+					}
 										
 					view.printMessage("\n");
 					view.printMessage(modelo.darMayor()+"\n");
+					view.printMessage("\n");
+					System.out.println(modelo.darHeap().darArreglo().darElemento(1)+"\n");
 					break;
 
 				case 3: 

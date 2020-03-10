@@ -145,7 +145,7 @@ public class ArregloDinamico<T extends Comparable<T>> implements IArregloDinamic
 	 */
 	public void ultimoNull()
 	{
-		elementos[tamanoAct-1]=null;
+		elementos[tamanoAct+1]=null;
 	}
 	
 	

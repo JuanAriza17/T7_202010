@@ -57,7 +57,7 @@ public class MaxHeapCP<T extends Comparable<T>> implements IMaxHeapCP {
 		T mayor = (T) heap.darElemento(1); 
 		heap.intercambiarPosiciones(0, heap.darTamano()-1);; 
 		heap.ultimoNull(); 
-		sink(0); 
+		sink(1); 
 		--numPresentes;
 		return mayor;
 	}
@@ -85,11 +85,10 @@ public class MaxHeapCP<T extends Comparable<T>> implements IMaxHeapCP {
 	 */
 	public void sink(int pPosicion) 
 	{
-		pPosicion++;
 		while (2*pPosicion <= heap.darTamano()-1)
 		{
 			int j = 2*pPosicion;
-			if (j < heap.darTamano()-1 && less(j, j+1)) j++;
+			if (j < heap.darTamano() && less(j, j+1)) j++;
 			if (!less(pPosicion, j)) break;
 			heap.intercambiarPosiciones(pPosicion, j);
 			pPosicion = j;

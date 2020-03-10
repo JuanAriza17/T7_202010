@@ -94,6 +94,13 @@ public class Controller {
 						view.printMessage(actual.toString());
 					}
 					view.printMessage("\n");
+					view.printMessage(heap.darElemento(1).toString());
+					view.printMessage(heap.darElemento(2).toString());
+					view.printMessage(heap.darElemento(3).toString());
+					view.printMessage(heap.darElemento(4).toString());
+					view.printMessage(heap.darElemento(5).toString());
+					view.printMessage("\n");
+					view.printMessage(heap.);
 					break;
 
 				case 3: 

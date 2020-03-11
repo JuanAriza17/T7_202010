@@ -28,7 +28,7 @@ public class Controller {
 	/**
 	 * Constante con la ruta del archivo que guarda los comparnedos.
 	 */
-	public final static String RUTA = "./data/comparendos_dei_2018_small.geojson";
+	public final static String RUTA = "./data/comparendos_dei_2018.geojson";
 
 
 	/**
@@ -100,7 +100,11 @@ public class Controller {
 					{
 						view.printMessage("\nNo hay suficientes comparendos en la cola, se imprimieron "+contador+ " comparendos cuando se solicitaron "+valorCopia+".\n");
 					}
-					view.printMessage("\n");
+					else
+					{
+						view.printMessage("\nSe imprimieron "+valor+ " comparendos.\n"); 
+					}
+					view.printMessage("\nNOTA: Los últimos comparendos fueron los que tuvieron mayor prioridad en la cola.\n");
 					
 					break;
 
@@ -114,8 +118,9 @@ public class Controller {
 						view.printMessage("Por favor inicialice la lista.\n");
 						break;
 					}
-
+					view.printMessage("Por favor ingrese el número de comparendos que desea visualizar:\n ");
 					int valor2= Integer.parseInt(lector.next());
+					int valor2Copia=valor2;
 
 					for(int i=0; i<heap.darTamano();++i)
 					{
@@ -124,9 +129,9 @@ public class Controller {
 					}
 					
 					boolean excedeTamano=false;
-					if(valor2>heap.darTamano())
+					if(valor2>heap.darTamano()-1)
 					{
-						valor2=heap.darTamano();
+						valor2=heap.darTamano()-1;
 						excedeTamano=true;
 					}
 					for(int i=valor2; i>0; --i)
@@ -136,7 +141,7 @@ public class Controller {
 					}
 					if(excedeTamano==true)
 					{
-						view.printMessage("\nNo hay suficientes comparendos en la cola, se imprimieron "+heap.darTamano()+ " comparendos cuando se solicitaron "+valor2+".\n");
+						view.printMessage("\nNo hay suficientes comparendos en la cola, se imprimieron "+heap.darTamano()+ " comparendos cuando se solicitaron "+valor2Copia+".\n");
 					}
 					
 					view.printMessage("\n");

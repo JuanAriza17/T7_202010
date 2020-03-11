@@ -43,15 +43,6 @@ public class MaxColaCP<T extends Comparable<T>> implements IMaxColaCP {
 	}
 
 	/**
-	 * Método que ordena la cola de prioridad según el comparador.
-	 */
-	public void ordenarCola()
-	{
-		Comparable[] a=cola.darElementos().darArreglo();
-		Ordenamientos.mergeSort(a);
-	}
-	
-	/**
 	 * Saca/atiende el elemento máximo en la cola y lo retorna.
 	 * @return Elemento máximo de la cola. Si la cola está vacía retorna null.
 	 */
@@ -79,12 +70,20 @@ public class MaxColaCP<T extends Comparable<T>> implements IMaxColaCP {
 	}
 	
 	/**
+	 * Retorna el arreglo con la lista de la cola.
+	 * @return Arreglo con la lista de la cola.
+	 */
+	public Comparable[] darListaCola()
+	{
+		return cola.darElementos().darArreglo();
+	}
+	
+	/**
 	 * Retorna la cola.
 	 * @return cola.
 	 */
-	public Queue darListaCola()
+	public IQueue darCola()
 	{
-		ordenarCola();
-		return (Queue) cola;
+		return (Queue)cola;
 	}
 }

@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Queue;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -108,12 +109,24 @@ public class Modelo {
 	}
 	
 	/**
+	 * Retorna la cola de prioridad.
+	 * @return Cola de prioridad.
+	 */
+	public Queue<Comparendo> darColaPrioridad()
+	{
+		return (Queue) cola.darCola();
+	}
+	
+	/**
 	 * Método que retorna el heap de comparendos.
 	 * @return Heap de comparendos.
 	 */
-	public IMaxColaCP darCola()
+	public Comparable[] darArregloCola()
 	{
-		return cola;
+		Comparendo.ComparadorXLatitud compXLatitud = new Comparendo.ComparadorXLatitud();
+		Comparable[] arreglo = cola.darListaCola();
+		Ordenamientos.mergeSort(arreglo, compXLatitud);
+		return arreglo;
 	}
 	
 	/**

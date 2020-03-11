@@ -1,5 +1,6 @@
 package model.logic;
 
+import java.util.Comparator;
 import java.util.Date;
 
 public class Comparendo implements Comparable<Comparendo>
@@ -8,7 +9,7 @@ public class Comparendo implements Comparable<Comparendo>
 	 * ID comparendo
 	 */
 	private int id;
-	
+
 	/**
 	 * Fecha comparendo
 	 */
@@ -18,32 +19,32 @@ public class Comparendo implements Comparable<Comparendo>
 	 * Vehiculo comparedo
 	 */
 	private String vehiculo;
-	
+
 	/**
 	 * Servicio comparendo
 	 */
 	private String servicio;
-	
+
 	/**
 	 * Infracción comparendo
 	 */
 	private String infraccion;
-	
+
 	/**
 	 * Descripcion infraccion
 	 */
 	private String des_infrac;
-	
+
 	/**
 	 * Localidad comparendo
 	 */
 	private String localidad;
-	
+
 	/**
 	 * Coordenadas comparendo
 	 */
 	private double[] coordenadas;
-	
+
 	/**
 	 * Metodo constructor para crear un comparendo
 	 * @param pId ID comparendo
@@ -66,7 +67,7 @@ public class Comparendo implements Comparable<Comparendo>
 		localidad = pLocalidad;
 		coordenadas = pCoordenadas;
 	}
-	
+
 	/**
 	 * Da el ID del comparendo
 	 * @return ID comparendo
@@ -130,7 +131,7 @@ public class Comparendo implements Comparable<Comparendo>
 	public double[] darCoordenadas() {
 		return coordenadas;
 	}
-	
+
 	/**
 	 * Da la longitud de la coordenada
 	 * @return longitud
@@ -139,7 +140,7 @@ public class Comparendo implements Comparable<Comparendo>
 	{
 		return coordenadas[0];
 	}
-	
+
 	/**
 	 * Da latitud de la coordenada
 	 * @return latitud
@@ -153,17 +154,17 @@ public class Comparendo implements Comparable<Comparendo>
 	 * Compara los comparendos por latitud.
 	 */
 	public int compareTo(Comparendo o) {
-		
+
 		int compare = 0;
-		
+
 		if(coordenadas!=null && o.darCoordenadas()!=null)
 		{
 			compare = (darLatitud()>o.darLatitud())?1:(darLatitud()<o.darLatitud())?-1:0;
 		}
-		
+
 		return compare;
 	}
-	
+
 	@Override
 	/**
 	 * Da la informacion del comparendo
@@ -173,5 +174,12 @@ public class Comparendo implements Comparable<Comparendo>
 		return  id+", "+fecha+", "+infraccion+", "+vehiculo+", "+servicio+", "+localidad +", "+"LATITUD: "+Double.toString(this.darLatitud())+".";
 	}
 
-	
+	public static class ComparadorXLatitud implements Comparator<Comparendo>{
+
+		public int compare(Comparendo c1, Comparendo c2){
+			return (c1.darLatitud()>c2.darLatitud())?1:(c1.darLatitud()<c2.darLatitud())?-1:0;
+		}
+	}
+
+
 }

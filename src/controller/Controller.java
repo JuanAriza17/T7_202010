@@ -79,23 +79,29 @@ public class Controller {
 
 				case 1:
 					view.printMessage("--------- \n ");
-					IQueue<Comparendo>cola=modelo.darCola().darListaCola();
+					Comparable[] cola=modelo.darArregloCola();
 					view.printMessage("Por favor ingrese el número de comparendos que desea visualizar:\n ");
 					int valor= Integer.parseInt(lector.next());
+					int valorCopia=valor;
+					boolean excedeTamanoCola=false;
 					int contador=0;
-					NodoLista<Comparendo>nodo=cola.darElementos().darPrimero();
-					while(nodo!=null && contador<valor)
+					if(valor>cola.length)
 					{
-						view.printMessage(nodo.darElemento().toString());
-						contador++;
-						nodo=nodo.darSiguiente();
+						valor=cola.length;
+						excedeTamanoCola=true;
 					}
-					if(contador<valor)
+					for(int i=0; i<valor;++i)
 					{
-						view.printMessage("\nNo hay suficientes comparendos en la cola, se imprimieron "+contador+ " cuando se solicitaron "+valor+".\n");
+						Comparendo actual= (Comparendo) cola[i];
+						view.printMessage(actual.toString());
+						contador++;
+					}
+					if(excedeTamanoCola==true)
+					{
+						view.printMessage("\nNo hay suficientes comparendos en la cola, se imprimieron "+contador+ " comparendos cuando se solicitaron "+valorCopia+".\n");
 					}
 					view.printMessage("\n");
-
+					
 					break;
 
 				case 2:
@@ -116,13 +122,23 @@ public class Controller {
 						Comparendo actual=(Comparendo) modelo.darHeap().sacarMax();
 						auxiliar.agregar(actual);
 					}
-
+					
+					boolean excedeTamano=false;
+					if(valor2>heap.darTamano())
+					{
+						valor2=heap.darTamano();
+						excedeTamano=true;
+					}
 					for(int i=valor2; i>0; --i)
 					{
 						Comparendo actual= (Comparendo) modelo.darHeap().darArreglo().darElemento(i);
 						view.printMessage(actual.toString());
 					}
-
+					if(excedeTamano==true)
+					{
+						view.printMessage("\nNo hay suficientes comparendos en la cola, se imprimieron "+heap.darTamano()+ " comparendos cuando se solicitaron "+valor2+".\n");
+					}
+					
 					view.printMessage("\n");
 					view.printMessage(modelo.darMayor()+"\n");
 					view.printMessage("\n");

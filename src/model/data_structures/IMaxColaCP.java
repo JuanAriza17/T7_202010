@@ -33,9 +33,15 @@ public interface IMaxColaCP<T extends Comparable<T>>
 	public boolean esVacia();
 	
 	/**
+	 * Retorna el arreglo con la lista de la cola.
+	 * @return Arreglo con la lista de la cola.
+	 */
+	public Comparable[] darListaCola();
+	
+	/**
 	 * Retorna la cola.
 	 * @return cola.
 	 */
-	public Queue darListaCola();
+	public IQueue darCola();
 	
 }

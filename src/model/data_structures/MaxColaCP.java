@@ -1,5 +1,7 @@
 package model.data_structures;
 
+import model.logic.Ordenamientos;
+
 public class MaxColaCP<T extends Comparable<T>> implements IMaxColaCP {
 
 	/**
@@ -37,36 +39,17 @@ public class MaxColaCP<T extends Comparable<T>> implements IMaxColaCP {
 	 */
 	public void agregar(Comparable elemento)
 	{
-		NodoLista<T> agregado= new NodoLista(elemento);
-		NodoLista<T> actual=cola.darElementos().darPrimero();
-		NodoLista<T> temporal=null;
-		if(actual==null)
-		{
-			cola.darElementos().agregar(elemento);
-			++numPresentes;
-			return;
-		}
-		while(actual!=null)
-		{
-			if((actual!=null && actual.darSiguiente()!=null) && (elemento.compareTo(actual.darElemento())>0) && (elemento.compareTo(actual.darSiguiente().darElemento())<0) )
-			{
-				temporal=actual.darSiguiente();
-				actual.cambiarSiguiente(agregado);
-				agregado.cambiarAnterior(actual);
-				agregado.cambiarSiguiente(temporal);
-				temporal.cambiarAnterior(agregado);
-				++numPresentes;
-				return;
-			}
-			else if(actual.darSiguiente()==null)
-			{
-				cola.darElementos().agregarFinal(elemento);
-				++numPresentes;
-				return;
-			}
-		}
+		cola.enqueue(elemento);
 	}
 
+	/**
+	 * Método que ordena la cola de prioridad según el comparador.
+	 */
+	public void ordenarCola()
+	{
+		Comparable[] a=cola.darElementos().darArreglo();
+		Ordenamientos.mergeSort(a);
+	}
 	
 	/**
 	 * Saca/atiende el elemento máximo en la cola y lo retorna.
@@ -93,5 +76,15 @@ public class MaxColaCP<T extends Comparable<T>> implements IMaxColaCP {
 	public boolean esVacia()
 	{
 		return cola.isEmpty();
+	}
+	
+	/**
+	 * Retorna la cola.
+	 * @return cola.
+	 */
+	public Queue darListaCola()
+	{
+		ordenarCola();
+		return (Queue) cola;
 	}
 }

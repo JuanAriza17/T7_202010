@@ -6,7 +6,9 @@ import java.util.Scanner;
 
 import model.data_structures.ArregloDinamico;
 import model.data_structures.IArregloDinamico;
+import model.data_structures.IListaEncadenada;
 import model.data_structures.IQueue;
+import model.data_structures.NodoLista;
 import model.logic.Comparendo;
 import model.logic.Modelo;
 import view.View;
@@ -42,7 +44,6 @@ public class Controller {
 	public void run() 
 	{
 		Scanner lector = new Scanner(System.in);
-		IQueue<Comparendo> cola = null;
 		Comparable[] c = null;
 		boolean fin = false;
 		long startTime = 0;
@@ -78,31 +79,50 @@ public class Controller {
 
 				case 1:
 					view.printMessage("--------- \n ");
-					view.printMessage("No se ha implementado el requerimiento.\n");
+					IQueue<Comparendo>cola=modelo.darCola().darListaCola();
+					view.printMessage("Por favor ingrese el número de comparendos que desea visualizar:\n ");
+					int valor= Integer.parseInt(lector.next());
+					int contador=0;
+					NodoLista<Comparendo>nodo=cola.darElementos().darPrimero();
+					while(nodo!=null && contador<valor)
+					{
+						view.printMessage(nodo.darElemento().toString());
+						contador++;
+						nodo=nodo.darSiguiente();
+					}
+					if(contador<valor)
+					{
+						view.printMessage("\nNo hay suficientes comparendos en la cola, se imprimieron "+contador+ " cuando se solicitaron "+valor+".\n");
+					}
+					view.printMessage("\n");
+
 					break;
 
 				case 2:
 					view.printMessage("--------- \n ");
 					IArregloDinamico<Comparendo>heap=modelo.darHeap().darArreglo();
 					IArregloDinamico<Comparendo>auxiliar=new ArregloDinamico(550000);
+
 					if(heap.darTamano()==0)
 					{
 						view.printMessage("Por favor inicialice la lista.\n");
 						break;
 					}
-					
+
+					int valor2= Integer.parseInt(lector.next());
+
 					for(int i=0; i<heap.darTamano();++i)
 					{
 						Comparendo actual=(Comparendo) modelo.darHeap().sacarMax();
 						auxiliar.agregar(actual);
 					}
-					view.printMessage(Integer.toString(heap.darTamano()));
-					for(int i=heap.darTamano()-2; i>0; --i)
+
+					for(int i=valor2; i>0; --i)
 					{
 						Comparendo actual= (Comparendo) modelo.darHeap().darArreglo().darElemento(i);
 						view.printMessage(actual.toString());
 					}
-										
+
 					view.printMessage("\n");
 					view.printMessage(modelo.darMayor()+"\n");
 					view.printMessage("\n");
@@ -122,7 +142,7 @@ public class Controller {
 			}
 			catch(NumberFormatException e)
 			{
-				view.printMessage("Por favor ingrese un número");
+				view.printMessage("Por favor ingrese un número.\n");
 			}
 
 

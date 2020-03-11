@@ -31,4 +31,11 @@ public interface IMaxColaCP<T extends Comparable<T>>
 	 * @return True en caso de que este vacía. False en caso contrario.
 	 */
 	public boolean esVacia();
+	
+	/**
+	 * Retorna la cola.
+	 * @return cola.
+	 */
+	public Queue darListaCola();
+	
 }

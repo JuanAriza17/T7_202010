@@ -14,8 +14,10 @@ import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 
 import model.data_structures.IListaEncadenada;
+import model.data_structures.IMaxColaCP;
 import model.data_structures.IMaxHeapCP;
 import model.data_structures.ListaEncadenada;
+import model.data_structures.MaxColaCP;
 import model.data_structures.MaxHeapCP;
 
 
@@ -34,7 +36,12 @@ public class Modelo {
 	 * Heap de comparendos.
 	 */
 	private IMaxHeapCP<Comparendo>heap;
-		
+	
+	/**
+	 * Cola de prioridad de comparendos. 
+	 */
+	private IMaxColaCP<Comparendo>cola;
+	
 	/**
 	 * Constructor del modelo del mundo con capacidad predefinida.
 	 * @post: Inicializa la lista de comparendos vacía.
@@ -43,6 +50,7 @@ public class Modelo {
 	{
 		listaComparendos = new ListaEncadenada<Comparendo>();
 		heap=new MaxHeapCP();
+		cola=new MaxColaCP();
 	}
 
 	/**
@@ -81,9 +89,31 @@ public class Modelo {
 		heap.agregar(dato);
 	}
 	
+	/**
+	 * Método que retorna el heap de comparendos.
+	 * @return Heap de comparendos.
+	 */
 	public IMaxHeapCP darHeap()
 	{
 		return heap;
+	}
+	
+	/**
+	 * Agrega los comparendos al heap.
+	 * @param dato Comparendo que llega por parámetro.
+	 */
+	public void agregarCola(Comparendo dato)
+	{
+		cola.agregar(dato);
+	}
+	
+	/**
+	 * Método que retorna el heap de comparendos.
+	 * @return Heap de comparendos.
+	 */
+	public IMaxColaCP darCola()
+	{
+		return cola;
 	}
 	
 	/**
@@ -261,7 +291,9 @@ public class Modelo {
 			Comparendo comparendo = new Comparendo(id, fecha, vehiculo, servicio, infraccion, descripcion, localidad,coordenadas);
 			
 			agregarFinal(comparendo);
-			heap.agregar(comparendo);
+			agregarHeap(comparendo);
+			agregarCola(comparendo);
+			
 		 }
 	}
 }

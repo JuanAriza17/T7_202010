@@ -9,6 +9,7 @@ import model.data_structures.IArregloDinamico;
 import model.data_structures.IListaEncadenada;
 import model.data_structures.IMaxColaCP;
 import model.data_structures.IQueue;
+import model.data_structures.MaxColaCP;
 import model.data_structures.NodoLista;
 import model.logic.Comparendo;
 import model.logic.Modelo;
@@ -51,6 +52,8 @@ public class Controller {
 		long endTime = 0;
 		long duration = 0;
 		int id = 0;
+		boolean primeraCopiaCola=false;
+		IMaxColaCP<Comparendo> colaCopia;
 
 		while( !fin ){
 			view.printMenu();
@@ -80,21 +83,21 @@ public class Controller {
 
 				case 1:
 					view.printMessage("--------- \n ");
-					IMaxColaCP cola=modelo.darColaPrioridad();
-					IMaxColaCP colaCopia=cola;
+					IMaxColaCP<Comparendo> cola=modelo.darColaPrioridad();
+					colaCopia=cola;
 					view.printMessage("Por favor ingrese el número de comparendos que desea visualizar:\n ");
 					int valor= Integer.parseInt(lector.next());
 					int valorCopia=valor;
 					boolean excedeTamanoCola=false;
 					int contador=0;
-					if(valor>cola.darNumElementos())
+					if(valor>colaCopia.darNumElementos())
 					{
-						valor=cola.darNumElementos();
+						valor=colaCopia.darNumElementos();
 						excedeTamanoCola=true;
 					}
-					for(int i=0; i<valor;++i)
+					for(int i=valor; i>0;--i)
 					{
-						view.printMessage(cola.sacarMax().toString());
+						view.printMessage(colaCopia.sacarMax().toString());
 						contador++;
 					}
 					if(excedeTamanoCola==true)
@@ -105,8 +108,8 @@ public class Controller {
 					{
 						view.printMessage("\nSe imprimieron "+valor+ " comparendos.\n"); 
 					}
-					view.printMessage("\nNOTA: Los últimos comparendos fueron los que tuvieron mayor prioridad en la cola.\n");
-					cola=colaCopia;
+					view.printMessage("\nNOTA: Los últimos comparendos fueron los que tuvieron menor prioridad en la cola.\n");
+					colaCopia=cola;
 					break;
 
 				case 2:

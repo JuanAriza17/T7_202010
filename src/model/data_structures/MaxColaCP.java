@@ -49,7 +49,8 @@ public class MaxColaCP<T extends Comparable<T>> implements IMaxColaCP {
 	 */
 	public T sacarMax()
 	{
-		return (T) cola.dequeue();
+		return (T) cola.darElementos().eliminarUltimo();
+		//return (T) cola.dequeue();
 	}
 	
 	/**

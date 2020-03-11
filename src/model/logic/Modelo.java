@@ -112,21 +112,18 @@ public class Modelo {
 	 * Retorna la cola de prioridad.
 	 * @return Cola de prioridad.
 	 */
-	public Queue<Comparendo> darColaPrioridad()
-	{
-		return (Queue) cola.darCola();
-	}
-	
-	/**
-	 * Método que retorna el heap de comparendos.
-	 * @return Heap de comparendos.
-	 */
-	public Comparable[] darArregloCola()
+	public MaxColaCP<Comparendo> darColaPrioridad()
 	{
 		Comparendo.ComparadorXLatitud compXLatitud = new Comparendo.ComparadorXLatitud();
+		IMaxColaCP auxiliar=new MaxColaCP();
 		Comparable[] arreglo = cola.darListaCola();
 		Ordenamientos.mergeSort(arreglo, compXLatitud);
-		return arreglo;
+		for(Comparable actual:arreglo)
+		{
+			auxiliar.agregar(actual);
+		}
+		cola=auxiliar;
+		return (MaxColaCP<Comparendo>) cola;
 	}
 	
 	/**

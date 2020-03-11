@@ -40,6 +40,7 @@ public class MaxColaCP<T extends Comparable<T>> implements IMaxColaCP {
 	public void agregar(Comparable elemento)
 	{
 		cola.enqueue(elemento);
+		numPresentes++;
 	}
 
 	/**

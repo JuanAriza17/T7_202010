@@ -81,5 +81,14 @@ public class Queue<T extends Comparable<T>> implements IQueue<T>
 		
 		return mensaje;
 	}
+	
+	/**
+	 * Método que retorna la lista de elementos.
+	 * @return Lista de elementos.
+	 */
+	public ListaEncadenada darElementos()
+	{
+		return (ListaEncadenada) elementos;
+	}
 
 }

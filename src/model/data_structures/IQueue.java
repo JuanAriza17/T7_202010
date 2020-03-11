@@ -38,6 +38,12 @@ public interface IQueue<T extends Comparable<T>>
 	 * @return Mensaje con los elementos de la cola.
 	 */
 	String darLista();
+	
+	/**
+	 * Método que retorna la lista de elementos.
+	 * @return Lista de elementos.
+	 */
+	public IListaEncadenada darElementos();
 
 
 }

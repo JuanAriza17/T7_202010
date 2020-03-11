@@ -1,11 +1,11 @@
 package model.data_structures;
 
-public class MaxColaCP<T extends Comparable<T>> extends Queue implements IMaxColaCP {
+public class MaxColaCP<T extends Comparable<T>> implements IMaxColaCP {
 
 	/**
 	 * Arreglo dinámico que maneja la cola de prioridad.
 	 */
-	public IArregloDinamico cola;
+	public IQueue cola;
 	
 	/**
 	 * Número de elementos presentes en la cola de prioridad.
@@ -20,7 +20,7 @@ public class MaxColaCP<T extends Comparable<T>> extends Queue implements IMaxCol
 	public MaxColaCP()
 	{
 		numPresentes=0;
-		cola=new ArregloDinamico(100);
+		cola=new Queue();
 	}
 	/**
 	 * Método que retorna el número de elementos presentes en la cola de prioridad.
@@ -37,7 +37,34 @@ public class MaxColaCP<T extends Comparable<T>> extends Queue implements IMaxCol
 	 */
 	public void agregar(Comparable elemento)
 	{
-		
+		NodoLista<T> agregado= new NodoLista(elemento);
+		NodoLista<T> actual=cola.darElementos().darPrimero();
+		NodoLista<T> temporal=null;
+		if(actual==null)
+		{
+			cola.darElementos().agregar(elemento);
+			++numPresentes;
+			return;
+		}
+		while(actual!=null)
+		{
+			if((actual!=null && actual.darSiguiente()!=null) && (elemento.compareTo(actual.darElemento())>0) && (elemento.compareTo(actual.darSiguiente().darElemento())<0) )
+			{
+				temporal=actual.darSiguiente();
+				actual.cambiarSiguiente(agregado);
+				agregado.cambiarAnterior(actual);
+				agregado.cambiarSiguiente(temporal);
+				temporal.cambiarAnterior(agregado);
+				++numPresentes;
+				return;
+			}
+			else if(actual.darSiguiente()==null)
+			{
+				cola.darElementos().agregarFinal(elemento);
+				++numPresentes;
+				return;
+			}
+		}
 	}
 
 	
@@ -47,7 +74,7 @@ public class MaxColaCP<T extends Comparable<T>> extends Queue implements IMaxCol
 	 */
 	public T sacarMax()
 	{
-		return null;
+		return (T) cola.dequeue();
 	}
 	
 	/**
@@ -56,7 +83,7 @@ public class MaxColaCP<T extends Comparable<T>> extends Queue implements IMaxCol
 	 */
 	public T darMax()
 	{
-		return null;
+		return (T) cola.peek();
 	}
 	
 	/**
@@ -65,6 +92,6 @@ public class MaxColaCP<T extends Comparable<T>> extends Queue implements IMaxCol
 	 */
 	public boolean esVacia()
 	{
-		return false;
+		return cola.isEmpty();
 	}
 }

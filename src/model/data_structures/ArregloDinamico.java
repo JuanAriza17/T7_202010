@@ -128,26 +128,8 @@ public class ArregloDinamico<T extends Comparable<T>> implements IArregloDinamic
 		return elemento;
 	}
 
-	/**
-	 * Intercambia la posición entre dos elementos del arreglo.
-	 * @param i Posición i.
-	 * @param j Posición j.
-	 */
-	public void intercambiarPosiciones(int i, int j) 
-	{
-		T elemento=elementos[i];
-		elementos[i]=elementos[j];
-		elementos[j]=elemento;
-	}
 	
-	/**
-	 * Método que vuelve el último elemento del tamaño del arreglo más uno en null.
-	 */
-	public void ultimoNull()
-	{
-		elementos[tamanoAct-1]=null;
-		--tamanoAct;
-	}
+
 	
 	
 

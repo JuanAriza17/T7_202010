@@ -86,9 +86,14 @@ public class Queue<T extends Comparable<T>> implements IQueue<T>
 	 * Método que retorna la lista de elementos.
 	 * @return Lista de elementos.
 	 */
-	public ListaEncadenada darElementos()
+	public IListaEncadenada<T> darElementos()
 	{
-		return (ListaEncadenada) elementos;
+		return  elementos;
+	}
+	
+	public void enqueueOrden(T elemento)
+	{
+		elementos.agregarOrden(elemento);
 	}
 
 }

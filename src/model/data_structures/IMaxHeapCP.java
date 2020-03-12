@@ -46,6 +46,6 @@ public interface IMaxHeapCP<T extends Comparable<T>>
 	 * Método que retorna el arreglo dinámico que guarda el heap.
 	 * @return Arreglo dinámico del Heap.
 	 */
-	public IArregloDinamico darArreglo();
+	public T[] darArreglo();
 
 }

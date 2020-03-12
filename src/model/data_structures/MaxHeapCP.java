@@ -1,12 +1,12 @@
 package model.data_structures;
 
 
-public class MaxHeapCP<T extends Comparable<T>> implements IMaxHeapCP {
+public class MaxHeapCP<T extends Comparable<T>> implements IMaxHeapCP<T> {
 
 	/**
 	 * Arreglo dinámico que maneja la cola de prioridad.
 	 */
-	public IArregloDinamico heap;
+	public T[] heap;
 
 	/**
 	 * Número de elementos presentes en la cola de prioridad.
@@ -18,10 +18,10 @@ public class MaxHeapCP<T extends Comparable<T>> implements IMaxHeapCP {
 	 * @post:-Inicializa el arreglo dinámico que manejará el heap.
 	 * 		 -Inicializa en cero el número de elementos presentes en el heap.
 	 */
-	public MaxHeapCP()
+	public MaxHeapCP(int n)
 	{
-		heap=new ArregloDinamico(550000);
-		numPresentes=heap.darTamano();
+		heap=(T[]) new Comparable[n+1];
+		numPresentes=0;
 
 	}
 
@@ -38,13 +38,10 @@ public class MaxHeapCP<T extends Comparable<T>> implements IMaxHeapCP {
 	 * Método que agrega un elemento en el heap de prioridad. Utiliza el comparador natural de la clase T.
 	 * @param elemento Elemento que será agregado a la cola de prioridad.
 	 */
-	public void agregar(Comparable elemento)
+	public void agregar(T elemento)
 	{
-		heap.agregar(elemento);
-		int posicionUltimo=heap.darTamano()-1;
-		numPresentes++;
-		swim(posicionUltimo);
-
+		heap[++numPresentes]=elemento;
+		swim(numPresentes);
 	}
 
 
@@ -54,11 +51,10 @@ public class MaxHeapCP<T extends Comparable<T>> implements IMaxHeapCP {
 	 */
 	public T sacarMax()
 	{
-		T mayor = (T) heap.darElemento(1); 
-		heap.intercambiarPosiciones(0, heap.darTamano()-1);; 
-		heap.ultimoNull(); 
+		T mayor = heap[1]; 
+		intercambiarPosiciones(1, numPresentes--);
+		heap[numPresentes+1]=null;
 		sink(1); 
-		--numPresentes;
 		return mayor;
 	}
 
@@ -68,7 +64,7 @@ public class MaxHeapCP<T extends Comparable<T>> implements IMaxHeapCP {
 	 */
 	public T darMax()
 	{
-		return (T) heap.darElemento(0);
+		return heap[1];
 	}
 
 	/**
@@ -77,7 +73,7 @@ public class MaxHeapCP<T extends Comparable<T>> implements IMaxHeapCP {
 	 */
 	public boolean esVacia()
 	{
-		return numPresentes==0?true:false;
+		return numPresentes==0;
 	}
 
 	/**
@@ -85,10 +81,10 @@ public class MaxHeapCP<T extends Comparable<T>> implements IMaxHeapCP {
 	 */
 	public void sink(int pPosicion) 
 	{
-		while (2*pPosicion <= heap.darTamano())
+		while (2*pPosicion <= numPresentes)
 		{
 			int j = 2*pPosicion;
-			if (j < heap.darTamano() && less(j, j+1))
+			if (j < numPresentes && less(j, j+1))
 			{
 				j++;
 			}
@@ -96,6 +92,7 @@ public class MaxHeapCP<T extends Comparable<T>> implements IMaxHeapCP {
 			{
 				break;
 			}
+			intercambiarPosiciones(pPosicion, j);
 			
 			pPosicion = j;
 		} 
@@ -106,9 +103,9 @@ public class MaxHeapCP<T extends Comparable<T>> implements IMaxHeapCP {
 	 */
 	public void swim(int pPosicion) 
 	{
-		while (pPosicion >= 0 && less(pPosicion/2, pPosicion))
+		while (pPosicion > 1 && less(pPosicion/2, pPosicion))
 		{
-			heap.intercambiarPosiciones(pPosicion/2, pPosicion);
+			intercambiarPosiciones(pPosicion/2, pPosicion);
 			pPosicion = pPosicion/2;
 		}
 	}
@@ -117,7 +114,7 @@ public class MaxHeapCP<T extends Comparable<T>> implements IMaxHeapCP {
 	 * Método que retorna el arreglo dinámico que guarda el heap.
 	 * @return Arreglo dinámico del Heap.
 	 */
-	public IArregloDinamico darArreglo() 
+	public T[] darArreglo() 
 	{
 		return heap;
 	}
@@ -131,14 +128,24 @@ public class MaxHeapCP<T extends Comparable<T>> implements IMaxHeapCP {
 	private boolean less(int i, int j)
 	{ 
 		boolean comparador=false;
-		if(heap.darElemento(j)!=null)
+		if(heap[j]!=null)
 		{
-			comparador= heap.darElemento(i).compareTo(heap.darElemento(j)) < 0; 
+			comparador= heap[i].compareTo(heap[j]) < 0; 
 		}
 		return comparador;
 	}
 
-
+	/**
+	 * Intercambia la posición entre dos elementos del arreglo.
+	 * @param i Posición i.
+	 * @param j Posición j.
+	 */
+	public void intercambiarPosiciones(int i, int j) 
+	{
+		T elemento=heap[i];
+		heap[i]=heap[j];
+		heap[j]=elemento;
+	}
 
 
 

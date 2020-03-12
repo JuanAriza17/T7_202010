@@ -368,22 +368,49 @@ public class ListaEncadenada<T extends Comparable<T>> implements IListaEncadenad
 		return comparable;
 	}
 	
-	/**
-	 * Método que invierte la lista actual.
-	 */
-	public void invertirLista()
+	public void agregarOrden(T elemento)
 	{
-		int stop=darLongitud();
-		while(stop>0)
+		boolean respuesta = false;
+		NodoLista<T> nuevo = new NodoLista<T>(elemento);
+		
+		if(primero==null)
 		{
-			NodoLista<T> temporal=ultimo.darAnterior();
-			ultimo.cambiarSiguiente(primero);
-			primero.cambiarAnterior(ultimo);
-			(ultimo.darAnterior()).cambiarSiguiente(null);
-			ultimo.cambiarAnterior(null);
-			primero=ultimo;
-			ultimo=temporal;
-			stop--;
+			primero = nuevo;
+			ultimo = primero;
+			respuesta = true;
 		}
+		else if(elemento.compareTo(primero.darElemento())>0)
+		{
+			nuevo.cambiarSiguiente(primero);
+			primero.cambiarAnterior(nuevo);
+			primero=nuevo;
+			respuesta = true;
+		}
+		else if(elemento.compareTo(primero.darElemento())<0)
+		{
+			NodoLista<T> ant = primero;
+			NodoLista<T> act = primero.darSiguiente();
+			while(act!=null && elemento.compareTo(act.darElemento())<0)
+			{
+				ant = act;
+				act = act.darSiguiente();
+			}
+			
+			if(act==null||elemento.compareTo(act.darElemento())>0)
+			{
+				ant.cambiarSiguiente(nuevo);
+				nuevo.cambiarAnterior(ant);
+				nuevo.cambiarSiguiente(act);
+				if(act==null)
+					ultimo = nuevo;
+				else
+					act.cambiarAnterior(nuevo);
+				respuesta = true;
+			}
+			
+		}
+		
+		if(respuesta)
+			longitud++;
 	}
 }

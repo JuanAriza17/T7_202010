@@ -2,12 +2,12 @@ package model.data_structures;
 
 import model.logic.Ordenamientos;
 
-public class MaxColaCP<T extends Comparable<T>> implements IMaxColaCP {
+public class MaxColaCP<T extends Comparable<T>> implements IMaxColaCP<T> {
 
 	/**
 	 * Arreglo dinámico que maneja la cola de prioridad.
 	 */
-	public IQueue cola;
+	public Queue<T> cola;
 	
 	/**
 	 * Número de elementos presentes en la cola de prioridad.
@@ -22,7 +22,7 @@ public class MaxColaCP<T extends Comparable<T>> implements IMaxColaCP {
 	public MaxColaCP()
 	{
 		numPresentes=0;
-		cola=new Queue();
+		cola=new Queue<T>();
 	}
 	/**
 	 * Método que retorna el número de elementos presentes en la cola de prioridad.
@@ -37,9 +37,9 @@ public class MaxColaCP<T extends Comparable<T>> implements IMaxColaCP {
 	 * Método que agrega un elemento a la cola de prioridad. Utiliza el comparador natural de la clase T.
 	 * @param elemento Elemento que será agregado a la cola de prioridad.
 	 */
-	public void agregar(Comparable elemento)
+	public void agregar(T elemento)
 	{
-		cola.enqueue(elemento);
+		cola.enqueueOrden(elemento);
 		numPresentes++;
 	}
 
@@ -49,8 +49,7 @@ public class MaxColaCP<T extends Comparable<T>> implements IMaxColaCP {
 	 */
 	public T sacarMax()
 	{
-		return (T) cola.darElementos().eliminarUltimo();
-		//return (T) cola.dequeue();
+		return cola.dequeue();
 	}
 	
 	/**
@@ -59,7 +58,7 @@ public class MaxColaCP<T extends Comparable<T>> implements IMaxColaCP {
 	 */
 	public T darMax()
 	{
-		return (T) cola.peek();
+		return  cola.peek();
 	}
 	
 	/**
@@ -84,8 +83,8 @@ public class MaxColaCP<T extends Comparable<T>> implements IMaxColaCP {
 	 * Retorna la cola.
 	 * @return cola.
 	 */
-	public IQueue darCola()
+	public IQueue<T> darCola()
 	{
-		return (Queue)cola;
+		return cola;
 	}
 }

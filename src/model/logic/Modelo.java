@@ -6,7 +6,6 @@ import java.io.FileReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Queue;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -14,6 +13,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 
+import model.data_structures.ArregloDinamico;
+import model.data_structures.IArregloDinamico;
 import model.data_structures.IListaEncadenada;
 import model.data_structures.IMaxColaCP;
 import model.data_structures.IMaxHeapCP;
@@ -44,14 +45,23 @@ public class Modelo {
 	private IMaxColaCP<Comparendo>cola;
 	
 	/**
+	 * Arreglo con las muestras
+	 */
+	private Comparendo[] muestras;
+	
+	private Comparable[] copia;
+	
+	/**
 	 * Constructor del modelo del mundo con capacidad predefinida.
 	 * @post: Inicializa la lista de comparendos vacía.
 	 */
 	public Modelo()
 	{
 		listaComparendos = new ListaEncadenada<Comparendo>();
-		heap=new MaxHeapCP();
-		cola=new MaxColaCP();
+		heap=new MaxHeapCP<Comparendo>(1);
+		cola=new MaxColaCP<Comparendo>();
+		muestras = new Comparendo[5];
+		copia = new Comparable[5];
 	}
 
 	/**
@@ -94,10 +104,21 @@ public class Modelo {
 	 * Método que retorna el heap de comparendos.
 	 * @return Heap de comparendos.
 	 */
-	public IMaxHeapCP darHeap()
+	public IMaxHeapCP<Comparendo> darHeap()
 	{
 		return heap;
 	}
+	
+	/**
+	 * Método que retorna la cola de comparendos.
+	 * @return Cola de comparendos
+	 */
+	public IMaxColaCP<Comparendo> darCola()
+	{
+		return cola;
+	}
+	
+	
 	
 	/**
 	 * Agrega los comparendos al heap.
@@ -106,24 +127,6 @@ public class Modelo {
 	public void agregarCola(Comparendo dato)
 	{
 		cola.agregar(dato);
-	}
-	
-	/**
-	 * Retorna la cola de prioridad.
-	 * @return Cola de prioridad.
-	 */
-	public MaxColaCP<Comparendo> darColaPrioridad()
-	{
-		Comparendo.ComparadorXLatitud compXLatitud = new Comparendo.ComparadorXLatitud();
-		IMaxColaCP auxiliar=new MaxColaCP();
-		Comparable[] arreglo = cola.darListaCola();
-		Ordenamientos.mergeSort(arreglo, compXLatitud);
-		for(Comparable actual:arreglo)
-		{
-			auxiliar.agregar(actual);
-		}
-		cola=auxiliar;
-		return (MaxColaCP<Comparendo>) cola;
 	}
 	
 	/**
@@ -206,46 +209,93 @@ public class Modelo {
 	 * Método que retorna el arreglo de elementos. Dicho arreglo retornado será comparable.
 	 * @return Arreglo de elementos que es comparable.
 	 */
-	public Comparable[] copiarComparendos()
+	public void copiarComparendos()
 	{		
-		return listaComparendos.darArreglo();
+		copia = listaComparendos.darArreglo();
+	}
+	
+	public void generarMuestra(int n)
+	{
+		copiarComparendos();
+		muestras = new Comparendo[n];
+		Ordenamientos.shuffle(copia);
+		
+		int i =0;
+		while(i<n)
+		{
+			Comparendo c = (Comparendo) copia[i];
+			muestras[i]=c;
+			++i;
+		}
+		
 	}
 	
 	/**
-	 * Método que ordena por el algoritmo de ShellSort el arreglo comparable que llega por parámetro.
-	 * @param a Arreglo de elementos que es comparable y llega por parámetro.
+	 * Carga la muestra en la cola
 	 */
-	public void shellSort(Comparable[] a)
+	public void cargarCola()
 	{
-		Ordenamientos.shellSort(a);
+		for (int i = 0; i < muestras.length; ++i) 
+		{
+			cola.agregar(muestras[i]);
+		}
 	}
 	
 	/**
-	 * Método que ordena por el algoritmo de MergeSort el arreglo comparable que llega por parámetro.
-	 * @param a Arreglo de elementos que es comparable y llega por parámetro.
+	 * Carga la muestra en el heap
 	 */
-	public void mergeSort(Comparable[] a)
+	public void cargarHeap()
 	{
-		Ordenamientos.mergeSort(a);
+		heap = new MaxHeapCP<Comparendo>(muestras.length);
+		for (int i = 0; i < muestras.length; ++i)
+		{
+			heap.agregar(muestras[i]);
+			
+		}
+		
 	}
 	
-	/**
-	 * Método que ordena por el algoritmo de QuickSort el arreglo comparable que llega por parámetro.
-	 * @param a Arreglo de elementos que es comparable y llega por parámetro.
-	 */
-	public void quickSort(Comparable[] a)
+	public IListaEncadenada<Comparendo> colaComparendosMasAlNorte(int n)
 	{
-		Ordenamientos.quickSort(a);
+		IListaEncadenada<Comparendo> lista= new ListaEncadenada<Comparendo>();
+		
+		int i =0;
+		while(i<n)
+		{
+			Comparendo c = cola.sacarMax();
+			lista.agregarFinal(c);
+			++i;
+		}
+		
+		return lista;
 	}
+	
+	public IListaEncadenada<Comparendo> heapComparendosMasAlNorte(int n)
+	{
+		IListaEncadenada<Comparendo> lista= new ListaEncadenada<Comparendo>();
+		
+		int i =0;
+		while(i<n)
+		{
+			Comparendo c = heap.sacarMax();
+			lista.agregarFinal(c);
+			++i;
+		}
+		
+		return lista;
+	}
+	
+	
+	
 	
 	
 	public String darMayor()
 	{
 		double valor=0;
 		String mayor="";
-		for(int i=1; i<heap.darArreglo().darTamano()-1; ++i)
+		for(int i=1; i<heap.darNumElementos(); ++i)
 		{
-			Comparendo elemento=(Comparendo) heap.darArreglo().darElemento(i);
+			Comparendo elemento=(Comparendo) heap.darArreglo()[i];
 			if(elemento.darLatitud()>valor)
 			{
 				valor=elemento.darLatitud();
@@ -301,9 +351,6 @@ public class Modelo {
 			Comparendo comparendo = new Comparendo(id, fecha, vehiculo, servicio, infraccion, descripcion, localidad,coordenadas);
 			
 			agregarFinal(comparendo);
-			agregarHeap(comparendo);
-			agregarCola(comparendo);
-			
 		 }
 	}
 }

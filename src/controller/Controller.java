@@ -30,7 +30,7 @@ public class Controller {
 	/**
 	 * Constante con la ruta del archivo que guarda los comparnedos.
 	 */
-	public final static String RUTA = "./data/comparendos_dei_2018.geojson";
+	public final static String RUTA = "./data/Comparendos_DEI_2018_Bogotá_D.C.geojson";
 
 
 	/**
@@ -46,12 +46,12 @@ public class Controller {
 	public void run() 
 	{
 		Scanner lector = new Scanner(System.in);
-		Comparable[] c = null;
 		boolean fin = false;
 		long startTime = 0;
 		long endTime = 0;
 		long duration = 0;
 		int id = 0;
+		int valor = 0;
 		boolean primeraCopiaCola=false;
 		IMaxColaCP<Comparendo> colaCopia;
 
@@ -80,81 +80,119 @@ public class Controller {
 					}
 					view.printMessage("\n---------\n" + "Número actual de comparendos en la lista " + modelo.darLongitud()+"\n");	
 					break;
-
-				case 1:
-					view.printMessage("--------- \n ");
-					IMaxColaCP<Comparendo> cola=modelo.darColaPrioridad();
-					colaCopia=cola;
-					view.printMessage("Por favor ingrese el número de comparendos que desea visualizar:\n ");
-					int valor= Integer.parseInt(lector.next());
-					int valorCopia=valor;
-					boolean excedeTamanoCola=false;
-					int contador=0;
-					if(valor>colaCopia.darNumElementos())
+					
+				case 1: 
+					
+					try
 					{
-						valor=colaCopia.darNumElementos();
-						excedeTamanoCola=true;
+						if(modelo.darLongitud()==0)
+						{
+							view.printMessage("Ingrese el número de comparendos aleatorios que desea agregar a la MaxColaCP y a la MaxHeapCP");
+							int n = Integer.parseInt(lector.next());
+							modelo.generarMuestra(n);
+							startTime = System.currentTimeMillis();
+							endTime = System.currentTimeMillis();
+							
+							duration = endTime-startTime;
+							
+							String mCola = "Tiempo de carga en MaxColaCP: "+duration+" milisegundos";
+							
+							startTime = System.currentTimeMillis();
+							modelo.cargarHeap();
+							endTime = System.currentTimeMillis();
+							
+							duration = endTime-startTime;
+							
+							String mHeap = "Tiempo de carga en MaxHeapCP: "+duration+" milisegundos";
+							
+							if(modelo.darHeap().darNumElementos()<n)
+							{
+								System.out.println("La muestra fue demasiado grande por lo que solo se cargaron "+modelo.darHeap().darNumElementos()+" comparendos.");
+							}
+							else
+							{
+								System.out.println("Se cargaron "+n+" comparendos a la cola y al heap");
+							}
+							
+							view.printMessage(mCola+"\n"+mHeap+"\n");
+						}
+						else
+							view.printMessage("No ha inicializado la lista.");
 					}
-					for(int i=valor; i>0;--i)
+					catch(NumberFormatException e)
 					{
-						view.printMessage(colaCopia.sacarMax().toString());
-						contador++;
+						view.printMessage("Ingrese un número válido.");
 					}
-					if(excedeTamanoCola==true)
-					{
-						view.printMessage("\nNo hay suficientes comparendos en la cola, se imprimieron "+contador+ " comparendos cuando se solicitaron "+valorCopia+".\n");
-					}
-					else
-					{
-						view.printMessage("\nSe imprimieron "+valor+ " comparendos.\n"); 
-					}
-					view.printMessage("\nNOTA: Los últimos comparendos fueron los que tuvieron menor prioridad en la cola.\n");
-					colaCopia=cola;
+					
 					break;
 
 				case 2:
 					view.printMessage("--------- \n ");
-					IArregloDinamico<Comparendo>heap=modelo.darHeap().darArreglo();
-					IArregloDinamico<Comparendo>auxiliar=new ArregloDinamico(550000);
-
-					if(heap.darTamano()==0)
-					{
-						view.printMessage("Por favor inicialice la lista.\n");
-						break;
-					}
 					view.printMessage("Por favor ingrese el número de comparendos que desea visualizar:\n ");
-					int valor2= Integer.parseInt(lector.next());
-					int valor2Copia=valor2;
+					valor= Integer.parseInt(lector.next());
+					
+					try
+					{
+						if(modelo.darCola().darNumElementos()!=0)
+						{
+							IListaEncadenada<Comparendo> lista=modelo.colaComparendosMasAlNorte(valor);
+							int numero = lista.darLongitud();
+							
+							
+							view.printLista(lista);
+							if(numero<valor )
+								view.printMessage("\nNo hay suficientes comparendos en la cola, se imprimieron "+lista.darLongitud()+ " comparendos cuando se solicitaron "+valor+".\n");
+							else
+								view.printMessage("\nSe imprimieron "+valor+ " comparendos.\n"); 
+					
+							view.printMessage("\nNOTA: Los últimos comparendos fueron los que tuvieron menor prioridad en la cola.\n");
 
-					for(int i=0; i<heap.darTamano();++i)
-					{
-						Comparendo actual=(Comparendo) modelo.darHeap().sacarMax();
-						auxiliar.agregar(actual);
+						}
+						else
+							view.printMessage("No ha inicializado la MaxColaCP ni el MaxHeapCP, por favor ejecute 1.");
+
 					}
-					
-					boolean excedeTamano=false;
-					if(valor2>heap.darTamano()-1)
+					catch(NumberFormatException e)
 					{
-						valor2=heap.darTamano()-1;
-						excedeTamano=true;
+						view.printMessage("Ingrese un número válido.");
 					}
-					for(int i=valor2; i>0; --i)
-					{
-						Comparendo actual= (Comparendo) modelo.darHeap().darArreglo().darElemento(i);
-						view.printMessage(actual.toString());
-					}
-					if(excedeTamano==true)
-					{
-						view.printMessage("\nNo hay suficientes comparendos en la cola, se imprimieron "+heap.darTamano()+ " comparendos cuando se solicitaron "+valor2Copia+".\n");
-					}
-					
-					view.printMessage("\n");
-					view.printMessage(modelo.darMayor()+"\n");
-					view.printMessage("\n");
-					System.out.println(modelo.darHeap().darArreglo().darElemento(1)+"\n");
 					break;
 
-				case 3: 
+				case 3:
+					view.printMessage("--------- \n ");
+					view.printMessage("Por favor ingrese el número de comparendos que desea visualizar:\n ");
+					valor= Integer.parseInt(lector.next());
+					
+					try
+					{
+						if(modelo.darHeap().darNumElementos()==0)
+						{
+							IListaEncadenada<Comparendo> lista=modelo.heapComparendosMasAlNorte(valor);
+							int numero = lista.darLongitud();
+							
+							view.printLista(lista);
+							
+							if(numero<valor)
+							{
+								view.printMessage("\nNo hay suficientes comparendos en la cola, se imprimieron "+lista.darLongitud()+ " comparendos cuando se solicitaron "+valor+".\n");
+							}
+							else
+							{
+								view.printMessage("\nSe imprimieron "+valor+ " comparendos.\n"); 
+							}
+							view.printMessage("\nNOTA: Los últimos comparendos fueron los que tuvieron menor prioridad en la cola.\n");
+						}
+						else
+							view.printMessage("No ha inicializado la MaxColaCP ni el MaxHeapCP, por favor ejecute 1.");
+							
+					}
+					catch(NumberFormatException e)
+					{
+						view.printMessage("Ingrese un número válido.");
+					}
+					break;
+
+				case 4: 
 					view.printMessage("--------- \n Hasta pronto !! \n---------"); 
 					lector.close();
 					fin = true;

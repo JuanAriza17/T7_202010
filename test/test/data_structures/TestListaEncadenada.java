@@ -8,9 +8,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
-import jdk.nashorn.internal.runtime.ListAdapter;
 import model.data_structures.ListaEncadenada;
-import model.data_structures.NodoLista;
 import model.logic.Comparendo;
 
 public class TestListaEncadenada 

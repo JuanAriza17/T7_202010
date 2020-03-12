@@ -1,13 +1,14 @@
 package test.data_structures;
 
-import model.data_structures.ArregloDinamico;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import com.sun.xml.internal.ws.policy.spi.AssertionCreationException;
+import model.data_structures.ArregloDinamico;
 
 public class TestArregloDinamico {
 

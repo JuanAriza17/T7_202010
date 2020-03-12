@@ -171,14 +171,7 @@ public class Comparendo implements Comparable<Comparendo>
 	 */
 	public String toString()
 	{
-		return  id+", "+fecha+", "+infraccion+", "+vehiculo+", "+servicio+", "+localidad +", "+"LATITUD: "+Double.toString(this.darLatitud())+".";
-	}
-
-	public static class ComparadorXLatitud implements Comparator<Comparendo>{
-
-		public int compare(Comparendo c1, Comparendo c2){
-			return (c1.darLatitud()>c2.darLatitud())?1:(c1.darLatitud()<c2.darLatitud())?-1:0;
-		}
+		return  id+", "+vehiculo+","+"LATITUD: "+darLatitud()+"LONGITUD"+darLongitud();
 	}
 
 

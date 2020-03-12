@@ -3,6 +3,11 @@ package model.data_structures;
 
 public class MaxHeapCP<T extends Comparable<T>> implements IMaxHeapCP<T> {
 
+	//ACLARACIÓN PREVIA:
+	//Los métodos utilizados para la implementación de esta clase fueron tomados
+	//textualmente del libro guía del curso (Algorithms 4th). 
+	//Se da entonces crédito total a los autores del libro y sus algoritmos.
+	
 	/**
 	 * Arreglo dinámico que maneja la cola de prioridad.
 	 */

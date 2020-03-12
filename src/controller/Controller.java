@@ -87,7 +87,7 @@ public class Controller {
 					{
 						if(modelo.darLongitud()!=0)
 						{
-							view.printMessage("Ingrese el número de comparendos aleatorios que desea agregar a la MaxColaCP y a la MaxHeapCP");
+							view.printMessage("\nIngrese el número de comparendos aleatorios que desea agregar a la MaxColaCP y a la MaxHeapCP:");
 							int n = Integer.parseInt(lector.next());
 							modelo.generarMuestra(n);
 							startTime = System.currentTimeMillis();
@@ -171,7 +171,7 @@ public class Controller {
 					view.printMessage("--------- \n ");
 					view.printMessage("Por favor ingrese el número de comparendos que desea visualizar:\n ");
 					valor= Integer.parseInt(lector.next());
-					view.printMessage("Ingrese los vehiculos que le interesan, de la forma Vehiculo1,Vehiculo2,..,Vehiculon");
+					view.printMessage("Ingrese los vehiculos que le interesan, de la forma: Vehiculo1,Vehiculo2,..,VehiculoN.\nTenga cuidado de no dejar espacios entre los tipos de vehículos.\n");
 					String vehiculos1 = lector.next();
 					
 					try

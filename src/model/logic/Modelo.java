@@ -269,11 +269,11 @@ public class Modelo {
 			
 			boolean esta = false;
 			
-			for (int j = 0; j < veh.length; j++)
+			for (int j = 0; j < veh.length&&!esta; j++)
 			{
 				String v= c.darVehiculo();
 				
-				if(v.equalsIgnoreCase(veh[j]))
+				if(v.equalsIgnoreCase(veh[j].trim()))
 					esta = true;
 			}
 			if(esta)
@@ -301,11 +301,11 @@ public class Modelo {
 			
 			boolean esta = false;
 			
-			for (int j = 0; j < veh.length; j++)
+			for (int j = 0; j < veh.length&&!esta; j++)
 			{
 				String v= c.darVehiculo();
 				
-				if(v.equalsIgnoreCase(veh[j]))
+				if(v.equalsIgnoreCase(veh[j].trim()))
 					esta = true;
 			}
 			if(esta)

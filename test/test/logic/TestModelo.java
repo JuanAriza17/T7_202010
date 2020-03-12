@@ -29,6 +29,18 @@ public class TestModelo {
 	public final static String RUTA = "./data/comparendos_dei_2018_small.geojson";
 
 	/**
+	 * Método que maneja las pruebas de coordenadas.
+	 * @return Arreglo de tamaño fijo double que maneja las coordenadas ingresadas por parámetro.
+	 */
+	public double[] coordenadas(double pLongitud, double pLatitud)
+	{
+		double[] coordenadas=new double[2];
+		coordenadas[0]=pLongitud;
+		coordenadas[1]=pLatitud;
+		return coordenadas;
+	}
+	
+	/**
 	 * Escenario 1
 	 */
 	@Before
@@ -55,7 +67,7 @@ public class TestModelo {
 		modelo = new Modelo();
 		for (int i = 0; i < 10; i++) 
 		{
-			modelo.agregar(new Comparendo(i, null, "", "", "", "", "", null));
+			modelo.agregar(new Comparendo(i, null, "", "", "", "", "", coordenadas(i,i)));
 		}
 	}
 
@@ -153,7 +165,6 @@ public class TestModelo {
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
 			assertEquals(0, modelo.darLongitud());
 		}
 
@@ -162,7 +173,7 @@ public class TestModelo {
 		assertEquals(10, modelo.darLongitud());
 
 		assertNotNull("No debería ser null", modelo.buscar(new Comparendo(1, null, "", "", "", "", "", null)));
-		assertNull("Debería ser null", modelo.buscar(new Comparendo(2000, null, "", "", "", "", "", null)));
+		assertNull("Debería ser null", modelo.buscar(new Comparendo(2000, null, "", "", "", "", "", coordenadas(-1,-1))));
 
 		assertTrue("Debería retornar el comparento con el ID 1 pero retorna el comparendo con ID "+modelo.buscar(new Comparendo(1, null, "", "", "", "", "", null)).darId()+".",modelo.buscar(new Comparendo(1, null, "", "", "", "", "", null)).compareTo(new Comparendo(1, null, "", "", "", "", "", null))==0);
 
@@ -212,7 +223,7 @@ public class TestModelo {
 		}
 		catch(Exception e)
 		{
-			assertEquals(20, modelo.darLongitud());
+			assertEquals(0, modelo.darLongitud());
 		}
 
 

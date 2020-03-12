@@ -171,7 +171,7 @@ public class Comparendo implements Comparable<Comparendo>
 	 */
 	public String toString()
 	{
-		return  id+", "+vehiculo+","+"LATITUD: "+darLatitud()+"LONGITUD"+darLongitud();
+		return  id+", "+vehiculo+", LATITUD: "+darLatitud()+" LONGITUD: "+darLongitud();
 	}
 
 

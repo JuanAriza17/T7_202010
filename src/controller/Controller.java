@@ -91,19 +91,20 @@ public class Controller {
 							int n = Integer.parseInt(lector.next());
 							modelo.generarMuestra(n);
 							startTime = System.currentTimeMillis();
-							endTime = System.currentTimeMillis();
-							
-							duration = endTime-startTime;
-							
-							String mCola = "Tiempo de carga en MaxColaCP: "+duration+" milisegundos";
-							
-							startTime = System.currentTimeMillis();
 							modelo.cargarHeap();
 							endTime = System.currentTimeMillis();
 							
 							duration = endTime-startTime;
 							
 							String mHeap = "Tiempo de carga en MaxHeapCP: "+duration+" milisegundos";
+
+							startTime = System.currentTimeMillis();
+							modelo.cargarCola();
+							endTime = System.currentTimeMillis();
+							
+							duration = endTime-startTime;
+							String mCola = "Tiempo de carga en MaxColaCP: "+duration+" milisegundos";
+
 							
 							if(modelo.darHeap().darNumElementos()<n)
 							{
@@ -130,16 +131,24 @@ public class Controller {
 					view.printMessage("--------- \n ");
 					view.printMessage("Por favor ingrese el número de comparendos que desea visualizar:\n ");
 					valor= Integer.parseInt(lector.next());
+					view.printMessage("Ingrese los vehiculos que le interesan, de la forma Vehiculo1,Vehiculo2,..,Vehiculon");
+					String vehiculos = lector.next();
 					
 					try
 					{
 						if(modelo.darCola().darNumElementos()!=0)
 						{
-							IListaEncadenada<Comparendo> lista=modelo.colaComparendosMasAlNorte(valor);
-							int numero = lista.darLongitud();
+							startTime = System.currentTimeMillis();
+							IListaEncadenada<Comparendo> lista=modelo.colaComparendosMasAlNorte(valor,vehiculos);
+							endTime = System.currentTimeMillis();
 							
+							duration=endTime-startTime;
+							
+							int numero = lista.darLongitud();
+									
 							
 							view.printLista(lista);
+							view.printMessage("\n\n Tiempo: "+duration+" milisegundos.");
 							if(numero<valor )
 								view.printMessage("\nNo hay suficientes comparendos en la cola, se imprimieron "+lista.darLongitud()+ " comparendos cuando se solicitaron "+valor+".\n");
 							else
@@ -162,16 +171,22 @@ public class Controller {
 					view.printMessage("--------- \n ");
 					view.printMessage("Por favor ingrese el número de comparendos que desea visualizar:\n ");
 					valor= Integer.parseInt(lector.next());
+					view.printMessage("Ingrese los vehiculos que le interesan, de la forma Vehiculo1,Vehiculo2,..,Vehiculon");
+					String vehiculos1 = lector.next();
 					
 					try
 					{
 						if(modelo.darHeap().darNumElementos()!=0)
 						{
-							IListaEncadenada<Comparendo> lista=modelo.heapComparendosMasAlNorte(valor);
+							startTime = System.currentTimeMillis();
+							IListaEncadenada<Comparendo> lista=modelo.heapComparendosMasAlNorte(valor,vehiculos1);
+							endTime = System.currentTimeMillis();
 							int numero = lista.darLongitud();
 							
+							duration = endTime-startTime;
 							view.printLista(lista);
-							
+							view.printMessage("\n\n Tiempo: "+duration+" milisegundos.");
+
 							if(numero<valor)
 							{
 								view.printMessage("\nNo hay suficientes comparendos en la cola, se imprimieron "+lista.darLongitud()+ " comparendos cuando se solicitaron "+valor+".\n");

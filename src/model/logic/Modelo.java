@@ -255,31 +255,64 @@ public class Modelo {
 		
 	}
 	
-	public IListaEncadenada<Comparendo> colaComparendosMasAlNorte(int n)
+	public IListaEncadenada<Comparendo> colaComparendosMasAlNorte(int n,String vehiculos)
 	{
 		IListaEncadenada<Comparendo> lista= new ListaEncadenada<Comparendo>();
-		
+		String[] veh = vehiculos.split(",");
 		int i =0;
+		
 		while(i<n)
 		{
 			Comparendo c = cola.sacarMax();
-			lista.agregarFinal(c);
-			++i;
+			if(c==null)
+				break;
+			
+			boolean esta = false;
+			
+			for (int j = 0; j < veh.length; j++)
+			{
+				String v= c.darVehiculo();
+				
+				if(v.equalsIgnoreCase(veh[j]))
+					esta = true;
+			}
+			if(esta)
+			{
+				lista.agregarFinal(c);
+				++i;
+			}
+
 		}
 		
 		return lista;
 	}
 	
-	public IListaEncadenada<Comparendo> heapComparendosMasAlNorte(int n)
+	public IListaEncadenada<Comparendo> heapComparendosMasAlNorte(int n,String vehiculos)
 	{
 		IListaEncadenada<Comparendo> lista= new ListaEncadenada<Comparendo>();
-		
+		String[] veh = vehiculos.split(",");
+
 		int i =0;
 		while(i<n)
 		{
 			Comparendo c = heap.sacarMax();
-			lista.agregarFinal(c);
-			++i;
+			if(c==null)
+				break;
+			
+			boolean esta = false;
+			
+			for (int j = 0; j < veh.length; j++)
+			{
+				String v= c.darVehiculo();
+				
+				if(v.equalsIgnoreCase(veh[j]))
+					esta = true;
+			}
+			if(esta)
+			{
+				lista.agregarFinal(c);
+				++i;
+			}
 		}
 		
 		return lista;

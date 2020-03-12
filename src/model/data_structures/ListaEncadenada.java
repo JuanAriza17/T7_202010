@@ -50,14 +50,14 @@ public class ListaEncadenada<T extends Comparable<T>> implements IListaEncadenad
 			ultimo.cambiarSiguiente(nuevo);
 			nuevo.cambiarAnterior(ultimo);
 			ultimo = nuevo;
-			longitud++;
 		}
 		else
 		{
 			primero = nuevo;
 			ultimo = primero;
-			longitud++;
 		}
+		longitud++;
+
 	}
 
 	/**

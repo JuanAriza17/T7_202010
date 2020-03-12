@@ -85,7 +85,7 @@ public class Controller {
 					
 					try
 					{
-						if(modelo.darLongitud()==0)
+						if(modelo.darLongitud()!=0)
 						{
 							view.printMessage("Ingrese el número de comparendos aleatorios que desea agregar a la MaxColaCP y a la MaxHeapCP");
 							int n = Integer.parseInt(lector.next());
@@ -165,7 +165,7 @@ public class Controller {
 					
 					try
 					{
-						if(modelo.darHeap().darNumElementos()==0)
+						if(modelo.darHeap().darNumElementos()!=0)
 						{
 							IListaEncadenada<Comparendo> lista=modelo.heapComparendosMasAlNorte(valor);
 							int numero = lista.darLongitud();

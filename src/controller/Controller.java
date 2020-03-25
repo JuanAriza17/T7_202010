@@ -167,47 +167,7 @@ public class Controller {
 					}
 					break;
 
-				case 3:
-					view.printMessage("--------- \n ");
-					view.printMessage("Por favor ingrese el número de comparendos que desea visualizar:\n ");
-					valor= Integer.parseInt(lector.next());
-					view.printMessage("Ingrese los vehiculos que le interesan, de la forma: Vehiculo1,Vehiculo2,..,VehiculoN.\nTenga cuidado de no dejar espacios entre los tipos de vehículos.\n");
-					String vehiculos1 = lector.next();
-					
-					try
-					{
-						if(modelo.darHeap().darNumElementos()!=0)
-						{
-							startTime = System.currentTimeMillis();
-							IListaEncadenada<Comparendo> lista=modelo.heapComparendosMasAlNorte(valor,vehiculos1);
-							endTime = System.currentTimeMillis();
-							int numero = lista.darLongitud();
-							
-							duration = endTime-startTime;
-							view.printLista(lista);
-							view.printMessage("\n\n Tiempo: "+duration+" milisegundos.");
-
-							if(numero<valor)
-							{
-								view.printMessage("\nNo hay suficientes comparendos en la cola, se imprimieron "+lista.darLongitud()+ " comparendos cuando se solicitaron "+valor+".\n");
-							}
-							else
-							{
-								view.printMessage("\nSe imprimieron "+valor+ " comparendos.\n"); 
-							}
-							view.printMessage("\nNOTA: Los últimos comparendos fueron los que tuvieron menor prioridad en la cola.\n");
-						}
-						else
-							view.printMessage("No ha inicializado la MaxColaCP ni el MaxHeapCP, por favor ejecute 1.");
-							
-					}
-					catch(NumberFormatException e)
-					{
-						view.printMessage("Ingrese un número válido.");
-					}
-					break;
-
-				case 4: 
+				case 3: 
 					view.printMessage("--------- \n Hasta pronto !! \n---------"); 
 					lector.close();
 					fin = true;

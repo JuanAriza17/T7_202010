@@ -91,7 +91,7 @@ public class HashLinearProbing<K extends Comparable<K>, V extends Comparable<V>>
 	 * @param pValue Valor que será agregado o reemplazado. pValue no puede ser null.
 	 */
 	public void putInSet(K pKey, V pValue) {
-		if(n/m>FACTOR_CARGA_MAX)
+		if(n/m>=FACTOR_CARGA_MAX)
 		{
 			rehash(nextPrime(2*m));
 		}
@@ -115,7 +115,7 @@ public class HashLinearProbing<K extends Comparable<K>, V extends Comparable<V>>
 	}
 	
 	public void put(K pKey, ListaEncadenada<V> pValue) {
-		if(n/m>FACTOR_CARGA_MAX)
+		if(n/m>=FACTOR_CARGA_MAX)
 		{
 			rehash(nextPrime(2*m));
 		}

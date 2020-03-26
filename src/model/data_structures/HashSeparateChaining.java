@@ -70,7 +70,7 @@ public class HashSeparateChaining<K extends Comparable<K>, V extends Comparable<
 	 */
 	public void putInSet(K pKey, V pValue) 
 	{
-		if(n/m>FACTOR_CARGA_MAX)
+		if(n/m>=FACTOR_CARGA_MAX)
 		{
 			rehash(nextPrime(2*m));
 		}
@@ -97,7 +97,7 @@ public class HashSeparateChaining<K extends Comparable<K>, V extends Comparable<
 
 	public void put(K pKey, ListaEncadenada<V> pValue) 
 	{
-		if(n/m>FACTOR_CARGA_MAX)
+		if(n/m>=FACTOR_CARGA_MAX)
 		{
 			rehash(nextPrime(2*m));
 		}

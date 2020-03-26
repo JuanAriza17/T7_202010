@@ -165,6 +165,7 @@ public class Controller {
 
 				default: 
 					view.printMessage("--------- \n Opción Invalida !! \n---------");
+					fin=true;
 					break;
 				}
 			}
@@ -175,5 +176,6 @@ public class Controller {
 
 
 		}
+		view.printMessage("--------- \nGracias! Vuelva pronto!");
 	}	
 }

@@ -2,6 +2,11 @@ package model.data_structures;
 
 import java.util.Iterator;
 
+//ACLARACIÓN PREVIA: La autoría de gran parte de estos métodos y algoritmos se encuentra completamente dada
+//A los autores del libro de Algorithms 4th edition. Principalmente nos basamos en el capítulo 3.4 del mismo
+//tablas de Hash. Además, se implementaron algoritmos de otras secciones del libro.
+
+//El algoritmo de nextPrime(int) fue sacado del foro stack.overflow.
 public class HashLinearProbing<K extends Comparable<K>, V extends Comparable<V>> implements IHashTable<K,V>
 {
 	/**
@@ -30,6 +35,9 @@ public class HashLinearProbing<K extends Comparable<K>, V extends Comparable<V>>
 	 */
 	private ListaEncadenada<V>[] values;
 	
+	/**
+	 * Factor de carga máximo.
+	 */
 	public static double FACTOR_CARGA_MAX = 0.75;
 
 	/**
@@ -45,6 +53,9 @@ public class HashLinearProbing<K extends Comparable<K>, V extends Comparable<V>>
 		contador = 0;
 	}
 
+	/**
+	 * Contador del número de rehashes
+	 */
 	public int darNumeroRehashes()
 	{
 		return contador;
@@ -114,6 +125,11 @@ public class HashLinearProbing<K extends Comparable<K>, V extends Comparable<V>>
 
 	}
 	
+	/**
+	 * Método que agrega la llave y la cadena de valores.
+	 * @param pKey Llave que será agregada.
+	 * @param pValue Cadena de valores que será agregada.
+	 */
 	public void put(K pKey, ListaEncadenada<V> pValue) {
 		if(n/m>=FACTOR_CARGA_MAX)
 		{
@@ -173,7 +189,6 @@ public class HashLinearProbing<K extends Comparable<K>, V extends Comparable<V>>
 		{
 			K keyToRedo=keys[i];
 			ListaEncadenada<V> valueToRedo=values[i];
-			--n;
 			put(keyToRedo,valueToRedo);
 			i=(i+1)%m;
 		}
@@ -237,6 +252,11 @@ public class HashLinearProbing<K extends Comparable<K>, V extends Comparable<V>>
 		return getSet(key) != null; 
 	}
 	
+	/**
+	 * Método que busca números primos para ser enviados al tamaño de la tabla de hash para mayor eficiencia en el algoritmo.
+	 * @param pm Valor del rango del primo.
+	 * @return Número primo más cercano.
+	 */
 	public int nextPrime(int pm)
 	{
 		int pn = pm*2;

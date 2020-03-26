@@ -2,6 +2,11 @@ package model.data_structures;
 
 import java.util.Iterator;
 
+//ACLARACIÓN PREVIA: La autoría de gran parte de estos métodos y algoritmos se encuentra completamente dada
+//A los autores del libro de Algorithms 4th edition. Principalmente nos basamos en el capítulo 3.4 del mismo
+//tablas de Hash. Además, se implementaron algoritmos de otras secciones del libro.
+
+//El algoritmo de nextPrime(int) fue sacado del foro stack.overflow.
 public class HashSeparateChaining<K extends Comparable<K>, V extends Comparable<V>> implements IHashTable<K,V>{
 
 	/**
@@ -14,12 +19,25 @@ public class HashSeparateChaining<K extends Comparable<K>, V extends Comparable<
 	 */
 	private int m;
 	
+	/**
+	 * Nodo de la clase
+	 */
 	private Node[] st;
 	
+	/**
+	 * Factor de carga
+	 */
 	public static double FACTOR_CARGA_MAX = 5.0;
 
+	/**
+	 * Contador de rehashes
+	 */
 	private int contador;
 	
+	/**
+	 * Método constructor. Inicializa los pares en 0, el tamaño según llega por parámetro, el contador en 0 e inicializa la tabla.
+	 * @param tamano
+	 */
     public HashSeparateChaining(int tamano) 
     {
     	n=0;
@@ -28,18 +46,46 @@ public class HashSeparateChaining<K extends Comparable<K>, V extends Comparable<
     	st= new HashSeparateChaining.Node[tamano];
 	}
 	
+    /**
+     * Clase interna que maneja el nodo.
+     * @author Juan Ariza
+     * @author Sergio Zona
+     *
+     */
     private class Node {
+    	/**
+    	 * Llave del nodo
+    	 */
         private K key;
+        
+        /**
+         * Lista encadenada de valores.
+         */
         private ListaEncadenada<V> values;
+        
+        /**
+         * Referencia al siguiente nodo.
+         */
         private Node next;
-
+        
+        /**
+         * Método constructor, inicializa los atributos por los que llegan por parámetro.
+         * @param pKey Llave que será inicializada.
+         * @param pValues Lista encadenada de valores que será inicializada.
+         * @param pNext Nodo siguiente que será inicializado.
+         */
         public Node(K pKey, ListaEncadenada<V> pValues, Node pNext)  {
             key  = pKey;
             values  = pValues;
             next = pNext;
         }
+        
     }
     
+    /**
+     * Método que retorn el número de rehashes
+     * @return Número de rehashes.
+     */
     public int darNumeroRehashes()
     {
     	return contador;
@@ -95,6 +141,11 @@ public class HashSeparateChaining<K extends Comparable<K>, V extends Comparable<
 		++n;
 	}
 
+	/**
+	 * Método que agrega la llave y la cadena de valores.
+	 * @param pKey Llave que será agregada.
+	 * @param pValue Cadena de valores que será agregada.
+	 */
 	public void put(K pKey, ListaEncadenada<V> pValue) 
 	{
 		if(n/m>=FACTOR_CARGA_MAX)
@@ -145,17 +196,31 @@ public class HashSeparateChaining<K extends Comparable<K>, V extends Comparable<
         int i = hash(pKey);
         
         Iterator<V> iterator = null;
+        Node a=st[i];
+        Node x=a.next;
+        if(pKey.equals(a.key))
+        {
+        	iterator=a.values.iterator();
+        	st[i]=st[i].next;
+        	--n;
+        }
+        else
+        {
+        	while(x!=null)
+            {
+            	if (pKey.equals(x.key)) 
+    			{ 
+    				--n;
+    				iterator = x.values.iterator();
+    				x=null;
+    			}
+            	a=x;
+            	x=x.next;
+            		
+            	
+            }
+        }
         
-		for (Node x = st[i]; x != null; x = x.next)
-		{
-			if (pKey.equals(x.key)) 
-			{ 
-				--n;
-				x = x.next;
-				iterator = x.values.iterator();
-			}
-		}
-		
 		return iterator;
   	}
 
@@ -181,6 +246,10 @@ public class HashSeparateChaining<K extends Comparable<K>, V extends Comparable<
 		return (pKey.hashCode() & 0x7fffffff) % m;
 	} 
 	
+	/**
+	 * Método que modifica el tamaño de la tabla de ser necesario si se queda sin espacio.
+	 * @param chains Cadena de valores que será agregada.
+	 */
 	public void rehash(int chains) 
 	{
 		HashSeparateChaining<K, V> temp = new HashSeparateChaining<K,V>(chains);
@@ -214,7 +283,11 @@ public class HashSeparateChaining<K extends Comparable<K>, V extends Comparable<
 		return getSet(key) != null; 
 	}
 
-	
+	/**
+	 * Método que busca números primos para ser enviados al tamaño de la tabla de hash para mayor eficiencia en el algoritmo.
+	 * @param pm Valor del rango del primo.
+	 * @return Número primo más cercano.
+	 */
 	public int nextPrime(int pm)
 	{
 		int pn = pm*2;

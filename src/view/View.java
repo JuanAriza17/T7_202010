@@ -21,6 +21,7 @@ public class View
 			System.out.println("0. (Requerimiento 00) Cargar Comparendos en la Lista.");
 			System.out.println("1. (Requerimiento 01) Buscar tiempos de viaje por fecha, clase de vehículo e infracción (Tabla de Hash Linear Probing).");
 			System.out.println("2. (Requerimiento 02) Buscar tiempos de viaje por fecha, clase de vehículo e infracción (Tabla de Hash Separate Chaining).");
+			System.out.println("3. (Requerimiento 03) Realizar Pruebas de desempeño, el tiempo se de en milisegundos.");
 			System.out.println("4. Exit");
 			System.out.println("Dar el numero de opcion a resolver, luego oprimir tecla Return: (e.g., 1):");
 		}

@@ -67,7 +67,7 @@ public class TestModelo {
 		modelo = new Modelo();
 		for (int i = 0; i < 10; i++) 
 		{
-			modelo.agregar(new Comparendo(i, null, "", "", "", "", "", coordenadas(i,i)));
+			modelo.agregarFinal(new Comparendo(i, null, "", "", "", "", "", coordenadas(i,i)));
 		}
 	}
 
@@ -129,7 +129,7 @@ public class TestModelo {
 		assertEquals(0, modelo.darLongitud());
 
 		Comparendo c = new Comparendo(0, null, "", "", "", "", "", new double[2]);
-		modelo.agregar(c);
+		modelo.agregarFinal(c);
 		assertEquals(1,modelo.darLongitud());
 		assertTrue("Debería retornar el comparendo pero retorna "+modelo.buscar(c)+".",modelo.buscar(c).compareTo(c)==0);
 

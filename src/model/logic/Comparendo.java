@@ -1,5 +1,6 @@
 package model.logic;
 
+import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Date;
 
@@ -149,20 +150,25 @@ public class Comparendo implements Comparable<Comparendo>
 	{
 		return coordenadas[1];
 	}
+	
+	public String darLlave()
+	{
+		String vehi = "";
+		if(vehiculo.equals("AUTOMÃ“VIL"))
+			vehi="automóvil";
+		else
+			vehi=vehiculo;
+		 SimpleDateFormat parser = new SimpleDateFormat("yyyy/MM/dd");
+		 String mensaje = parser.format(fecha)+vehi+infraccion; 
+		return mensaje.toLowerCase();
+	}
 
 	/**
 	 * Compara los comparendos por latitud.
 	 */
 	public int compareTo(Comparendo o) {
 
-		int compare = 0;
-
-		if(coordenadas!=null && o.darCoordenadas()!=null)
-		{
-			compare = (darLatitud()>o.darLatitud())?1:(darLatitud()<o.darLatitud())?-1:0;
-		}
-
-		return compare;
+		return id-o.darId();
 	}
 
 	@Override
@@ -171,7 +177,15 @@ public class Comparendo implements Comparable<Comparendo>
 	 */
 	public String toString()
 	{
-		return  id+", "+vehiculo+", LATITUD: "+darLatitud()+" LONGITUD: "+darLongitud();
+		SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+
+		String f = "";
+		if(fecha!=null)
+			f=parser.format(fecha);
+		else
+			f="00";
+		
+		return  "OBJECTID: "+id+", FECHA: "+f+", TIPO SERVICIO: "+servicio+", CLASE VEHICULO: "+vehiculo+", INFRACCION: "+infraccion;
 	}
 
 

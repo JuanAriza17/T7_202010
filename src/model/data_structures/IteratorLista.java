@@ -62,23 +62,9 @@ public class IteratorLista<T extends Comparable<T>> implements Iterator<T>
 	 * Remueve un nodo de la estructura de datos.
 	 * @post: Se elimina el elemento de la estructura.
 	 */
-	public void remove()
+	public void remove() throws UnsupportedOperationException, IllegalStateException
 	{
-		NodoLista<T> prox_prox = null;
-		
-		if(ant_ant!=null)
-		{
-			if(proximo!=null)
-			{
-				prox_prox = proximo.darSiguiente();
-			}
-			ant_ant.cambiarSiguiente(proximo);
-			
-			ant_prox = proximo;
-			
-			proximo = prox_prox;
-			
-		}
+		throw new UnsupportedOperationException("No implementada");
 	}
 
 }

@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.FileNotFoundException;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.Scanner;
 
@@ -46,14 +47,13 @@ public class Controller {
 	public void run() 
 	{
 		Scanner lector = new Scanner(System.in);
+		String fecha = "";
+		String vehiculo = "";
+		String infraccion = "";
 		boolean fin = false;
-		long startTime = 0;
-		long endTime = 0;
-		long duration = 0;
 		int id = 0;
 		int valor = 0;
-		boolean primeraCopiaCola=false;
-		IMaxColaCP<Comparendo> colaCopia;
+
 
 		while( !fin ){
 			view.printMenu();
@@ -67,8 +67,22 @@ public class Controller {
 					{
 						modelo.cargarComparendos(RUTA);
 						view.printMessage("Lista de comparendos creada");
+						view.printMessage("Número de comparendos guardados: "+modelo.darLongitud());
 						view.printMessage("PRIMERO: \n"+modelo.darPrimerComparendo().toString());
-						view.printMessage("ÚLTIMO: \n"+modelo.darUltimoComparendo().toString());
+						view.printMessage("ÚLTIMO: \n"+modelo.darUltimoComparendo().toString()+"\n");
+						
+						double num1 = (double)modelo.numeroTuplasLinear()/modelo.tamanoLinear();
+						double num2= (double)modelo.numeroTuplasSeparate()/modelo.tamanoSeparate();
+						DecimalFormat formato = new DecimalFormat("0.00");
+						
+						view.printMessage("                                  Linear Probing          Separate Chaining");
+						view.printMessage("Número de tuplas                  "+modelo.numeroTuplasLinear()+"                   "+modelo.numeroTuplasSeparate());
+						view.printMessage("Tamaño inicial del arreglo        5                       5");
+						view.printMessage("Tamaño final del arreglo          "+modelo.tamanoLinear()+"                   "+modelo.tamanoSeparate());
+						view.printMessage("Factor de carga final (N/M)       "+formato.format(num1)+"                    "+formato.format(num2));
+						view.printMessage("Número de rehashes realizados     "+modelo.numeroRehashesLinear()+"                       "+modelo.numeroRehashesSeparate());
+						view.printMessage("\n");
+						
 					}
 					catch(FileNotFoundException e)
 					{
@@ -78,99 +92,75 @@ public class Controller {
 					{
 						view.printMessage(e.getMessage());
 					}
-					view.printMessage("\n---------\n" + "Número actual de comparendos en la lista " + modelo.darLongitud()+"\n");	
+
 					break;
 					
 				case 1: 
 					
-					try
+					if(modelo.darLongitud()==0)
 					{
-						if(modelo.darLongitud()!=0)
+						view.printMessage("Aún no ha inicializado las tablas de hash");
+					}
+					else
+					{
+						view.printMessage("Ingrese una fecha (Año/Mes/Día): ");
+						fecha = lector.next();
+						view.printMessage("Ingrese un vehículo: ");
+						vehiculo = lector.next();
+						view.printMessage("Ingrese una infracción: ");
+						infraccion = lector.next();
+						
+						String comparendos = modelo.buscarComparendosDadaFechaLinear(fecha, vehiculo, infraccion);
+						
+						if(comparendos==null)
 						{
-							view.printMessage("\nIngrese el número de comparendos aleatorios que desea agregar a la MaxColaCP y a la MaxHeapCP:");
-							int n = Integer.parseInt(lector.next());
-							modelo.generarMuestra(n);
-							startTime = System.currentTimeMillis();
-							modelo.cargarHeap();
-							endTime = System.currentTimeMillis();
-							
-							duration = endTime-startTime;
-							
-							String mHeap = "Tiempo de carga en MaxHeapCP: "+duration+" milisegundos";
-
-							startTime = System.currentTimeMillis();
-							modelo.cargarCola();
-							endTime = System.currentTimeMillis();
-							
-							duration = endTime-startTime;
-							String mCola = "Tiempo de carga en MaxColaCP: "+duration+" milisegundos";
-
-							
-							if(modelo.darHeap().darNumElementos()<n)
-							{
-								System.out.println("La muestra fue demasiado grande por lo que solo se cargaron "+modelo.darHeap().darNumElementos()+" comparendos.");
-							}
-							else
-							{
-								System.out.println("Se cargaron "+n+" comparendos a la cola y al heap");
-							}
-							
-							view.printMessage(mCola+"\n"+mHeap+"\n");
+							view.printMessage("No se encontraron comparendos con las características dadas");
 						}
 						else
-							view.printMessage("No ha inicializado la lista.");
-					}
-					catch(NumberFormatException e)
-					{
-						view.printMessage("Ingrese un número válido.");
+						{
+							view.printMessage(comparendos);
+						}
 					}
 					
 					break;
 
 				case 2:
-					view.printMessage("--------- \n ");
-					view.printMessage("Por favor ingrese el número de comparendos que desea visualizar:\n ");
-					valor= Integer.parseInt(lector.next());
-					view.printMessage("Ingrese los vehiculos que le interesan, de la forma Vehiculo1,Vehiculo2,..,Vehiculon");
-					String vehiculos = lector.next();
 					
-					try
+					if(modelo.darLongitud()==0)
 					{
-						if(modelo.darCola().darNumElementos()!=0)
+						view.printMessage("Aún no ha inicializado las tablas de hash");
+					}
+					else
+					{
+						view.printMessage("Ingrese una fecha (Año/Mes/Día): ");
+						fecha = lector.next();
+						view.printMessage("Ingrese un vehículo: ");
+						vehiculo = lector.next();
+						view.printMessage("Ingrese una infracción: ");
+						infraccion = lector.next();
+						
+						String c = modelo.buscarComparendosDadaFechaSeparate(fecha, vehiculo, infraccion);
+						
+						if(c==null)
 						{
-							startTime = System.currentTimeMillis();
-							IListaEncadenada<Comparendo> lista=modelo.colaComparendosMasAlNorte(valor,vehiculos);
-							endTime = System.currentTimeMillis();
-							
-							duration=endTime-startTime;
-							
-							int numero = lista.darLongitud();
-									
-							
-							view.printLista(lista);
-							view.printMessage("\n\n Tiempo: "+duration+" milisegundos.");
-							if(numero<valor )
-								view.printMessage("\nNo hay suficientes comparendos en la cola, se imprimieron "+lista.darLongitud()+ " comparendos cuando se solicitaron "+valor+".\n");
-							else
-								view.printMessage("\nSe imprimieron "+valor+ " comparendos.\n"); 
-					
-							view.printMessage("\nNOTA: Los últimos comparendos fueron los que tuvieron menor prioridad en la cola.\n");
-
+							view.printMessage("No se encontraron comparendos con las características dadas");
 						}
 						else
-							view.printMessage("No ha inicializado la MaxColaCP ni el MaxHeapCP, por favor ejecute 1.");
-
-					}
-					catch(NumberFormatException e)
-					{
-						view.printMessage("Ingrese un número válido.");
+						{
+							view.printMessage(c);
+						}
 					}
 					break;
 
 				case 3: 
-					view.printMessage("--------- \n Hasta pronto !! \n---------"); 
-					lector.close();
-					fin = true;
+					if(modelo.darLongitud()==0)
+					{
+						view.printMessage("Aún no ha inicializado las tablas de hash");
+					}
+					else
+					{
+						view.printMessage(modelo.pruebaDesempeño());
+					}
 					break;
 
 				default: 

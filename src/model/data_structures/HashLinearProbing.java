@@ -2,27 +2,35 @@ package model.data_structures;
 
 import java.util.Iterator;
 
-public class HashLinearProbing<T extends Comparable<T>, V extends Comparable<V>> implements IHashTable<T,V>
+public class HashLinearProbing<K extends Comparable<K>, V extends Comparable<V>> implements IHashTable<K,V>
 {
 	/**
 	 * Número de pares en la tabla.
 	 */
-	private int pares;
+	private int n;
 
 	/**
 	 * Tamaño de la tabla.
 	 */
-	private int tamano;
+	private int m;
 
 	/**
 	 * Arreglo de las llaves.
 	 */
-	private T[] keys;
+	private K[] keys;
+	
+	/**
+	 * Numero de rehashes realizados
+	 */
+	
+	private int contador;
 
 	/**
 	 * Arreglo de los valores.
 	 */
-	private V[] values;
+	private ListaEncadenada<V>[] values;
+	
+	public static double FACTOR_CARGA_MAX = 0.75;
 
 	/**
 	 * Método constructor.
@@ -30,18 +38,24 @@ public class HashLinearProbing<T extends Comparable<T>, V extends Comparable<V>>
 	 */
 	public HashLinearProbing(int pTamano) 
 	{
-		tamano=pTamano;
-		keys= (T[]) new Object[tamano];
-		values= (V[]) new Object[tamano];
+		n=0;
+		m=pTamano;
+		keys= (K[]) new Comparable[m];
+		values= new ListaEncadenada[m];
+		contador = 0;
 	}
 
+	public int darNumeroRehashes()
+	{
+		return contador;
+	}
 	/**
 	 * Método que retorna el número de pares de la tabla.
 	 * @return Número de pares de la tabla.
 	 */
 	public int darNumPares()
 	{
-		return pares;
+		return n;
 	}
 
 	/**
@@ -50,14 +64,14 @@ public class HashLinearProbing<T extends Comparable<T>, V extends Comparable<V>>
 	 */
 	public int darTamano()
 	{
-		return tamano;
+		return m;
 	}
 
 	/**
 	 * Método que retorna el arreglo de llaves.
 	 * @return Arreglo de llaves.
 	 */
-	public T[] darKeys()
+	public K[] darKeys()
 	{
 		return keys;
 	}
@@ -66,7 +80,7 @@ public class HashLinearProbing<T extends Comparable<T>, V extends Comparable<V>>
 	 * Método que retorna el arreglo de valores.
 	 * @return Arreglo de valores.
 	 */
-	public V[] darValues()
+	public ListaEncadenada<V>[] darValues()
 	{
 		return values;
 	}
@@ -76,14 +90,37 @@ public class HashLinearProbing<T extends Comparable<T>, V extends Comparable<V>>
 	 * @param pKey Llave que será agregada o buscada. 
 	 * @param pValue Valor que será agregado o reemplazado. pValue no puede ser null.
 	 */
-	@Override
-	public void put(T pKey, V pValue) {
-		if(pares>=tamano/2)
+	public void putInSet(K pKey, V pValue) {
+		if(n/m>FACTOR_CARGA_MAX)
 		{
-			resize(2*tamano);
+			rehash(nextPrime(2*m));
 		}
 		int i;
-		for(i=hash(pKey); keys[i]!=null; i=(i+1)%tamano)
+		for(i=hash(pKey); keys[i]!=null; i=(i+1)%m)
+		{
+			if(keys[i].equals(pKey))
+			{
+				values[i].agregar(pValue);
+				return;
+			}
+		}
+		
+		ListaEncadenada<V> lista = new ListaEncadenada<V>();
+		lista.agregarFinal(pValue);
+		
+		keys[i]=pKey;
+		values[i]=lista;
+		++n;
+
+	}
+	
+	public void put(K pKey, ListaEncadenada<V> pValue) {
+		if(n/m>FACTOR_CARGA_MAX)
+		{
+			rehash(nextPrime(2*m));
+		}
+		int i;
+		for(i=hash(pKey); keys[i]!=null; i=(i+1)%m)
 		{
 			if(keys[i].equals(pKey))
 			{
@@ -93,8 +130,7 @@ public class HashLinearProbing<T extends Comparable<T>, V extends Comparable<V>>
 		}
 		keys[i]=pKey;
 		values[i]=pValue;
-		++pares;
-
+		++n;
 	}
 
 	/**
@@ -102,13 +138,13 @@ public class HashLinearProbing<T extends Comparable<T>, V extends Comparable<V>>
 	 * @param pKey Llave que será buscada.
 	 * @return El valor asociado a esa llave. Retorna null en caso de que no se encuentre la llave.
 	 */
-	@Override
-	public V get(T pKey) {
-		for (int i= hash(pKey); keys[i]!=null; i=(i+1)%tamano)
+	public Iterator<V> getSet(K pKey) {
+		
+		for (int i= hash(pKey); keys[i]!=null; i=(i+1)%m)
 		{
 			if (keys[i].equals(pKey))
 			{
-				return values[i];
+				return values[i].iterator();
 			}
 		}
 		return null;
@@ -119,8 +155,7 @@ public class HashLinearProbing<T extends Comparable<T>, V extends Comparable<V>>
 	 * @param pKey Llave que será buscada.
 	 * @return Valor asociado a la llave. Retorna null en caso de que no se encuentre la llave.
 	 */
-	@Override
-	public V delete(T pKey) {
+	public Iterator<V> deleteSet(K pKey) {
 		if(!contains(pKey))
 		{
 			return null;
@@ -128,25 +163,21 @@ public class HashLinearProbing<T extends Comparable<T>, V extends Comparable<V>>
 		int i=hash(pKey);
 		while(!pKey.equals(keys[i]))
 		{
-			i=(i+1)%tamano;
+			i=(i+1)%m;
 		}
-		V retorno=values[i];
+		Iterator<V> retorno=values[i].iterator();
 		keys[i]=null;
 		values[i]=null;
-		i=(i+1)%tamano;
+		i=(i+1)%m;
 		while(keys[i]!=null)
 		{
-			T keyToRedo=keys[i];
-			V valueToRedo=values[i];
-			--pares;
+			K keyToRedo=keys[i];
+			ListaEncadenada<V> valueToRedo=values[i];
+			--n;
 			put(keyToRedo,valueToRedo);
-			i=(i+1)%tamano;
+			i=(i+1)%m;
 		}
-		--pares;
-		if(pares>0 && pares==tamano/8)
-		{
-			resize(tamano/2);
-		}
+		--n;
 		return retorno;
 		
 		
@@ -157,9 +188,11 @@ public class HashLinearProbing<T extends Comparable<T>, V extends Comparable<V>>
 	 * @return Conjunto de llaves T presentes en la tabla.
 	 */
 	@Override
-	public Iterator<T> keys() {
-		// TODO Auto-generated method stub
-		return null;
+	public Iterator<K> keys() {
+		 ListaEncadenada<K> lista = new ListaEncadenada<K>();
+	     for (int i = 0; i < m; i++)
+	         if (keys[i] != null) lista.agregarFinal(keys[i]);
+	     return lista.iterator();
 	}
 
 	/**
@@ -167,20 +200,20 @@ public class HashLinearProbing<T extends Comparable<T>, V extends Comparable<V>>
 	 * @param pKey. Llave que ingresa por parámetro.
 	 * @return Índice que representa el hashCode.
 	 */
-	public int hash(T pKey)
+	public int hash(K pKey)
 	{ 
-		return (pKey.hashCode() & 0x7fffffff) % tamano;
+		return (pKey.hashCode() & 0x7fffffff) % m;
 	} 
 
 	/**
 	 * Método que cambia el tamaño de la tabla por el valor que llega por parámetro.
 	 * @param pTamano Tamaño nuevo de la tabla.
 	 */
-	public void resize(int pTamano)
+	public void rehash(int pTamano)
 	{
-		HashLinearProbing<T, V> t;
-		t = new HashLinearProbing<T, V>(pTamano);
-		for (int i = 0; i < tamano; i++)
+		HashLinearProbing<K, V> t;
+		t = new HashLinearProbing<K, V>(pTamano);
+		for (int i = 0; i < m; i++)
 		{
 			if (keys[i] != null)
 			{
@@ -190,7 +223,8 @@ public class HashLinearProbing<T extends Comparable<T>, V extends Comparable<V>>
 
 		keys = t.darKeys();
 		values = t.darValues();
-		tamano = t.darTamano();
+		m = t.darTamano();
+		contador++;
 	}
 
 	/**
@@ -198,37 +232,39 @@ public class HashLinearProbing<T extends Comparable<T>, V extends Comparable<V>>
 	 * @param key Llave que es buscada
 	 * @return True si se encuentra. False en caso contrario.
 	 */
-	public boolean contains(T key)
-	{ 
-		return rank(key) != -1; 
+	public boolean contains(K key)
+	{
+		return getSet(key) != null; 
 	}
-
-	/**
-	 * Método que busca por medio de búsqueda binaria la llave que ingresa por parámetro en el arreglo de llaves.
-	 * @param key
-	 * @return
-	 */
-	private int rank(T pKey)
-	{ // Binary search.
-		int lo = 0;
-		int hi =keys.length - 1;
-		while (lo <= hi)
-		{ // Key is in a[lo..hi] or not present.
-			int mid = lo + (hi - lo) / 2;
-			if (hash(pKey) < hash(keys[mid])) 
+	
+	public int nextPrime(int pm)
+	{
+		int pn = pm*2;
+		boolean[] isPrime = new boolean[pn+1];
+		for (int i = 2; i <= pn; i++) 
+		{
+			isPrime[i]=true;
+		}
+		
+		for (int factor = 2; factor*factor <= pn; factor++) 
+		{
+			if (isPrime[factor]) 
 			{
-				hi = mid - 1;
-			}
-			else if (hash(pKey) > hash(keys[mid])) 
-			{
-				lo = mid + 1;
-			}
-			else
-			{
-				return mid;
+				for (int j = factor; factor*j <= pn; j++) {
+					isPrime[factor*j]=false;
+				}
 			}
 		}
-		return -1;
-	} 
+		
+		int primo = 0;
+		for (int i = pm; i <= pn; i++) {
+			if(isPrime[i])
+			{
+				primo=i;
+			}
+		}
+		
+		return primo;
+	}
 
 }

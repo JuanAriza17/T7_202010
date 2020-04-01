@@ -185,7 +185,7 @@ public class Comparendo implements Comparable<Comparendo>
 		else
 			f="00";
 		
-		return  "OBJECTID: "+id+", FECHA: "+f+", TIPO SERVICIO: "+servicio+", CLASE VEHICULO: "+vehiculo+", INFRACCION: "+infraccion;
+		return  "OBJECTID: "+id+", FECHA Y HORA: "+f+", INFRACCION: "+infraccion+",  CLASE VEHICULO: "+vehiculo+", TIPO SERVICIO: "+servicio+", LOCALIDAD: "+localidad;
 	}
 
 

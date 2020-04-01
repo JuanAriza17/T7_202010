@@ -44,6 +44,8 @@ public interface IQueue<T extends Comparable<T>>
 	 * @return Lista de elementos.
 	 */
 	public IListaEncadenada darElementos();
+	
+	public void enqueueOrden(T elemento);
 
 
 }

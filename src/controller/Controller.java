@@ -47,125 +47,112 @@ public class Controller {
 	public void run() 
 	{
 		Scanner lector = new Scanner(System.in);
-		String fecha = "";
-		String vehiculo = "";
-		String infraccion = "";
+		lector.useDelimiter("\n");
+		boolean cargado = false;
 		boolean fin = false;
-		int id = 0;
-		int valor = 0;
 
 
 		while( !fin ){
 			view.printMenu();
 			try
 			{
-				int option = Integer.parseInt(lector.next());				
+				int option = Integer.parseInt(lector.nextLine());				
 				switch(option){
 				case 0:
-					view.printMessage("--------- \nCargando lista de comparendos");
-					try
+					if(!cargado)
 					{
-						modelo.cargarComparendos(RUTA);
-						view.printMessage("Lista de comparendos creada");
-						view.printMessage("Número de comparendos guardados: "+modelo.darLongitud());
-						view.printMessage("PRIMERO: \n"+modelo.darPrimerComparendo().toString());
-						view.printMessage("ÚLTIMO: \n"+modelo.darUltimoComparendo().toString()+"\n");
-						
-						double num1 = (double)modelo.numeroTuplasLinear()/modelo.tamanoLinear();
-						double num2= (double)modelo.numeroTuplasSeparate()/modelo.tamanoSeparate();
-						DecimalFormat formato = new DecimalFormat("0.00");
-						
-						view.printMessage("                                  Linear Probing          Separate Chaining");
-						view.printMessage("Número de tuplas                  "+modelo.numeroTuplasLinear()+"                   "+modelo.numeroTuplasSeparate());
-						view.printMessage("Tamaño inicial del arreglo        5                       5");
-						view.printMessage("Tamaño final del arreglo          "+modelo.tamanoLinear()+"                   "+modelo.tamanoSeparate());
-						view.printMessage("Factor de carga final (N/M)       "+formato.format(num1)+"                    "+formato.format(num2));
-						view.printMessage("Número de rehashes realizados     "+modelo.numeroRehashesLinear()+"                       "+modelo.numeroRehashesSeparate());
-						view.printMessage("\n");
-						
-					}
-					catch(FileNotFoundException e)
-					{
-						view.printMessage("No se pudo crear la lista porque no existe el archivo de comparendos");
-					}
-					catch(ParseException e)
-					{
-						view.printMessage(e.getMessage());
-					}
+						view.printMessage("--------- \nCargando lista de comparendos");
+						view.printMessage("--------- \nCargando lista de comparendos en la lista ");
+						try
+						{
+							modelo.cargarComparendos(RUTA);
+							cargado = true;
+							view.printMessage("Comparendos cargados a la lista");
+							view.printMessage("\n---------\n" + "Numero actual de comparendos en la lista " + modelo.darLongitud()+"\n");	
+							view.printMessage("Comparendo con mayor ID: \n"+modelo.darMayorId().toString()+"\n");
+							cargado = true;
+						}
+						catch(FileNotFoundException e)
+						{
+							view.printMessage("No se pudo crear la lista porque no existe el archivo de comparendos");
+							view.printMessage("\n---------\n" + "Numero actual de comparendos en la lista " + modelo.darLongitud()+"\n");	
+						}
+						catch(ParseException e)
+						{
+							view.printMessage("Ocurrió un error cargando los comparendos");
+							view.printMessage("\n---------\n" + "Numero actual de comparendos en la lista " + modelo.darLongitud()+"\n");	
 
-					break;
-					
-				case 1: 
-					
-					if(modelo.darLongitud()==0)
-					{
-						view.printMessage("Aún no ha inicializado las tablas de hash");
+						}
 					}
 					else
 					{
-						view.printMessage("Ingrese una fecha (Año/Mes/Día): ");
-						fecha = lector.next();
-						view.printMessage("Ingrese un vehículo: ");
-						vehiculo = lector.next();
-						view.printMessage("Ingrese una infracción: ");
-						infraccion = lector.next();
-						
-						String comparendos = modelo.buscarComparendosDadaFechaLinear(fecha, vehiculo, infraccion);
-						
-						if(comparendos==null)
-						{
-							view.printMessage("No se encontraron comparendos con las características dadas");
-						}
-						else
-						{
-							view.printMessage(comparendos);
-						}
+						view.printMessage("La lista de comparendos ya ha sido cargada.");
 					}
-					
-					break;
 
+					break;
+					
+				case 1:
+					view.printMessage("--------- \n ");
+					
+					view.printMessage("Aún no se ha implementado el requerimiento");						
+					break;
+				
 				case 2:
+					view.printMessage("--------- \n ");
 					
-					if(modelo.darLongitud()==0)
-					{
-						view.printMessage("Aún no ha inicializado las tablas de hash");
-					}
-					else
-					{
-						view.printMessage("Ingrese una fecha (Año/Mes/Día): ");
-						fecha = lector.next();
-						view.printMessage("Ingrese un vehículo: ");
-						vehiculo = lector.next();
-						view.printMessage("Ingrese una infracción: ");
-						infraccion = lector.next();
-						
-						String c = modelo.buscarComparendosDadaFechaSeparate(fecha, vehiculo, infraccion);
-						
-						if(c==null)
-						{
-							view.printMessage("No se encontraron comparendos con las características dadas");
-						}
-						else
-						{
-							view.printMessage(c);
-						}
-					}
+					view.printMessage("Aún no se ha implementado el requerimiento");						
 					break;
-
-				case 3: 
-					if(modelo.darLongitud()==0)
-					{
-						view.printMessage("Aún no ha inicializado las tablas de hash");
-					}
-					else
-					{
-						view.printMessage(modelo.pruebaDesempeño());
-					}
+					
+				case 3:
+					view.printMessage("--------- \n ");
+					
+					view.printMessage("Aún no se ha implementado el requerimiento");						
+					break;
+					
+				case 4:
+					view.printMessage("--------- \n ");
+					
+					view.printMessage("Aún no se ha implementado el requerimiento");						
+					break;
+				
+				case 5:
+					view.printMessage("--------- \n ");
+					
+					view.printMessage("Aún no se ha implementado el requerimiento");						
+					break;
+					
+				case 6:
+					view.printMessage("--------- \n ");
+					
+					view.printMessage("Aún no se ha implementado el requerimiento");						
+					break;
+				
+				case 7:
+					view.printMessage("--------- \n ");
+					
+					view.printMessage("Aún no se ha implementda el requerimiento");						
+					break;
+				
+				case 8:
+					view.printMessage("--------- \n ");
+					
+					view.printMessage("Aún no se ha implementado el requerimiento");						
+					break;
+				
+				case 9:
+					view.printMessage("--------- \n ");
+					
+					view.printMessage("Aún no se ha implementda el requerimiento");						
+					break;
+					
+				case 10: 
+					view.printMessage("--------- \n Hasta pronto !! \n---------"); 
+					lector.close();
+					fin = true;
 					break;
 
 				default: 
-					view.printMessage("--------- \n Opción Invalida !! \n---------");
-					fin=true;
+					view.printMessage("--------- \n Opcion Invalida !! \n---------");
 					break;
 				}
 			}

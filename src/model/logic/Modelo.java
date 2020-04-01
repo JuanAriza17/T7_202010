@@ -20,7 +20,9 @@ import model.data_structures.HashLinearProbing;
 import model.data_structures.HashSeparateChaining;
 import model.data_structures.IHashTable;
 import model.data_structures.IListaEncadenada;
+import model.data_structures.IMaxHeapCP;
 import model.data_structures.ListaEncadenada;
+import model.data_structures.NodoLista;
 
 
 /**
@@ -34,22 +36,18 @@ public class Modelo {
 	 */
 	private IListaEncadenada<Comparendo> listaComparendos;
 	
-	/**
-	 * Linear Probing de comparendos
-	 */
-	private IHashTable<String, Comparendo> linearProbing;
-	
-	/**
-	 * Separate Chaining de coomparendos
-	 */
-	private IHashTable<String, Comparendo> separateChaining;
 
 	/**
 	 * Arreglo con las muestras
 	 */
 	private Comparendo[] muestras;
 	
+	/**
+	 * Arreglo que representa una copia de la lista.
+	 */
 	private Comparable[] copia;
+	
+	private final static int MAX_DATOS = 20;
 	
 	
 	/**
@@ -58,224 +56,128 @@ public class Modelo {
 	 */
 	public Modelo()
 	{
-		linearProbing = new HashLinearProbing<String, Comparendo>(5);
-		separateChaining = new HashSeparateChaining<String, Comparendo>(5);
 		listaComparendos = new ListaEncadenada<Comparendo>();
 	}
+	
+	/**
+	 * Método que se encarga de solucionar el requerimiento 1A
+	 * @param m número de comparendos que se quiere imprimir.
+	 * @return Los m comparendos con mayor prioridad en una cola de prioridad por gravedad.
+	 */
+	public IMaxHeapCP<Comparendo>darMComparendosConMayorGravedad(int m)
+	{
+		return null;
+	}
+
+
+	/**
+	 * Método que se encarga de solucionar el requerimiento 2A
+	 * @param mes Número del mes que se quiere buscar los comparendos
+	 * @param diaSemana Inicial del día de la semana que se quiere buscar los comparendos
+	 * @return Iterator con los comparendo que corresponden a la llave (mes-diaSemana). 
+	 */
+	public Iterator<Comparendo> darComparendosPorMesYDiaSemana(int mes, String diaSemana)
+	{
+		return null;
+	}
+
+	/**
+	 * Método que se encarga de solucionar el requerimiento 3A
+	 * @param fecha1 fecha inicial del rango de tiempo.
+	 * @param fecha2 fecha final del rango de tiempo 
+	 * @param localidad Localidad en la que se quieren buscar los comparendos
+	 * @return Comparendos en el periodo de tiempo y localidad dada.
+	 */
+	public String darComparendosEnRangoDeFechaYLocalidad(Date fecha1, Date fecha2, String localidad)
+	{
+		return null;
+	}
+
+
+	/**
+	 * Método que se encarga de solucionar el requerimiento 1B
+	 * @param m número de comparendos que se quiere imprimir.
+	 * @return Los m comparendos con mayor prioridad en una cola de prioridad por la cercanía a la estación.
+	 */ 
+	public IMaxHeapCP<Comparendo> darMComparendosMasCercaEstacion(int m)
+	{
+		return null;
+	}
+	
+	/**
+	 * Método que se encarga de solucionar el requerimiento 2B
+	 * @param deteccion medio de deteccion de los comparendos
+	 * @param servicio tipo de servicio de los comparendos
+	 * @param localidad localidad de los comparendos
+	 * @return Iterator con los comparendos que tienen como llave (deteccion-servicio-localidad)
+	 */
+	public Iterator<Comparendo> darComparendosPorDeteccionVehiculoLocalidad(String deteccion, String servicio, String localidad)
+	{
+		return null;
+	}
+
+
+	/**
+	 * Método que se encarga de solucionar el requerimiento 3B
+	 * @param latitud1 Latitud inicial del rango
+	 * @param latitud2 Latitud final del rango
+	 * @param vehiculo Vehiculo Tipo de vehiculos del que se quiere buscar comparendos
+	 * @return Comparendos en el rango de latitud y vehiculo particular dado.
+	 */
+	public String darComparendosEnRangoLatitudYVehiculo(double latitud1, double latitud2, String vehiculo)
+	{
+		return null;
+	}
+
+	/**
+	 * Método que se encarga de solucionar el requerimiento 1C
+	 * @return Una tabla ASCII de todos los comparendos según un rango de fechas. 
+	 */
+	public String generarASCII()
+	{
+		return null;
+	}
+	
+	/**
+	 * Método que se encarga de solucionar el requerimiento 2C
+	 * @return Una tabla ASCII con el número de comparendos procesados por día y los que están en espera.
+	 * Además, retorna una tabla con el costo del comparendo y el tiempo de espera.
+	 */
+	public String costoTiempoEsperaHoyEnDia()
+	{
+		return null;
+	}
+	
+	/**
+	 * Método que se encarga de solucionar el requerimiento 3C
+	 * @return Una tabla ASCII con el número de comparendos procesados por día y los que están en espera.
+	 * Además, retorna una tabla con el costo del comparendo y el tiempo de espera. Todo esto según el nuevo sistema
+	 */
+	public String costoTiempoEsperaNuevoSistema()
+	{
+		return null;
+	}
 
 	
-	
 	/**
-	 * Método que retorna la cantidad de rehash realizados en el hash
-	 * @return número rehash
+	 * Da el comparendo con el mayor ID
+	 * @return Comparendo con mayor ID
 	 */
-	public int numeroRehashesLinear()
+	public Comparendo darMayorId()
 	{
-		return linearProbing.darNumeroRehashes();
-	}
-	
-	/**
-	 * Método que retorna la cantidad de rehash realizados en el hash
-	 * @return número rehash
-	 */
-	public int numeroRehashesSeparate()
-	{
-		return separateChaining.darNumeroRehashes();
-	}
-	
-	/**
-	 * Da el tamaño del arreglo del hash
-	 * @return tamaño arreglo linear
-	 */
-	public int tamanoLinear()
-	{
-		return linearProbing.darTamano();
-	}
-	
-	/**
-	 * Da el tamaño del arreglo del hash
-	 * @return tamaño arreglo separate
-	 */
-	public int tamanoSeparate()
-	{
-		return separateChaining.darTamano();
-	}
-	
-	/**
-	 * Da el número de tuplas del hash
-	 * @return número de tuplas del linear
-	 */
-	public int numeroTuplasLinear()
-	{
-		return linearProbing.darNumPares();
-	}
-	
-	/**
-	 * Da el número de tuplas del hash
-	 * @return número de tuplas del separate
-	 */
-	public int numeroTuplasSeparate()
-	{
-		return separateChaining.darNumPares();
-	}
-	
-	/**
-	 * Método que agrega en el hash linear
-	 * @param dato comparendo a agregar
-	 */
-	public void agregarLinear(Comparendo dato)
-	{
-		linearProbing.putInSet(dato.darLlave(), dato);
-	}
-	
-	/**
-	 * Método que agrega en el hash separate
-	 * @param dato comparendo a agregar
-	 */
-	public void agregarSeparate(Comparendo dato)
-	{
-		separateChaining.putInSet(dato.darLlave(), dato);
-	}
-	
-	/**
-	 * Método que resuelve el requirimiento 1
-	 * @param fecha fecha de los comparendos
-	 * @param vehi vehiculo de los comparendos
-	 * @param infra infraccion de los comparendos
-	 * @return Mensaje con los comparendos correspondientes a la llave.
-	 */
-	public String buscarComparendosDadaFechaLinear(String fecha, String vehi, String infra)
-	{
-		String key = ""+fecha+vehi+infra;
-		
-		if(!linearProbing.contains(key.toLowerCase()))
-			return null;
-		
-		Iterator<Comparendo> consulta = linearProbing.getSet(key);
-		String mensaje = "";
-		ListaEncadenada<Comparendo> lista = new ListaEncadenada<Comparendo>();
-		
-		while(consulta.hasNext())
-		{
-			Comparendo c = consulta.next();
-			lista.agregarFinal(c);
-		}
-		
-		Comparable[] arreglo = lista.darArreglo();
-		Ordenamientos.mergeSort(arreglo);
-		
-		for (int i = 0; i < arreglo.length; i++) 
-		{
-			mensaje+=arreglo[i].toString()+"\n";
-		}
-		mensaje+="\nSe encontraron "+arreglo.length+" comparendos.\n";
-		return mensaje;
-	}
-	
-	/**
-	 * Método que resuelve el requirimiento 2
-	 * @param fecha fecha de los comparendos
-	 * @param vehi vehiculo de los comparendos
-	 * @param infra infraccion de los comparendos
-	 * @return Mensaje con los comparendos correspondientes a la llave.
-	 */
-	public String buscarComparendosDadaFechaSeparate(String fecha, String vehi, String infra)
-	{
-		String key = fecha+vehi+infra;
-		
-		if(!separateChaining.contains(key))
-			return null;
-		
-		Iterator<Comparendo> consulta = linearProbing.getSet(key);
-		String mensaje = "";
-		ListaEncadenada<Comparendo> lista = new ListaEncadenada<Comparendo>();
-		
-		while(consulta.hasNext())
-		{
-			Comparendo c = consulta.next();
-			lista.agregarFinal(c);
-		}
-		
-		Comparable[] arreglo = lista.darArreglo();
-		Ordenamientos.mergeSort(arreglo);
-		
-		for (int i = 0; i < arreglo.length; i++) 
-		{
-			mensaje+=arreglo[i].toString()+"\n";
-		}
-		mensaje+="\nSe encontraron "+arreglo.length+" comparendos.\n";
-		return mensaje;
-	}
-	
-	/**
-	 * Método que se encarga del requerimiento 3
-	 * @return tabla de desempeño
-	 */
-	public String pruebaDesempeño()
-	{
-		long startTime = 0;
-		long endTime = 0;
-		long duration = 0;
-		String mensaje ="                                  Linear Probing          Separate Chaining";
+		Comparendo comp = null;
+		int id = 0;
 
-		generarMuestra(8000);
-		Comparendo[] comparendos = new Comparendo[10000];
-		long[] tiempos = new long[10000];
-		
-		for (int i = 0; i < comparendos.length; i++)
-		{
-			if(i<8000)
-				comparendos[i]=muestras[i];
-			else
-				comparendos[i]=new Comparendo(527655+1+i, new Date(2020, i%12+1, i%31+1), (i%5==0)?"motocicleta":(i%3==0)?"bicicicleta":(i%2==0)?"automóvil":"camioneta", "", "x0"+i%10, "", "",null);
-			
+		for(Comparendo c:listaComparendos)
+		{			
+			if(c.darId()>id)
+			{
+				comp = c;
+				id = c.darId();
+			}
 		}
-		
-		Iterator<Comparendo> it = null;
-		long minL = 100000000;
-		long maxL = 0;
-		long total=0;
-		for (int i = 0; i < tiempos.length; i++) 
-		{
-			startTime = System.currentTimeMillis();
-			it = linearProbing.getSet(comparendos[i].darLlave());
-			endTime = System.currentTimeMillis();
-			duration = endTime-startTime;
-			tiempos[i]=duration;
-			
-			if(duration>maxL)
-				maxL = duration;
-			else if(duration<minL)
-				minL=duration;
-			
-			total+=duration;
-		}
-		long promL = total/tiempos.length;
-		long minS = 100000000;
-		long maxS = 0;
-		for (int i = 0; i < tiempos.length; i++) 
-		{
-			startTime = System.currentTimeMillis();
-			it = separateChaining.getSet(comparendos[i].darLlave());
-			endTime = System.currentTimeMillis();
-			duration = endTime-startTime;
-			tiempos[i]=duration;
-			
-			if(duration>maxS)
-				maxS = duration;
-			else if(duration<minS)
-				minS=duration;
-			
-			total+=duration;
-		}
-		long promS = total/tiempos.length;
-		
-		mensaje+="\nTiempo mínimo de get(...)         "+minL+"                       "+minS+
-				 "\nTiempo promedio de get(...)       "+promL+"                       "+promS+
-				 "\nTiempo máximo de get(...)         "+maxL+"                       "+maxS+"\n";
-		
-		
-		return mensaje;
+
+		return comp;
 	}
 	
 	/**
@@ -344,6 +246,10 @@ public class Modelo {
 		copia = listaComparendos.darArreglo();
 	}
 	
+	/**
+	 * Método que genera una muestra de datos aleatorios de la lista
+	 * @param n tamaño de la muestra.
+	 */
 	public void generarMuestra(int n)
 	{
 		copiarComparendos();
@@ -388,8 +294,6 @@ public class Modelo {
 	{
 		 File archivo = new File(ruta);
 		 
-		 linearProbing = new HashLinearProbing<String, Comparendo>(5);
-		 separateChaining = new HashSeparateChaining<String, Comparendo>(5);
 		 listaComparendos = new ListaEncadenada<Comparendo>();
 		 
 		 JsonReader lector = new JsonReader(new FileReader(archivo));
@@ -426,8 +330,6 @@ public class Modelo {
 			Comparendo comparendo = new Comparendo(id, fecha, vehiculo, servicio, infraccion, descripcion, localidad,coordenadas);
 			
 			agregarFinal(comparendo);
-			agregarLinear(comparendo);
-			agregarSeparate(comparendo);
 		 }
 	}
 }

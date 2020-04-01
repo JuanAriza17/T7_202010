@@ -7,7 +7,7 @@ public class MaxColaCP<T extends Comparable<T>> implements IMaxColaCP<T> {
 	/**
 	 * Arreglo dinámico que maneja la cola de prioridad.
 	 */
-	public Queue<T> cola;
+	public IQueue<T> cola;
 	
 	/**
 	 * Número de elementos presentes en la cola de prioridad.

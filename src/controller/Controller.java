@@ -3,6 +3,8 @@ package controller;
 import java.io.FileNotFoundException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Scanner;
 
@@ -98,20 +100,30 @@ public class Controller {
 					break;
 					
 				case 1:
+					if(cargado==false)
+					{
+						view.printMessage("Por favor inicialice la lista de comparendos.\n");
+						break;
+					}
 					view.printMessage("--------- \n ");
-					view.printMessage("Por favor ingrese el número de comparendos que desea visualizar.\n");
+					view.printMessage("Por favor ingrese el número de comparendos que desea visualizar.");
 					int numComparendosMayorGravedadInfraccion=Integer.parseInt(lector.nextLine());
 					String mayorGravedadInfraccion=modelo.darMComparendosConMayorGravedad(numComparendosMayorGravedadInfraccion);
 					view.printMessage(mayorGravedadInfraccion);
 					break;
 				
 				case 2:
+					if(cargado==false)
+					{
+						view.printMessage("Por favor inicialice la lista de comparendos.\n");
+						break;
+					}
 					view.printMessage("--------- \n ");
-					view.printMessage("Por favor ingrese el número de comparendos que desea visualizar.\n");
+					view.printMessage("Por favor ingrese el número de comparendos que desea visualizar.");
 					int numComparendosMesDia=Integer.parseInt(lector.nextLine());
-					view.printMessage("Por favor ingrese el día de la semana con el siguiente formato: (L, M, I, J, V, S, D).\n");
+					view.printMessage("Por favor ingrese el día de la semana con el siguiente formato: (L, M, I, J, V, S, D).");
 					String dia=lector.nextLine();
-					view.printMessage("Por favor ingrese el número del mes: (1-12).\n");
+					view.printMessage("Por favor ingrese el número del mes: (1-12).");
 					int mes=Integer.parseInt(lector.nextLine());
 					Iterator<Comparendo> iteratorMesDia=modelo.darComparendosPorMesYDiaSemana(mes,dia);
 					while(iteratorMesDia.hasNext()&&numComparendosMesDia>0)
@@ -127,9 +139,31 @@ public class Controller {
 					break;
 					
 				case 3:
-					view.printMessage("--------- \n ");
-					
-					view.printMessage("Aún no se ha implementado el requerimiento");						
+					try 
+					{
+						if(cargado==false)
+						{
+							view.printMessage("Por favor inicialice la lista de comparendos.\n");
+							break;
+						}
+						view.printMessage("--------- \n ");
+						view.printMessage("Por favor ingrese la fecha menor en el siguiente formato: yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+						String dato1=lector.nextLine();
+						SimpleDateFormat format1=new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+						Date fecha1=format1.parse(dato1);
+						view.printMessage("Por favor ingrese la fecha mayor en el siguiente formato: yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+						String dato2=lector.nextLine();
+						SimpleDateFormat format2=new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+						Date fecha2=format2.parse(dato2);
+						view.printMessage("Por favor ingrese la localidad:");
+						String localidad=lector.nextLine().trim();
+						String retorno=modelo.darComparendosEnRangoDeFechaYLocalidad(fecha1, fecha2, localidad);
+						view.printMessage(retorno);
+					} 
+					catch (ParseException e) 
+					{
+						view.printMessage("Formato inválido de la fecha.\n");
+					}
 					break;
 					
 				case 4:

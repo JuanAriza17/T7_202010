@@ -22,9 +22,11 @@ import model.data_structures.HashSeparateChaining;
 import model.data_structures.IHashTable;
 import model.data_structures.IListaEncadenada;
 import model.data_structures.IMaxHeapCP;
+import model.data_structures.IRedBlackBST;
 import model.data_structures.ListaEncadenada;
 import model.data_structures.MaxHeapCP;
 import model.data_structures.NodoLista;
+import model.data_structures.RedBlackBST;
 
 
 /**
@@ -59,8 +61,15 @@ public class Modelo {
 	 */
 	private IMaxHeapCP<Comparendo> heap;
 	
+	/**
+	 * Tabla de Hash de comparendos.
+	 */
 	private IHashTable<String, Comparendo> hash;
 	
+	/**
+	 * Árbol RedBlack de comparendos.
+	 */
+	private IRedBlackBST<Date, Comparendo>redBlack;
 	
 	/**
 	 * Constructor del modelo del mundo con capacidad predefinida.
@@ -71,6 +80,7 @@ public class Modelo {
 		listaComparendos = new ListaEncadenada<Comparendo>();
 		heap=new MaxHeapCP<Comparendo>(600000);
 		hash=new HashSeparateChaining<String, Comparendo>(6);
+		redBlack= new RedBlackBST<Date, Comparendo>();
 	}
 	
 	/**
@@ -110,7 +120,17 @@ public class Modelo {
 	 */
 	public String darComparendosEnRangoDeFechaYLocalidad(Date fecha1, Date fecha2, String localidad)
 	{
-		return null;
+		String respuesta="";
+		Iterator<Comparendo> iterador=redBlack.valuesInRange(fecha1, fecha2); 
+		while(iterador.hasNext())
+		{
+			Comparendo actual=iterador.next();
+			if(localidad.equalsIgnoreCase(actual.darLocalidad()))
+			{
+				respuesta+=actual.toString()+"\n";
+			}
+		}
+		return respuesta;
 	}
 
 
@@ -322,8 +342,9 @@ public class Modelo {
 		 JsonArray arregloComparendos = obj.get("features").getAsJsonArray();  
 		 		 
 		 SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+		 //SimpleDateFormat parserRedBlack= new SimpleDateFormat("YYYY/MM/DD-HH:mm:ss");
 		 Calendar calendario= Calendar.getInstance();
-		 
+
 		 for (JsonElement e: arregloComparendos) 	
 		 {
 			
@@ -331,7 +352,9 @@ public class Modelo {
 			
 			int id = propiedades.get("OBJECTID").getAsInt();
 			String f = propiedades.get("FECHA_HORA").getAsString();
+			//String transformado=transformarFormatoFecha(f);
 			Date fecha = parser.parse(f);
+			//Date fechaRedBlack=parserRedBlack.parse(transformado);
 			calendario.setTime(fecha);
 			String vehiculo = propiedades.get("CLASE_VEHICULO").getAsString();
 			String servicio = propiedades.get("TIPO_SERVICIO").getAsString();
@@ -351,11 +374,31 @@ public class Modelo {
 			int diaSemana= calendario.get(Calendar.DAY_OF_WEEK)-1;
 			String dia=(1==diaSemana)?"L":(2==diaSemana)?"M":(3==diaSemana)?"I":(4==diaSemana)?"J":(5==diaSemana)?"V":(6==diaSemana)?"S":"D";;
 			
-			
 			Comparendo comparendo = new Comparendo(id, fecha, vehiculo, servicio, infraccion, descripcion, localidad,coordenadas);
+			//Comparendo comparendoRedBlack=new Comparendo(id, fechaRedBlack, vehiculo, servicio, infraccion, descripcion, localidad, coordenadas);
 			heap.agregar(comparendo);
 			hash.putInSet(dia, comparendo);
+			redBlack.put(fecha, comparendo);
 			agregarFinal(comparendo);
 		 }
+	}
+	
+	/**
+	 * Método que cambiar el formato de fecha de yyyy-MM-dd'T'HH:mm:ss.SSS'Z' a YYYY/MM/DD-HH:MM:ss para cumplir con el requerimiento 3A. 
+	 * @param pFecha Fecha que será modificada.
+	 * @return Fecha modificada.
+	 */
+	public String transformarFormatoFecha(String pFecha)
+	{
+		String fecha="";
+		String[] arreglo=pFecha.split("-");
+		String temp=arreglo[2];
+		fecha+=arreglo[0]+"/"+arreglo[1]+"/";
+		arreglo=temp.split("T");
+		fecha+=arreglo[0];
+		temp=arreglo[1];
+		temp=temp.replaceAll(".000Z", "");
+		fecha+="-"+temp;
+		return fecha;
 	}
 }

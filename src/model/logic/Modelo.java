@@ -22,6 +22,7 @@ import model.data_structures.IHashTable;
 import model.data_structures.IListaEncadenada;
 import model.data_structures.IMaxHeapCP;
 import model.data_structures.ListaEncadenada;
+import model.data_structures.MaxHeapCP;
 import model.data_structures.NodoLista;
 
 
@@ -47,7 +48,15 @@ public class Modelo {
 	 */
 	private Comparable[] copia;
 	
+	/**
+	 * Número de datos en caso de ser necesario imprimir números muy grandes.
+	 */
 	private final static int MAX_DATOS = 20;
+	
+	/**
+	 * Heap de comparendos
+	 */
+	private IMaxHeapCP<Comparendo> heap;
 	
 	
 	/**
@@ -57,6 +66,7 @@ public class Modelo {
 	public Modelo()
 	{
 		listaComparendos = new ListaEncadenada<Comparendo>();
+		heap=new MaxHeapCP<Comparendo>(600000);
 	}
 	
 	/**
@@ -64,9 +74,15 @@ public class Modelo {
 	 * @param m número de comparendos que se quiere imprimir.
 	 * @return Los m comparendos con mayor prioridad en una cola de prioridad por gravedad.
 	 */
-	public IMaxHeapCP<Comparendo>darMComparendosConMayorGravedad(int m)
+	public String darMComparendosConMayorGravedad(int m)
 	{
-		return null;
+		String retorno="";
+		for(int i=0; i<m;++i)
+		{
+			Comparendo actual=heap.sacarMax();
+			retorno+=actual.toString()+"\n";
+		}
+		return retorno;
 	}
 
 
@@ -328,7 +344,7 @@ public class Modelo {
 			}
 						
 			Comparendo comparendo = new Comparendo(id, fecha, vehiculo, servicio, infraccion, descripcion, localidad,coordenadas);
-			
+			heap.agregar(comparendo);
 			agregarFinal(comparendo);
 		 }
 	}

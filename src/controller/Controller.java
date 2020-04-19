@@ -32,6 +32,11 @@ public class Controller {
 	 * Constante con la ruta del archivo que guarda los comparnedos.
 	 */
 	public final static String RUTA = "./data/Comparendos_DEI_2018_Bogotá_D.C.geojson";
+	
+	/**
+	 * Constante de número de impresión en comparendo de consola.
+	 */
+	public final static int numImpresiones=20;
 
 
 	/**
@@ -93,8 +98,10 @@ public class Controller {
 					
 				case 1:
 					view.printMessage("--------- \n ");
-					
-					view.printMessage("Aún no se ha implementado el requerimiento");						
+					view.printMessage("Por favor ingrese el número de comparendos que desea visualizar.\n");
+					int numComparendosMayorGravedadInfraccion=Integer.parseInt(lector.nextLine());
+					String mayorGravedadInfraccion=modelo.darMComparendosConMayorGravedad(numComparendosMayorGravedadInfraccion);
+					view.printMessage(mayorGravedadInfraccion);
 					break;
 				
 				case 2:

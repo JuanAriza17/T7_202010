@@ -168,7 +168,7 @@ public class Comparendo implements Comparable<Comparendo>
 	 */
 	public int compareTo(Comparendo o) {
 
-		return id-o.darId();
+		return infraccion.compareTo(o.darInfraccion());
 	}
 
 	@Override

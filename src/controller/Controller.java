@@ -3,6 +3,7 @@ package controller;
 import java.io.FileNotFoundException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
+import java.util.Iterator;
 import java.util.Scanner;
 
 import model.data_structures.ArregloDinamico;
@@ -106,8 +107,23 @@ public class Controller {
 				
 				case 2:
 					view.printMessage("--------- \n ");
-					
-					view.printMessage("Aún no se ha implementado el requerimiento");						
+					view.printMessage("Por favor ingrese el número de comparendos que desea visualizar.\n");
+					int numComparendosMesDia=Integer.parseInt(lector.nextLine());
+					view.printMessage("Por favor ingrese el día de la semana con el siguiente formato: (L, M, I, J, V, S, D).\n");
+					String dia=lector.nextLine();
+					view.printMessage("Por favor ingrese el número del mes: (1-12).\n");
+					int mes=Integer.parseInt(lector.nextLine());
+					Iterator<Comparendo> iteratorMesDia=modelo.darComparendosPorMesYDiaSemana(mes,dia);
+					while(iteratorMesDia.hasNext()&&numComparendosMesDia>0)
+					{
+						Comparendo actual=iteratorMesDia.next();
+						if((actual.darFecha().getMonth()+1)==mes)
+						{
+							view.printMessage(actual.toString());
+							--numComparendosMesDia;
+						}
+					}
+					view.printMessage("\n");
 					break;
 					
 				case 3:

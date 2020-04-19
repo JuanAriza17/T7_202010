@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 
@@ -58,6 +59,8 @@ public class Modelo {
 	 */
 	private IMaxHeapCP<Comparendo> heap;
 	
+	private IHashTable<String, Comparendo> hash;
+	
 	
 	/**
 	 * Constructor del modelo del mundo con capacidad predefinida.
@@ -67,6 +70,7 @@ public class Modelo {
 	{
 		listaComparendos = new ListaEncadenada<Comparendo>();
 		heap=new MaxHeapCP<Comparendo>(600000);
+		hash=new HashSeparateChaining<String, Comparendo>(6);
 	}
 	
 	/**
@@ -94,7 +98,7 @@ public class Modelo {
 	 */
 	public Iterator<Comparendo> darComparendosPorMesYDiaSemana(int mes, String diaSemana)
 	{
-		return null;
+		return hash.getSet(diaSemana);
 	}
 
 	/**
@@ -318,7 +322,7 @@ public class Modelo {
 		 JsonArray arregloComparendos = obj.get("features").getAsJsonArray();  
 		 		 
 		 SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-		 		
+		 Calendar calendario= Calendar.getInstance();
 		 
 		 for (JsonElement e: arregloComparendos) 	
 		 {
@@ -328,6 +332,7 @@ public class Modelo {
 			int id = propiedades.get("OBJECTID").getAsInt();
 			String f = propiedades.get("FECHA_HORA").getAsString();
 			Date fecha = parser.parse(f);
+			calendario.setTime(fecha);
 			String vehiculo = propiedades.get("CLASE_VEHICULO").getAsString();
 			String servicio = propiedades.get("TIPO_SERVICIO").getAsString();
 			String infraccion = propiedades.get("INFRACCION").getAsString();
@@ -337,14 +342,19 @@ public class Modelo {
 			JsonObject geometria = e.getAsJsonObject().get("geometry").getAsJsonObject();
 			JsonArray coords = geometria.get("coordinates").getAsJsonArray();
 			double[] coordenadas = new double[2];
-			
 			for (int j = 0; j < coordenadas.length; j++) 
 			{
 				coordenadas[j]=coords.get(j).getAsDouble();
 			}
-						
+			
+			//(L, M, I, J, V, S, D)
+			int diaSemana= calendario.get(Calendar.DAY_OF_WEEK)-1;
+			String dia=(1==diaSemana)?"L":(2==diaSemana)?"M":(3==diaSemana)?"I":(4==diaSemana)?"J":(5==diaSemana)?"V":(6==diaSemana)?"S":"D";;
+			
+			
 			Comparendo comparendo = new Comparendo(id, fecha, vehiculo, servicio, infraccion, descripcion, localidad,coordenadas);
 			heap.agregar(comparendo);
+			hash.putInSet(dia, comparendo);
 			agregarFinal(comparendo);
 		 }
 	}

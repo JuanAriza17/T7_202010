@@ -54,7 +54,7 @@ public class TestMaxHeapCP
 		for (int i = 0; i < 100; ++i) 
 		{
 
-			arreglo[i]=new Comparendo(i, null, "", "", "", "", "", coordenadas(i,i));
+			arreglo[i]=new Comparendo(i, null, "", "", "", "", "", coordenadas(i,i), null);
 		}
 		Ordenamientos.shuffle(arreglo);
 		for(int i=0; i<arreglo.length;++i)
@@ -82,8 +82,8 @@ public class TestMaxHeapCP
 		setUp2();
 		assertNotNull("La lista debería existir", heap);
 		assertEquals(100, heap.darNumElementos());
-		assertEquals(new Comparendo(99, null, "", "", "", "", "", coordenadas(99,99)).darLatitud(), heap.darMax().darLatitud(),0);
-		assertEquals(new Comparendo(99, null, "", "", "", "", "", coordenadas(99,99)).darLatitud(), heap.sacarMax().darLatitud(),0);
+		assertEquals(new Comparendo(99, null, "", "", "", "", "", coordenadas(99,99), null).darLatitud(), heap.darMax().darLatitud(),0);
+		assertEquals(new Comparendo(99, null, "", "", "", "", "", coordenadas(99,99), null).darLatitud(), heap.sacarMax().darLatitud(),0);
 		assertEquals(false, heap.esVacia());
 		assertNotNull("No debería existir", heap.darArreglo());
 	}
@@ -96,7 +96,7 @@ public class TestMaxHeapCP
 	{
 		//Comprobamos tamaño y que la lista este vacía
 		assertEquals(0,heap.darNumElementos());
-		heap.agregar(new Comparendo(100, null, "", "", "", "", "", coordenadas(0,0)));
+		heap.agregar(new Comparendo(100, null, "", "", "", "", "", coordenadas(0,0), null));
 		//Comprobamos que se haya agregado correctamente, se comprueba el caso de un solo elemento en la lista.
 		assertEquals(1, heap.darNumElementos());
 		heap.sacarMax();
@@ -116,17 +116,17 @@ public class TestMaxHeapCP
 	 
 		for(int i=0; i<100;i++)
 		{
-			heap.agregar(new Comparendo(100-i, null, "", "", "", "", "", coordenadas(99-i,99-i)));
+			heap.agregar(new Comparendo(100-i, null, "", "", "", "", "", coordenadas(99-i,99-i), null));
 		}
 		Comparable[] a= heap.darArreglo();
 		//Comprueba agregar muchos elementos y comprueba que el orden sea el indicado.
 		for(int i=0; i<100;++i)
 		{
 			Comparendo actual= (Comparendo) a[i+1];
-			assertEquals(new Comparendo(100-i, null, "", "", "", "", "", coordenadas(99-i,99-i)).darLatitud(), actual.darLatitud(),0);
+			assertEquals(new Comparendo(100-i, null, "", "", "", "", "", coordenadas(99-i,99-i), null).darLatitud(), actual.darLatitud(),0);
 		}
-		assertEquals(new Comparendo(99, null, "", "", "", "", "", coordenadas(99,99)).darLatitud(), heap.darMax().darLatitud(),0);
-		assertEquals(new Comparendo(99, null, "", "", "", "", "", coordenadas(99,99)).darLatitud(), heap.sacarMax().darLatitud(),0);
+		assertEquals(new Comparendo(99, null, "", "", "", "", "", coordenadas(99,99), null).darLatitud(), heap.darMax().darLatitud(),0);
+		assertEquals(new Comparendo(99, null, "", "", "", "", "", coordenadas(99,99), null).darLatitud(), heap.sacarMax().darLatitud(),0);
 		assertEquals(false, heap.esVacia());
 	}
 
@@ -139,7 +139,7 @@ public class TestMaxHeapCP
 		
 		//Comprobamos tamaño y que la lista este vacía
 		assertEquals(0,heap.darNumElementos());
-		heap.agregar(new Comparendo(100, null, "", "", "", "", "", coordenadas(0,0)));
+		heap.agregar(new Comparendo(100, null, "", "", "", "", "", coordenadas(0,0), null));
 		assertEquals(1, heap.darNumElementos());
 		heap.sacarMax();
 		assertEquals(0, heap.darNumElementos());
@@ -159,8 +159,8 @@ public class TestMaxHeapCP
 	{
 		//Comprobamos tamaño y que la lista este vacía
 		assertEquals(0,heap.darNumElementos());
-		heap.agregar(new Comparendo(100, null, "", "", "", "", "", coordenadas(0,0)));
-		assertEquals(new Comparendo(100, null, "", "", "", "", "", coordenadas(0,0)).darLatitud(),heap.darMax().darLatitud(),0);
+		heap.agregar(new Comparendo(100, null, "", "", "", "", "", coordenadas(0,0), null));
+		assertEquals(new Comparendo(100, null, "", "", "", "", "", coordenadas(0,0), null).darLatitud(),heap.darMax().darLatitud(),0);
 		heap.sacarMax();
 		assertEquals(0, heap.darNumElementos());
 		setUp2();
@@ -168,7 +168,7 @@ public class TestMaxHeapCP
 		int valor=heap.darNumElementos();
 		while(valor>0)
 		{
-			assertEquals(new Comparendo(valor-1, null, "", "", "", "", "", coordenadas(valor-1,valor-1)).darLatitud(),heap.darMax().darLatitud(),0);
+			assertEquals(new Comparendo(valor-1, null, "", "", "", "", "", coordenadas(valor-1,valor-1), null).darLatitud(),heap.darMax().darLatitud(),0);
 			heap.sacarMax();
 			valor--;
 		}
@@ -182,7 +182,7 @@ public class TestMaxHeapCP
 	{
 		//Comprueba si la lista está vacía y agregando y eliminado un dato.
 		assertEquals(true, heap.esVacia());
-		heap.agregar(new Comparendo(100, null, "", "", "", "", "", coordenadas(0,0)));
+		heap.agregar(new Comparendo(100, null, "", "", "", "", "", coordenadas(0,0), null));
 		assertEquals(false, heap.esVacia());
 		heap.sacarMax();
 		assertEquals(true, heap.esVacia());

@@ -1,11 +1,17 @@
 package model.logic;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 
 public class Comparendo implements Comparable<Comparendo>
 {
+	
+	private final static double LONGITUD_ESTACION = -74.078122;
+	
+	private final static double LATITUD_ESTACION = 4.647586;
+	
 	/**
 	 * ID comparendo
 	 */
@@ -45,6 +51,11 @@ public class Comparendo implements Comparable<Comparendo>
 	 * Coordenadas comparendo
 	 */
 	private double[] coordenadas;
+	
+	/**
+	 * Medio de deteccion
+	 */
+	private String medioDete;
 
 	/**
 	 * Metodo constructor para crear un comparendo
@@ -57,7 +68,7 @@ public class Comparendo implements Comparable<Comparendo>
 	 * @param pLocalidad localidad comparendo
 	 * @param pCoordenadas coordenadas comparendo
 	 */
-	public Comparendo(int pId, Date pFecha, String pVehiculo, String pServicio, String pInfraccion, String pDescripcion, String pLocalidad, double[] pCoordenadas)
+	public Comparendo(int pId, Date pFecha, String pVehiculo, String pServicio, String pInfraccion, String pDescripcion, String pLocalidad, double[] pCoordenadas, String pDete)
 	{
 		id = pId;
 		fecha = pFecha;
@@ -67,6 +78,7 @@ public class Comparendo implements Comparable<Comparendo>
 		des_infrac = pDescripcion;
 		localidad = pLocalidad;
 		coordenadas = pCoordenadas;
+		medioDete = pDete;
 	}
 
 	/**
@@ -126,7 +138,7 @@ public class Comparendo implements Comparable<Comparendo>
 	}
 
 	/**
-	 * Da las coordenadas del com
+	 * Da las coordenadas del comparendo
 	 * @return
 	 */
 	public double[] darCoordenadas() {
@@ -141,7 +153,7 @@ public class Comparendo implements Comparable<Comparendo>
 	{
 		return coordenadas[0];
 	}
-
+	
 	/**
 	 * Da latitud de la coordenada
 	 * @return latitud
@@ -151,16 +163,41 @@ public class Comparendo implements Comparable<Comparendo>
 		return coordenadas[1];
 	}
 	
-	public String darLlave()
+	/**
+	 * Da el medio de detección.
+	 * @return medio de deteccion
+	 */
+	public String darMedioDete()
 	{
-		String vehi = "";
-		if(vehiculo.equals("AUTOMÃ“VIL"))
-			vehi="automóvil";
-		else
-			vehi=vehiculo;
-		 SimpleDateFormat parser = new SimpleDateFormat("yyyy/MM/dd");
-		 String mensaje = parser.format(fecha)+vehi+infraccion; 
-		return mensaje.toLowerCase();
+		return medioDete;
+	}
+	
+	public String darLlaveDiaSemana()
+	{
+		Calendar calendario = Calendar.getInstance();
+		calendario.setTime(fecha);
+		
+		int diaSemana= calendario.get(Calendar.DAY_OF_WEEK)-1;
+		int mes = calendario.get(Calendar.MONTH)+1;
+		String dia=(1==diaSemana)?"L":(2==diaSemana)?"M":(3==diaSemana)?"I":(4==diaSemana)?"J":(5==diaSemana)?"V":(6==diaSemana)?"S":"D";
+		String llave = dia+mes;
+		
+		return llave;
+	}
+	
+	public String darLlaveDeteccionVehiculoServicioLocalidad()
+	{	
+		String llave = medioDete+vehiculo+servicio+localidad;
+		return llave.toLowerCase();
+	}
+	
+	/**
+	 * Método que retorna la distancia a la estación.
+	 * @return  distancia a la estación de policía.
+	 */
+	public double darDistanciaEstacion()
+	{
+		return Haversine.distance(LATITUD_ESTACION, LONGITUD_ESTACION, darLatitud(), darLongitud());
 	}
 
 	/**
@@ -168,8 +205,26 @@ public class Comparendo implements Comparable<Comparendo>
 	 */
 	public int compareTo(Comparendo o) {
 
-		return infraccion.compareTo(o.darInfraccion());
+		return id - o.darId();
 	}
+	
+	
+	public static class ComparadorXDistanciaAscendente implements Comparator<Comparendo>{
+		
+		public int compare(Comparendo c1, Comparendo c2)
+		{
+			return c2.darDistanciaEstacion()>c1.darDistanciaEstacion()?1:c2.darDistanciaEstacion()<c1.darDistanciaEstacion()?-1:0;
+		}
+	}
+	
+	public static class ComparadorXInfraccion implements Comparator<Comparendo>{
+		
+		public int compare(Comparendo c1, Comparendo c2)
+		{
+			return c1.darInfraccion().compareTo(c2.darInfraccion());
+		}
+	}
+
 
 	@Override
 	/**
@@ -185,7 +240,7 @@ public class Comparendo implements Comparable<Comparendo>
 		else
 			f="00";
 		
-		return  "OBJECTID: "+id+", FECHA Y HORA: "+f+", INFRACCION: "+infraccion+",  CLASE VEHICULO: "+vehiculo+", TIPO SERVICIO: "+servicio+", LOCALIDAD: "+localidad;
+		return "OBJECTID: "+id+", FECHA Y HORA: "+f+", INFRACCION: "+infraccion+",  CLASE VEHICULO: "+vehiculo+", TIPO SERVICIO: "+servicio+", LOCALIDAD: "+localidad;
 	}
 
 

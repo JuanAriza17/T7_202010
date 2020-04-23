@@ -1,20 +1,12 @@
 package controller;
 
 import java.io.FileNotFoundException;
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Scanner;
 
-import model.data_structures.ArregloDinamico;
-import model.data_structures.IArregloDinamico;
-import model.data_structures.IListaEncadenada;
-import model.data_structures.IMaxColaCP;
-import model.data_structures.IQueue;
-import model.data_structures.MaxColaCP;
-import model.data_structures.NodoLista;
 import model.logic.Comparendo;
 import model.logic.Modelo;
 import view.View;
@@ -58,7 +50,7 @@ public class Controller {
 		lector.useDelimiter("\n");
 		boolean cargado = false;
 		boolean fin = false;
-
+		int numComparendos = 0;
 
 		while( !fin ){
 			view.printMenu();
@@ -70,7 +62,6 @@ public class Controller {
 					if(!cargado)
 					{
 						view.printMessage("--------- \nCargando lista de comparendos");
-						view.printMessage("--------- \nCargando lista de comparendos en la lista ");
 						try
 						{
 							modelo.cargarComparendos(RUTA);
@@ -107,8 +98,8 @@ public class Controller {
 					}
 					view.printMessage("--------- \n ");
 					view.printMessage("Por favor ingrese el número de comparendos que desea visualizar.");
-					int numComparendosMayorGravedadInfraccion=Integer.parseInt(lector.nextLine());
-					String mayorGravedadInfraccion=modelo.darMComparendosConMayorGravedad(numComparendosMayorGravedadInfraccion);
+					numComparendos=Integer.parseInt(lector.nextLine());
+					String mayorGravedadInfraccion=modelo.darMComparendosConMayorGravedad(numComparendos);
 					view.printMessage(mayorGravedadInfraccion);
 					break;
 				
@@ -120,20 +111,22 @@ public class Controller {
 					}
 					view.printMessage("--------- \n ");
 					view.printMessage("Por favor ingrese el número de comparendos que desea visualizar.");
-					int numComparendosMesDia=Integer.parseInt(lector.nextLine());
+					numComparendos=Integer.parseInt(lector.nextLine());
 					view.printMessage("Por favor ingrese el día de la semana con el siguiente formato: (L, M, I, J, V, S, D).");
 					String dia=lector.nextLine();
 					view.printMessage("Por favor ingrese el número del mes: (1-12).");
 					int mes=Integer.parseInt(lector.nextLine());
 					Iterator<Comparendo> iteratorMesDia=modelo.darComparendosPorMesYDiaSemana(mes,dia);
-					while(iteratorMesDia.hasNext()&&numComparendosMesDia>0)
+					
+					if(numComparendos>Modelo.MAX_DATOS)
 					{
-						Comparendo actual=iteratorMesDia.next();
-						if((actual.darFecha().getMonth()+1)==mes)
-						{
-							view.printMessage(actual.toString());
-							--numComparendosMesDia;
-						}
+						view.printIterator(iteratorMesDia, Modelo.MAX_DATOS);
+						view.printMessage("\nDebido a que se quiso imprimir una cantidad de comparendos mayor a la permitida ("+Modelo.MAX_DATOS+"), se imprimieron solo "+numComparendos+".\n");
+					}
+					else
+					{
+						view.printIterator(iteratorMesDia,numComparendos);
+						view.printMessage("\nSe imprimieron los "+numComparendos+" comparendos.\n");
 					}
 					view.printMessage("\n");
 					break;
@@ -167,21 +160,93 @@ public class Controller {
 					break;
 					
 				case 4:
+					if(cargado==false)
+					{
+						view.printMessage("Por favor inicialice la lista de comparendos.\n");
+						break;
+					}
 					view.printMessage("--------- \n ");
-					
-					view.printMessage("Aún no se ha implementado el requerimiento");						
+					view.printMessage("Por favor ingrese el número de comparendos que desea visualizar.");
+					numComparendos=Integer.parseInt(lector.nextLine());
+					String menorDistancia=modelo.darMComparendosMasCercaEstacion(numComparendos);
+					view.printMessage(menorDistancia);
 					break;
 				
 				case 5:
+					if(cargado==false)
+					{
+						view.printMessage("Por favor inicialice la lista de comparendos.\n");
+						break;
+					}
 					view.printMessage("--------- \n ");
+					view.printMessage("Por favor ingrese el número de comparendos que desea visualizar.");
+					numComparendos=Integer.parseInt(lector.nextLine());
+					view.printMessage("Por favor ingrese el medio de detección.");
+					String dete=lector.nextLine();
+					view.printMessage("Por favor ingrese el vehículo.");
+					String vehiculo = lector.nextLine();
+					view.printMessage("Por favor ingrese el tipo de servicio.");
+					String servicio = lector.nextLine();
+					view.printMessage("Por favor ingrese la localidad.");
+					String localidad = lector.nextLine();
 					
-					view.printMessage("Aún no se ha implementado el requerimiento");						
+					if(vehiculo.equalsIgnoreCase("automovil")||vehiculo.equalsIgnoreCase("automóvil"))
+						vehiculo = "AUTOMÃ“VIL";
+					if(servicio.equalsIgnoreCase("público")||servicio.equalsIgnoreCase("público"))
+						servicio = "PÃºblico";
+					if(localidad.equalsIgnoreCase("antonio nariño"))
+						localidad = "ANTONIO NARIÃ‘O";
+					
+					Iterator<Comparendo> iteratorDeteVehi = modelo.darComparendosPorDeteccionVehiculoLocalidad(dete, vehiculo, servicio, localidad);
+					if(iteratorDeteVehi!=null)
+					{
+						if(numComparendos>Modelo.MAX_DATOS)
+						{
+							view.printIterator(iteratorDeteVehi, Modelo.MAX_DATOS);
+							view.printMessage("\nDebido a que se quiso imprimir una cantidad de comparendos mayor a la permitida ("+Modelo.MAX_DATOS+"), se imprimieron solo "+numComparendos+".\n");
+						}
+						else
+						{
+							view.printIterator(iteratorDeteVehi,numComparendos);
+							view.printMessage("\nSe imprimieron los "+numComparendos+" comparendos.\n");
+						}
+					}
+					else
+					{
+						view.printMessage("No se encontraron comparendos con los parámetros dados.");
+					}
+					view.printMessage("\n");
 					break;
 					
 				case 6:
-					view.printMessage("--------- \n ");
+					if(cargado==false)
+					{
+						view.printMessage("Por favor inicialice la lista de comparendos.\n");
+						break;
+					}
 					
-					view.printMessage("Aún no se ha implementado el requerimiento");						
+					try
+					{
+						view.printMessage("--------- \n ");
+						view.printMessage("Por favor ingrese la latitud inicial.");
+						double latitud1=Double.parseDouble(lector.nextLine());
+						view.printMessage("Por favor ingrese la latitud final.");
+						double latitud2 = Double.parseDouble(lector.nextLine());
+						view.printMessage("Por favor ingrese el vehiculo.");
+						String vehi = lector.nextLine();
+						
+						if(vehi.equalsIgnoreCase("automovil")||vehi.equalsIgnoreCase("automóvil"))
+							vehi = "AUTOMÃ“VIL";
+						
+						view.printMessage(modelo.darComparendosEnRangoLatitudYVehiculo(latitud1, latitud2, vehi));
+						
+						view.printMessage("\n");	
+					}
+					catch(Exception e)
+					{
+						view.printMessage("Ingrese una latitud válida.\n");
+					}
+								
 					break;
 				
 				case 7:

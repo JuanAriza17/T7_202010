@@ -32,7 +32,7 @@ public class TestStack
 		stack = new Stack<Comparendo>();
 		for (int i = 0; i < 10; i++) 
 		{
-			stack.push(new Comparendo(i, null, "", "", "", "", "", null));
+			stack.push(new Comparendo(i, null, "", "", "", "", "", null, null));
 		}
 	}
 
@@ -50,7 +50,7 @@ public class TestStack
 		//Se comprueba con el escenario 2.
 		setUp2();
 		assertNotNull("La lista debería existir", stack);
-		assertEquals(new Comparendo(9, null, "", "", "", "", "", null).darId(), stack.peek().darId());
+		assertEquals(new Comparendo(9, null, "", "", "", "", "", null, null).darId(), stack.peek().darId());
 		assertEquals(10, stack.size());
 		assertEquals(false, stack.isEmpty());
 	}
@@ -64,18 +64,18 @@ public class TestStack
 		//Comprobamos tamaño y que la lista este vacía
 		assertEquals(true, stack.isEmpty());
 		assertEquals(0, stack.size());
-		stack.push(new Comparendo(0, null, "", "", "", "", "", null));
+		stack.push(new Comparendo(0, null, "", "", "", "", "", null, null));
 
 		//Comprobamos que se haya agregado correctamente, se comprueba el caso de un solo elemento en la lista.
 		assertEquals(false, stack.isEmpty());
 		assertEquals(1, stack.size());
-		assertEquals(new Comparendo(0, null, "", "", "", "", "", null).darId(), stack.peek().darId());
+		assertEquals(new Comparendo(0, null, "", "", "", "", "", null, null).darId(), stack.peek().darId());
 
 		//Comprobamos que se haya agregado correctamente, se comprueba cualquier otro caso de la lista.
 		setUp2();
 		assertEquals(false, stack.isEmpty());
 		assertEquals(10, stack.size());
-		assertEquals(new Comparendo(9, null, "", "", "", "", "", null).darId(), stack.peek().darId());
+		assertEquals(new Comparendo(9, null, "", "", "", "", "", null, null).darId(), stack.peek().darId());
 	}
 
 	/**
@@ -90,10 +90,10 @@ public class TestStack
 		assertNull(stack.pop());
 
 		//Agregamos un elemento y posteriormente realizamos pop
-		stack.push(new Comparendo(0, null, "", "", "", "", "", null));
+		stack.push(new Comparendo(0, null, "", "", "", "", "", null, null));
 		assertEquals(false, stack.isEmpty());
 		assertEquals(1, stack.size());
-		assertEquals(new Comparendo(0, null, "", "", "", "", "", null).darId(), stack.pop().darId());
+		assertEquals(new Comparendo(0, null, "", "", "", "", "", null, null).darId(), stack.pop().darId());
 		assertEquals(true, stack.isEmpty());
 		assertEquals(0, stack.size());
 
@@ -101,7 +101,7 @@ public class TestStack
 		//Comprueba el pop para cualquiero otro caso de la lista
 		assertEquals(false, stack.isEmpty());
 		assertEquals(10, stack.size());
-		assertEquals(new Comparendo(9, null, "", "", "", "", "", null).darId(), stack.pop().darId());
+		assertEquals(new Comparendo(9, null, "", "", "", "", "", null, null).darId(), stack.pop().darId());
 		assertEquals(9, stack.size());
 	}
 
@@ -117,10 +117,10 @@ public class TestStack
 		assertNull(stack.peek());
 
 		//Agregamos un elemento y posteriormente realizamos peek
-		stack.push(new Comparendo(0, null, "", "", "", "", "", null));
+		stack.push(new Comparendo(0, null, "", "", "", "", "", null, null));
 		assertEquals(false, stack.isEmpty());
 		assertEquals(1, stack.size());
-		assertEquals(new Comparendo(0, null, "", "", "", "", "", null).darId(), stack.peek().darId());
+		assertEquals(new Comparendo(0, null, "", "", "", "", "", null, null).darId(), stack.peek().darId());
 		assertEquals(false, stack.isEmpty());
 		assertEquals(1, stack.size());
 		
@@ -128,7 +128,7 @@ public class TestStack
 		setUp2();
 		assertEquals(false, stack.isEmpty());
 		assertEquals(10, stack.size());
-		assertEquals(new Comparendo(9, null, "", "", "", "", "", null).darId(), stack.peek().darId());
+		assertEquals(new Comparendo(9, null, "", "", "", "", "", null, null).darId(), stack.peek().darId());
 		assertEquals(10, stack.size());
 	}
 	
@@ -140,7 +140,7 @@ public class TestStack
 	{
 		//Se comprueba que se agrega un elemento al inicio.
 		assertEquals(0,stack.size());
-		stack.push(new Comparendo(0, null, "", "", "", "", "", null));
+		stack.push(new Comparendo(0, null, "", "", "", "", "", null, null));
 		assertEquals(1, stack.size());
 		
 		//Se comprueba que el tamaño disminuye si se elimina el único elemento en la lista.
@@ -153,7 +153,7 @@ public class TestStack
 		assertEquals(10,stack.size());
 		stack.pop();
 		assertEquals(9, stack.size());
-		stack.push(new Comparendo(11, null, "", "", "", "", "", null));
+		stack.push(new Comparendo(11, null, "", "", "", "", "", null, null));
 		assertEquals(10, stack.size());
 	}
 	
@@ -167,7 +167,7 @@ public class TestStack
 		assertEquals(true, stack.isEmpty());
 		
 		//Se agrega un elemento para comprobar si deja de estar vacía
-		stack.push(new Comparendo(0, null, "", "", "", "", "", null));
+		stack.push(new Comparendo(0, null, "", "", "", "", "", null, null));
 		assertEquals(false, stack.isEmpty());
 		
 		//Se elimina para comprobar el cambio de lista NO vacía a vacía.

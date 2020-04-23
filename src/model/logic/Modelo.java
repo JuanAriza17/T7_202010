@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
 
@@ -17,6 +18,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 
+
 import model.data_structures.HashLinearProbing;
 import model.data_structures.HashSeparateChaining;
 import model.data_structures.IHashTable;
@@ -27,6 +29,7 @@ import model.data_structures.ListaEncadenada;
 import model.data_structures.MaxHeapCP;
 import model.data_structures.NodoLista;
 import model.data_structures.RedBlackBST;
+import model.logic.Comparendo.ComparadorXDistanciaAscendente;
 
 
 /**
@@ -40,7 +43,6 @@ public class Modelo {
 	 */
 	private IListaEncadenada<Comparendo> listaComparendos;
 	
-
 	/**
 	 * Arreglo con las muestras
 	 */
@@ -54,22 +56,37 @@ public class Modelo {
 	/**
 	 * Número de datos en caso de ser necesario imprimir números muy grandes.
 	 */
-	private final static int MAX_DATOS = 20;
+	public final static int MAX_DATOS = 20;
 	
 	/**
-	 * Heap de comparendos
+	 * Heap de comparendos por infracción.
 	 */
-	private IMaxHeapCP<Comparendo> heap;
+	private IMaxHeapCP<Comparendo> heapInfraccion;
 	
 	/**
-	 * Tabla de Hash de comparendos.
+	 * Heap de comparendos por distancia a la estación.
 	 */
-	private IHashTable<String, Comparendo> hash;
+	private IMaxHeapCP<Comparendo> heapDistancia;
 	
 	/**
-	 * Árbol RedBlack de comparendos.
+	 * Tabla de Hash de comparendos con llave de dias de la semana.
 	 */
-	private IRedBlackBST<Date, Comparendo>redBlack;
+	private IHashTable<String, Comparendo> hashDiasSemana;
+
+	/**
+	 * Tabla de Hash de comparendos con llave de medio de deteccion
+	 */
+	private IHashTable<String, Comparendo> hashDeteVehiServiLoc;
+	
+	/**
+	 * Árbol RedBlack de comparendos por fechas.
+	 */
+	private IRedBlackBST<Date, Comparendo>redBlackFechas;
+	
+	/**
+	 * Árbol RedBlack de comparendos por latitud.
+	 */
+	private IRedBlackBST<Double, Comparendo>redBlackLatitud;
 	
 	/**
 	 * Constructor del modelo del mundo con capacidad predefinida.
@@ -78,9 +95,12 @@ public class Modelo {
 	public Modelo()
 	{
 		listaComparendos = new ListaEncadenada<Comparendo>();
-		heap=new MaxHeapCP<Comparendo>(600000);
-		hash=new HashSeparateChaining<String, Comparendo>(6);
-		redBlack= new RedBlackBST<Date, Comparendo>();
+		heapInfraccion=new MaxHeapCP<Comparendo>(527656);
+		hashDiasSemana=new HashSeparateChaining<String, Comparendo>(7);
+		redBlackFechas= new RedBlackBST<Date, Comparendo>();
+		heapDistancia = new MaxHeapCP<Comparendo>(527656);
+		hashDeteVehiServiLoc = new HashSeparateChaining<String, Comparendo>(7);
+		redBlackLatitud = new RedBlackBST<Double, Comparendo>();
 	}
 	
 	/**
@@ -90,12 +110,17 @@ public class Modelo {
 	 */
 	public String darMComparendosConMayorGravedad(int m)
 	{
+		Comparendo.ComparadorXInfraccion compInfra = new Comparendo.ComparadorXInfraccion();
 		String retorno="";
-		for(int i=0; i<m;++i)
+		int max = m>MAX_DATOS?MAX_DATOS:m;
+		for(int i=0; i<max;++i)
 		{
-			Comparendo actual=heap.sacarMax();
+			Comparendo actual=heapInfraccion.sacarMax(compInfra);
 			retorno+=actual.toString()+"\n";
 		}
+
+		retorno+=m>MAX_DATOS?"\nDebido a que se quiso imprimir una cantidad de comparendos mayor a la permitida ("+Modelo.MAX_DATOS+"), se imprimieron solo "+m+"\n":"\nSe imprimieron los "+m+" comparendos.\n";
+
 		return retorno;
 	}
 
@@ -108,7 +133,8 @@ public class Modelo {
 	 */
 	public Iterator<Comparendo> darComparendosPorMesYDiaSemana(int mes, String diaSemana)
 	{
-		return hash.getSet(diaSemana);
+		String llave = diaSemana+mes;
+		return hashDiasSemana.getSet(llave);
 	}
 
 	/**
@@ -121,13 +147,15 @@ public class Modelo {
 	public String darComparendosEnRangoDeFechaYLocalidad(Date fecha1, Date fecha2, String localidad)
 	{
 		String respuesta="";
-		Iterator<Comparendo> iterador=redBlack.valuesInRange(fecha1, fecha2); 
-		while(iterador.hasNext())
+		Iterator<Comparendo> iterador=redBlackFechas.valuesInRange(fecha1, fecha2); 
+		int i =0;
+		while(iterador.hasNext()&&i<MAX_DATOS)
 		{
 			Comparendo actual=iterador.next();
 			if(localidad.equalsIgnoreCase(actual.darLocalidad()))
 			{
 				respuesta+=actual.toString()+"\n";
+				++i;
 			}
 		}
 		return respuesta;
@@ -139,9 +167,22 @@ public class Modelo {
 	 * @param m número de comparendos que se quiere imprimir.
 	 * @return Los m comparendos con mayor prioridad en una cola de prioridad por la cercanía a la estación.
 	 */ 
-	public IMaxHeapCP<Comparendo> darMComparendosMasCercaEstacion(int m)
+	public String darMComparendosMasCercaEstacion(int m)
 	{
-		return null;
+		String mensaje = "";
+		int max = m>MAX_DATOS?MAX_DATOS:m;
+
+		Comparendo.ComparadorXDistanciaAscendente comp = new Comparendo.ComparadorXDistanciaAscendente();
+		for (int i=0;i<max; ++i) 
+		{
+			Comparendo c = heapDistancia.sacarMax(comp);
+			mensaje+=c.toString()+" LONGITUD:"+ c.darLongitud()+" LATITUD: "+c.darLatitud()+ " DISTANCIA: "+c.darDistanciaEstacion()+"\n";
+		}
+		
+
+		mensaje+=m>MAX_DATOS?"\nDebido a que se quiso imprimir una cantidad de comparendos mayor a la permitida ("+Modelo.MAX_DATOS+"), se imprimieron solo "+m+".\n":"\nSe imprimieron los "+m+" comparendos.\n";
+
+		return mensaje;
 	}
 	
 	/**
@@ -151,9 +192,10 @@ public class Modelo {
 	 * @param localidad localidad de los comparendos
 	 * @return Iterator con los comparendos que tienen como llave (deteccion-servicio-localidad)
 	 */
-	public Iterator<Comparendo> darComparendosPorDeteccionVehiculoLocalidad(String deteccion, String servicio, String localidad)
+	public Iterator<Comparendo> darComparendosPorDeteccionVehiculoLocalidad(String deteccion, String vehiculo, String servicio, String localidad)
 	{
-		return null;
+		String llave = deteccion + vehiculo + servicio + localidad;
+		return hashDeteVehiServiLoc.getSet(llave.toLowerCase());
 	}
 
 
@@ -166,7 +208,22 @@ public class Modelo {
 	 */
 	public String darComparendosEnRangoLatitudYVehiculo(double latitud1, double latitud2, String vehiculo)
 	{
-		return null;
+		Iterator<Comparendo> it = redBlackLatitud.valuesInRange(latitud1, latitud2);
+		String mensaje = "";
+		
+		int i =0;
+		while(it.hasNext()&& i<20)
+		{
+			Comparendo c = it.next();
+			
+			if(c.darVehiculo().equalsIgnoreCase(vehiculo))
+			{
+				mensaje += c.toString()+" LATITUD: "+c.darLatitud()+"\n";
+				++i;
+			}
+		}
+		
+		return mensaje;
 	}
 
 	/**
@@ -335,7 +392,13 @@ public class Modelo {
 		 File archivo = new File(ruta);
 		 
 		 listaComparendos = new ListaEncadenada<Comparendo>();
-		 
+		 heapInfraccion=new MaxHeapCP<Comparendo>(527656);
+	 	 hashDiasSemana=new HashSeparateChaining<String, Comparendo>(7);
+	  	 redBlackFechas= new RedBlackBST<Date, Comparendo>();
+		 heapDistancia = new MaxHeapCP<Comparendo>(527656);
+	 	 hashDeteVehiServiLoc = new HashSeparateChaining<String, Comparendo>(7);
+	 	 redBlackLatitud = new RedBlackBST<Double, Comparendo>();
+	 	 		 
 		 JsonReader lector = new JsonReader(new FileReader(archivo));
 		 JsonObject obj = JsonParser.parseReader(lector).getAsJsonObject();
 		 
@@ -344,6 +407,9 @@ public class Modelo {
 		 SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 		 //SimpleDateFormat parserRedBlack= new SimpleDateFormat("YYYY/MM/DD-HH:mm:ss");
 		 Calendar calendario= Calendar.getInstance();
+		 
+		 Comparendo.ComparadorXInfraccion compInfra = new Comparendo.ComparadorXInfraccion();
+		 Comparendo.ComparadorXDistanciaAscendente compLat = new Comparendo.ComparadorXDistanciaAscendente();
 
 		 for (JsonElement e: arregloComparendos) 	
 		 {
@@ -361,6 +427,7 @@ public class Modelo {
 			String infraccion = propiedades.get("INFRACCION").getAsString();
 			String descripcion = propiedades.get("DES_INFRACCION").getAsString();
 			String localidad = propiedades.get("LOCALIDAD").getAsString();
+			String medioDete = propiedades.get("MEDIO_DETECCION").getAsString();
 
 			JsonObject geometria = e.getAsJsonObject().get("geometry").getAsJsonObject();
 			JsonArray coords = geometria.get("coordinates").getAsJsonArray();
@@ -371,16 +438,17 @@ public class Modelo {
 			}
 			
 			//(L, M, I, J, V, S, D)
-			int diaSemana= calendario.get(Calendar.DAY_OF_WEEK)-1;
-			String dia=(1==diaSemana)?"L":(2==diaSemana)?"M":(3==diaSemana)?"I":(4==diaSemana)?"J":(5==diaSemana)?"V":(6==diaSemana)?"S":"D";;
 			
-			Comparendo comparendo = new Comparendo(id, fecha, vehiculo, servicio, infraccion, descripcion, localidad,coordenadas);
+			Comparendo comparendo = new Comparendo(id, fecha, vehiculo, servicio, infraccion, descripcion, localidad,coordenadas, medioDete);
 			//Comparendo comparendoRedBlack=new Comparendo(id, fechaRedBlack, vehiculo, servicio, infraccion, descripcion, localidad, coordenadas);
-			heap.agregar(comparendo);
-			hash.putInSet(dia, comparendo);
-			redBlack.put(fecha, comparendo);
+			heapInfraccion.agregar(comparendo, compInfra);
+			heapDistancia.agregar(comparendo, compLat);
+			hashDiasSemana.putInSet(comparendo.darLlaveDiaSemana(), comparendo);
+			hashDeteVehiServiLoc.putInSet(comparendo.darLlaveDeteccionVehiculoServicioLocalidad(), comparendo);
+			redBlackFechas.put(fecha, comparendo);
+			redBlackLatitud.put(comparendo.darLatitud(), comparendo);
 			agregarFinal(comparendo);
-		 }
+		}
 	}
 	
 	/**

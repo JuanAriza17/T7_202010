@@ -60,11 +60,12 @@ public class View
 		 * Método que imprime el toString() del iterator de comparendos ingresado por parámetro.
 		 * @param lista Lista de comparendos.
 		 */
-		public void printIterator(Iterator<Comparendo> iterator)
+		public void printIterator(Iterator<Comparendo> iterator, int max)
 		{
-			while(iterator.hasNext())
+			while(iterator.hasNext()&&max>0)
 			{
 				System.out.println(iterator.next().toString());
+				--max;
 			}
 			System.out.println("\n");
 		}

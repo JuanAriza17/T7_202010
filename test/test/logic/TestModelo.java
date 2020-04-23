@@ -67,7 +67,7 @@ public class TestModelo {
 		modelo = new Modelo();
 		for (int i = 0; i < 10; i++) 
 		{
-			modelo.agregarFinal(new Comparendo(i, null, "", "", "", "", "", coordenadas(i,i)));
+			modelo.agregarFinal(new Comparendo(i, null, "", "", "", "", "", coordenadas(i,i), null));
 		}
 	}
 
@@ -128,14 +128,14 @@ public class TestModelo {
 	public void testAgregar() {
 		assertEquals(0, modelo.darLongitud());
 
-		Comparendo c = new Comparendo(0, null, "", "", "", "", "", new double[2]);
+		Comparendo c = new Comparendo(0, null, "", "", "", "", "", new double[2], null);
 		modelo.agregarFinal(c);
 		assertEquals(1,modelo.darLongitud());
 		assertTrue("Debería retornar el comparendo pero retorna "+modelo.buscar(c)+".",modelo.buscar(c).compareTo(c)==0);
 
 		for (int i = 1; i < 200; i++) 
 		{
-			c = new Comparendo(i, null, "", "", "", "", "",  new double[2]);
+			c = new Comparendo(i, null, "", "", "", "", "",  new double[2], null);
 			modelo.agregar(c);
 			assertEquals(i+1,modelo.darLongitud());
 			assertTrue("Debería retornar "+i+ " pero retorna "+modelo.buscar(c)+".",modelo.buscar(c).compareTo(c)==0);
@@ -154,13 +154,13 @@ public class TestModelo {
 			assertNotNull("El arreglo debería existir",modelo);
 			assertEquals(20, modelo.darLongitud());
 
-			assertNull("Debería ser null", modelo.buscar(new Comparendo(1, null, "", "", "", "", "", null)));
+			assertNull("Debería ser null", modelo.buscar(new Comparendo(1, null, "", "", "", "", "", null, null)));
 
-			Comparendo c = new Comparendo(29042, null, "", "", "", "", "", null);
+			Comparendo c = new Comparendo(29042, null, "", "", "", "", "", null, null);
 			assertNotNull("No debería ser null", modelo.buscar(c));
 
 			assertTrue("Debería retornar el comparento con el ID 29042 pero retorna el comparendo con ID "+modelo.buscar(c).darId()+".",modelo.buscar(c).compareTo(c)==0);
-			c = new Comparendo(29042, null, "", "", "", "", "", null);
+			c = new Comparendo(29042, null, "", "", "", "", "", null, null);
 			assertTrue("Debería retornar el comparento con el ID 29042 pero retorna el comparendo con ID "+modelo.buscar(c).darId()+".",modelo.buscar(c).compareTo(c)==0);
 		}
 		catch(Exception e)
@@ -172,10 +172,10 @@ public class TestModelo {
 		assertNotNull("El arreglo debería existir",modelo);
 		assertEquals(10, modelo.darLongitud());
 
-		assertNotNull("No debería ser null", modelo.buscar(new Comparendo(1, null, "", "", "", "", "", null)));
-		assertNull("Debería ser null", modelo.buscar(new Comparendo(2000, null, "", "", "", "", "", coordenadas(-1,-1))));
+		assertNotNull("No debería ser null", modelo.buscar(new Comparendo(1, null, "", "", "", "", "", null, null)));
+		assertNull("Debería ser null", modelo.buscar(new Comparendo(2000, null, "", "", "", "", "", coordenadas(-1,-1), null)));
 
-		assertTrue("Debería retornar el comparento con el ID 1 pero retorna el comparendo con ID "+modelo.buscar(new Comparendo(1, null, "", "", "", "", "", null)).darId()+".",modelo.buscar(new Comparendo(1, null, "", "", "", "", "", null)).compareTo(new Comparendo(1, null, "", "", "", "", "", null))==0);
+		assertTrue("Debería retornar el comparento con el ID 1 pero retorna el comparendo con ID "+modelo.buscar(new Comparendo(1, null, "", "", "", "", "", null, null)).darId()+".",modelo.buscar(new Comparendo(1, null, "", "", "", "", "", null, null)).compareTo(new Comparendo(1, null, "", "", "", "", "", null, null))==0);
 
 
 
@@ -194,13 +194,13 @@ public class TestModelo {
 			assertNotNull("El arreglo debería existir",modelo);
 			assertEquals(20, modelo.darLongitud());
 
-			Comparendo c = new Comparendo(0, null, "", "", "", "", "", null);
+			Comparendo c = new Comparendo(0, null, "", "", "", "", "", null, null);
 
 			Comparendo eliminar = modelo.eliminar(c);
 			assertNull("Debería ser null", eliminar);
 			assertEquals(20, modelo.darLongitud());
 
-			c = new Comparendo(29049, null, "", "", "", "", "", null); 
+			c = new Comparendo(29049, null, "", "", "", "", "", null, null); 
 
 			Comparendo dato = modelo.buscar(c);
 			eliminar = modelo.eliminar(c);

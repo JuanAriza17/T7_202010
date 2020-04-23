@@ -44,7 +44,7 @@ public class TestListaEncadenada
 		lista = new ListaEncadenada<Comparendo>();
 		for (int i = 0; i < 10; i++) 
 		{
-			lista.agregar(new Comparendo(i, null, "", "", "", "", "", coordenadas(i,i)));
+			lista.agregar(new Comparendo(i, null, "", "", "", "", "", coordenadas(i,i),""));
 		}
 	}
 
@@ -67,17 +67,17 @@ public class TestListaEncadenada
 		//Agrega muchos elementos al final para comprobar si fueron agregados.
 		for (int i = 0; i < 10; i++) 
 		{
-			lista.agregarFinal(new Comparendo(i, null, "", "", "", "", "", coordenadas(i,i)));
+			lista.agregarFinal(new Comparendo(i, null, "", "", "", "", "", coordenadas(i,i),""));
 		}
 		assertNotNull("El arreglo debería existir",lista);
 		assertEquals(10, lista.darLongitud());
 
 		//Comprueba un elemento que existe y otro que no.
-		assertNotNull("No debería ser null", lista.buscar(new Comparendo(1, null, "", "", "", "", "", coordenadas(1,1))));
-		assertNull("Debería ser null", lista.buscar(new Comparendo(2000, null, "", "", "", "", "", coordenadas(-1,-1))));
+		assertNotNull("No debería ser null", lista.buscar(new Comparendo(1, null, "", "", "", "", "", coordenadas(1,1),"")));
+		assertNull("Debería ser null", lista.buscar(new Comparendo(2000, null, "", "", "", "", "", coordenadas(-1,-1),"")));
 
 		//Comprueba el primer y el último elemento.
-		assertTrue("Debería retornar el comparento con el ID 1 pero retorna el comparendo con ID "+lista.buscar(new Comparendo(1, null, "", "", "", "", "", null)).darId()+".",lista.buscar(new Comparendo(1, null, "", "", "", "", "", null)).compareTo(new Comparendo(1, null, "", "", "", "", "", null))==0);
+		assertTrue("Debería retornar el comparento con el ID 1 pero retorna el comparendo con ID "+lista.buscar(new Comparendo(1, null, "", "", "", "", "", null,"")).darId()+".",lista.buscar(new Comparendo(1, null, "", "", "", "", "", null,"")).compareTo(new Comparendo(1, null, "", "", "", "", "", null,""))==0);
 		assertEquals(lista.darElemento(0), lista.darPrimero().darElemento());
 		assertEquals(lista.darElemento(lista.darLongitud()-1),lista.darUltimo().darElemento());
 	}
@@ -90,17 +90,17 @@ public class TestListaEncadenada
 	{
 		for (int i = 0; i < 10; i++) 
 		{
-			lista.agregar(new Comparendo(i, null, "", "", "", "", "", coordenadas(i,i)));
+			lista.agregar(new Comparendo(i, null, "", "", "", "", "", coordenadas(i,i),""));
 		}
 		assertNotNull("El arreglo debería existir",lista);
 		assertEquals(10, lista.darLongitud());
 
 		//Comprueba un elemento que existe y otro que no.
-		assertNotNull("No debería ser null", lista.buscar(new Comparendo(1, null, "", "", "", "", "", coordenadas(1,1))));
-		assertNull("Debería ser null", lista.buscar(new Comparendo(2000, null, "", "", "", "", "", coordenadas(-1,-1))));
+		assertNotNull("No debería ser null", lista.buscar(new Comparendo(1, null, "", "", "", "", "", coordenadas(1,1),"")));
+		assertNull("Debería ser null", lista.buscar(new Comparendo(2000, null, "", "", "", "", "", coordenadas(-1,-1),"")));
 
 		//Comprueba el primer y el último elemento.
-		assertTrue("Debería retornar el comparento con el ID 1 pero retorna el comparendo con ID "+lista.buscar(new Comparendo(1, null, "", "", "", "", "", null)).darId()+".",lista.buscar(new Comparendo(1, null, "", "", "", "", "", null)).compareTo(new Comparendo(1, null, "", "", "", "", "", null))==0);
+		assertTrue("Debería retornar el comparento con el ID 1 pero retorna el comparendo con ID "+lista.buscar(new Comparendo(1, null, "", "", "", "", "", null,"")).darId()+".",lista.buscar(new Comparendo(1, null, "", "", "", "", "", null,"")).compareTo(new Comparendo(1, null, "", "", "", "", "", null,""))==0);
 		assertEquals(lista.darElemento(lista.darLongitud()-1),lista.darUltimo().darElemento());
 	}
 
@@ -112,7 +112,7 @@ public class TestListaEncadenada
 	{
 		//Comprueba el caso en que la lista esté vacía.
 		assertNull(lista.darPrimero());
-		lista.agregarInicio(new Comparendo(1, null, "", "", "", "", "", null));
+		lista.agregarInicio(new Comparendo(1, null, "", "", "", "", "", null, null));
 		assertNotNull(lista.darPrimero().darElemento());
 		assertEquals(lista.darElemento(0), lista.darPrimero().darElemento());
 
@@ -122,11 +122,11 @@ public class TestListaEncadenada
 		assertEquals(10, lista.darLongitud());
 
 		//Comprueba un elemento que existe y otro que no.
-		assertNotNull("No debería ser null", lista.buscar(new Comparendo(1, null, "", "", "", "", "", coordenadas(1,1))));
-		assertNull("Debería ser null", lista.buscar(new Comparendo(2000, null, "", "", "", "", "", coordenadas(-1,-1))));
+		assertNotNull("No debería ser null", lista.buscar(new Comparendo(1, null, "", "", "", "", "", coordenadas(1,1), null)));
+		assertNull("Debería ser null", lista.buscar(new Comparendo(2000, null, "", "", "", "", "", coordenadas(-1,-1), null)));
 
 		//Comprueba el primer y el último elemento.
-		assertTrue("Debería retornar el comparento con el ID 1 pero retorna el comparendo con ID "+lista.buscar(new Comparendo(1, null, "", "", "", "", "", null)).darId()+".",lista.buscar(new Comparendo(1, null, "", "", "", "", "", null)).compareTo(new Comparendo(1, null, "", "", "", "", "", null))==0);
+		assertTrue("Debería retornar el comparento con el ID 1 pero retorna el comparendo con ID "+lista.buscar(new Comparendo(1, null, "", "", "", "", "", null, null)).darId()+".",lista.buscar(new Comparendo(1, null, "", "", "", "", "", null, null)).compareTo(new Comparendo(1, null, "", "", "", "", "", null, null))==0);
 		assertEquals(lista.darElemento(0), lista.darPrimero().darElemento());
 		assertEquals(lista.darElemento(lista.darLongitud()-1),lista.darUltimo().darElemento());
 	}
@@ -138,18 +138,18 @@ public class TestListaEncadenada
 	public void testBuscar()
 	{
 		//Prueba de buscar si no hay nada en la lista.
-		assertNull("Debería ser null", lista.buscar(new Comparendo(1, null, "", "", "", "", "", null)));
+		assertNull("Debería ser null", lista.buscar(new Comparendo(1, null, "", "", "", "", "", null, null)));
 
 		setUp2();
 		assertNotNull("El arreglo debería existir",lista);
 		assertEquals(10, lista.darLongitud());
 
 		//Comprueba un elemento que existe y otro que no.
-		assertNotNull("No debería ser null", lista.buscar(new Comparendo(1, null, "", "", "", "", "", null)));
-		assertNull("Debería ser null", lista.buscar(new Comparendo(2000, null, "", "", "", "", "", coordenadas(-1,-1))));
+		assertNotNull("No debería ser null", lista.buscar(new Comparendo(1, null, "", "", "", "", "", null, null)));
+		assertNull("Debería ser null", lista.buscar(new Comparendo(2000, null, "", "", "", "", "", coordenadas(-1,-1), null)));
 
 		//Comprueba otros casos.
-		assertTrue("Debería retornar el comparento con el ID 1 pero retorna el comparendo con ID "+lista.buscar(new Comparendo(1, null, "", "", "", "", "", null)).darId()+".",lista.buscar(new Comparendo(1, null, "", "", "", "", "", null)).compareTo(new Comparendo(1, null, "", "", "", "", "", null))==0);
+		assertTrue("Debería retornar el comparento con el ID 1 pero retorna el comparendo con ID "+lista.buscar(new Comparendo(1, null, "", "", "", "", "", null, null)).darId()+".",lista.buscar(new Comparendo(1, null, "", "", "", "", "", null, null)).compareTo(new Comparendo(1, null, "", "", "", "", "", null, null))==0);
 	}
 
 	/**
@@ -162,7 +162,7 @@ public class TestListaEncadenada
 		assertEquals(0, lista.darLongitud());
 
 		//Prueba la longitud agregando un elemento.
-		Comparendo c1 = new Comparendo(0, null, "", "", "", "", "", null);
+		Comparendo c1 = new Comparendo(0, null, "", "", "", "", "", null, null);
 		lista.agregar(c1);
 		assertEquals(1, lista.darLongitud());
 
@@ -185,10 +185,10 @@ public class TestListaEncadenada
 		assertNull(lista.darPrimero());
 
 		//Agregamos 4 comparendos.
-		Comparendo c0 = new Comparendo(0, null, "", "", "", "", "", coordenadas(0,0));
-		Comparendo c1 = new Comparendo(1, null, "", "", "", "", "", coordenadas(1,1));
-		Comparendo c2 = new Comparendo(2, null, "", "", "", "", "", coordenadas(2,2));
-		Comparendo c3 = new Comparendo(3, null, "", "", "", "", "", coordenadas(3,3));
+		Comparendo c0 = new Comparendo(0, null, "", "", "", "", "", coordenadas(0,0), null);
+		Comparendo c1 = new Comparendo(1, null, "", "", "", "", "", coordenadas(1,1), null);
+		Comparendo c2 = new Comparendo(2, null, "", "", "", "", "", coordenadas(2,2), null);
+		Comparendo c3 = new Comparendo(3, null, "", "", "", "", "", coordenadas(3,3), null);
 
 		lista.agregar(c0);
 		lista.agregar(c1);
@@ -228,14 +228,14 @@ public class TestListaEncadenada
 		assertNull(lista.darPrimero());
 
 		//Cuando hay un solo elemento en la lista.
-		Comparendo c = new Comparendo(0, null, "", "", "", "", "", null);
+		Comparendo c = new Comparendo(0, null, "", "", "", "", "", null, null);
 		lista.agregar(c);
 		assertNotNull(lista.darPrimero());
 
 		//Prueba en el resto de casos
 		setUp2();
 		assertEquals(lista.darElemento(0), lista.darPrimero().darElemento());
-		Comparendo c1 = new Comparendo(0, null, "", "", "", "", "", null);
+		Comparendo c1 = new Comparendo(0, null, "", "", "", "", "", null, null);
 		lista.agregarInicio(c1);
 		assertEquals(c1, lista.darPrimero().darElemento());
 
@@ -251,13 +251,13 @@ public class TestListaEncadenada
 		assertNull(lista.darUltimo());
 
 		//Cuando hay un solo elemento en la lista.
-		Comparendo c = new Comparendo(0, null, "", "", "", "", "", null);
+		Comparendo c = new Comparendo(0, null, "", "", "", "", "", null, null);
 		lista.agregar(c);
 		assertNotNull(lista.darUltimo());
 
 		//Comprueba el resto de casos.
 		setUp2();
-		Comparendo c1 = new Comparendo(9, null, "", "", "", "", "", null);
+		Comparendo c1 = new Comparendo(9, null, "", "", "", "", "", null, null);
 		assertEquals(c1.darId(), lista.darUltimo().darElemento().darId());
 	}
 

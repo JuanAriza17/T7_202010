@@ -1,5 +1,7 @@
 package model.data_structures;
 
+import java.util.Comparator;
+
 public interface IMaxHeapCP<T extends Comparable<T>>
 {
 	/**
@@ -13,7 +15,7 @@ public interface IMaxHeapCP<T extends Comparable<T>>
 	 * @param elemento Elemento que será agregado a la cola de prioridad.
 	 */
 	public void agregar(T elemento);
-	
+		
 	/**
 	 * Saca/atiende el elemento máximo en el heap y lo retorna.
 	 * @return Elemento máximo de la cola. Si la cola está vacía retorna null.
@@ -48,4 +50,31 @@ public interface IMaxHeapCP<T extends Comparable<T>>
 	 */
 	public T[] darArreglo();
 
+	/**
+	 * Método que agrega un elemento en el heap de prioridad. Utiliza el comparador natural de la clase T.
+	 * @param elemento Elemento que será agregado a la cola de prioridad.
+	 * @param Comparator
+	 */
+	public void agregar(T elemento, Comparator<T> comp);
+
+
+	/**
+	 * Saca/atiende el elemento máximo en el heap y lo retorna.
+	 * @param Comparator
+	 * @return Elemento máximo de la cola. Si la cola está vacía retorna null.
+	 */
+	public T sacarMax(Comparator<T> comp);
+
+	/**
+	 * Método que envía un elemento de la parte superior a la inferior del heap para preservar el orden.
+	 * @param Comparator
+	 */
+	public void sink(int pPosicion, Comparator<T> comp);
+	
+	/**
+	 * Método que envía un elemento de la parte inferior a la superior del heap para preservar el orden.
+	 * @param comp Comparator 
+	 */
+	public void swim(int pPosicion, Comparator<T> comp);
+	
 }

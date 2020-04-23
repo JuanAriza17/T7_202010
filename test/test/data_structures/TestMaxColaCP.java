@@ -10,7 +10,6 @@ import org.junit.Test;
 import model.data_structures.MaxColaCP;
 import model.logic.Comparendo;
 import model.logic.Ordenamientos;
-import model.logic.Ordenamientos;
 
 public class TestMaxColaCP 
 {
@@ -54,7 +53,7 @@ public class TestMaxColaCP
 		for (int i = 0; i < 100; ++i) 
 		{
 
-			arreglo[i]=new Comparendo(i, null, "", "", "", "", "", coordenadas(i,i));
+			arreglo[i]=new Comparendo(i, null, "", "", "", "", "", coordenadas(i,i), null);
 		}
 		Ordenamientos.shuffle(arreglo);
 		for(int i=0; i<arreglo.length;++i)
@@ -82,8 +81,8 @@ public class TestMaxColaCP
 		setUp2();
 		assertNotNull("La lista debería existir", cola);
 		assertEquals(100, cola.darNumElementos());
-		assertEquals(new Comparendo(99, null, "", "", "", "", "", coordenadas(99,99)).darLatitud(), cola.darMax().darLatitud(),0);
-		assertEquals(new Comparendo(99, null, "", "", "", "", "", coordenadas(99,99)).darLatitud(), cola.sacarMax().darLatitud(),0);
+		assertEquals(new Comparendo(99, null, "", "", "", "", "", coordenadas(99,99), null).darLatitud(), cola.darMax().darLatitud(),0);
+		assertEquals(new Comparendo(99, null, "", "", "", "", "", coordenadas(99,99), null).darLatitud(), cola.sacarMax().darLatitud(),0);
 		assertEquals(false, cola.esVacia());
 		assertNotNull("No debería existir", cola.darListaCola());
 		assertNotNull("No debería existir", cola.darCola());
@@ -97,7 +96,7 @@ public class TestMaxColaCP
 	{
 		//Comprobamos tamaño y que la lista este vacía
 		assertEquals(0,cola.darNumElementos());
-		cola.agregar(new Comparendo(100, null, "", "", "", "", "", coordenadas(0,0)));
+		cola.agregar(new Comparendo(100, null, "", "", "", "", "", coordenadas(0,0), null));
 		//Comprobamos que se haya agregado correctamente, se comprueba el caso de un solo elemento en la lista.
 		assertEquals(1, cola.darNumElementos());
 		cola.sacarMax();
@@ -119,10 +118,10 @@ public class TestMaxColaCP
 		for(int i=0; i<100;++i)
 		{
 			Comparendo actual=(Comparendo) cola.darCola().darElementos().darElemento(i);
-			assertEquals(new Comparendo(100-i, null, "", "", "", "", "", coordenadas(99-i,99-i)).darLatitud(), actual.darLatitud(),0);
+			assertEquals(new Comparendo(100-i, null, "", "", "", "", "", coordenadas(99-i,99-i), null).darLatitud(), actual.darLatitud(),0);
 		}
-		assertEquals(new Comparendo(99, null, "", "", "", "", "", coordenadas(99,99)).darLatitud(), cola.darMax().darLatitud(),0);
-		assertEquals(new Comparendo(99, null, "", "", "", "", "", coordenadas(99,99)).darLatitud(), cola.sacarMax().darLatitud(),0);
+		assertEquals(new Comparendo(99, null, "", "", "", "", "", coordenadas(99,99), null).darLatitud(), cola.darMax().darLatitud(),0);
+		assertEquals(new Comparendo(99, null, "", "", "", "", "", coordenadas(99,99), null).darLatitud(), cola.sacarMax().darLatitud(),0);
 		assertEquals(false, cola.esVacia());
 	}
 
@@ -134,7 +133,7 @@ public class TestMaxColaCP
 	{
 		//Comprobamos tamaño y que la lista este vacía
 		assertEquals(0,cola.darNumElementos());
-		cola.agregar(new Comparendo(100, null, "", "", "", "", "", coordenadas(0,0)));
+		cola.agregar(new Comparendo(100, null, "", "", "", "", "", coordenadas(0,0), null));
 		assertEquals(1, cola.darNumElementos());
 		cola.sacarMax();
 		assertEquals(0, cola.darNumElementos());
@@ -154,8 +153,8 @@ public class TestMaxColaCP
 	{
 		//Comprobamos tamaño y que la lista este vacía
 		assertEquals(0,cola.darNumElementos());
-		cola.agregar(new Comparendo(100, null, "", "", "", "", "", coordenadas(0,0)));
-		assertEquals(new Comparendo(100, null, "", "", "", "", "", coordenadas(0,0)).darLatitud(),cola.darMax().darLatitud(),0);
+		cola.agregar(new Comparendo(100, null, "", "", "", "", "", coordenadas(0,0), null));
+		assertEquals(new Comparendo(100, null, "", "", "", "", "", coordenadas(0,0), null).darLatitud(),cola.darMax().darLatitud(),0);
 		cola.sacarMax();
 		assertEquals(0, cola.darNumElementos());
 		setUp2();
@@ -163,7 +162,7 @@ public class TestMaxColaCP
 		int valor=cola.darNumElementos();
 		while(valor>0)
 		{
-			assertEquals(new Comparendo(valor-1, null, "", "", "", "", "", coordenadas(valor-1,valor-1)).darLatitud(),cola.darMax().darLatitud(),0);
+			assertEquals(new Comparendo(valor-1, null, "", "", "", "", "", coordenadas(valor-1,valor-1), null).darLatitud(),cola.darMax().darLatitud(),0);
 			cola.sacarMax();
 			valor--;
 		}
@@ -177,7 +176,7 @@ public class TestMaxColaCP
 	{
 		//Comprueba si la lista está vacía y agregando y eliminado un dato.
 		assertEquals(true, cola.esVacia());
-		cola.agregar(new Comparendo(100, null, "", "", "", "", "", coordenadas(0,0)));
+		cola.agregar(new Comparendo(100, null, "", "", "", "", "", coordenadas(0,0), null));
 		assertEquals(false, cola.esVacia());
 		cola.sacarMax();
 		assertEquals(true, cola.esVacia());

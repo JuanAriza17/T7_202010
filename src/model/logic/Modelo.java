@@ -1,16 +1,15 @@
 package model.logic;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
-
-import javax.swing.JPopupMenu.Separator;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -18,8 +17,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 
-
-import model.data_structures.HashLinearProbing;
 import model.data_structures.HashSeparateChaining;
 import model.data_structures.IHashTable;
 import model.data_structures.IListaEncadenada;
@@ -27,9 +24,7 @@ import model.data_structures.IMaxHeapCP;
 import model.data_structures.IRedBlackBST;
 import model.data_structures.ListaEncadenada;
 import model.data_structures.MaxHeapCP;
-import model.data_structures.NodoLista;
 import model.data_structures.RedBlackBST;
-import model.logic.Comparendo.ComparadorXDistanciaAscendente;
 
 
 /**
@@ -119,7 +114,7 @@ public class Modelo {
 			retorno+=actual.toString()+"\n";
 		}
 
-		retorno+=m>MAX_DATOS?"\nDebido a que se quiso imprimir una cantidad de comparendos mayor a la permitida ("+Modelo.MAX_DATOS+"), se imprimieron solo "+m+"\n":"\nSe imprimieron los "+m+" comparendos.\n";
+		retorno+=m>MAX_DATOS?"\nDebido a que se quiso imprimir una cantidad de comparendos mayor a la permitida ("+m+"), se imprimieron solo "+Modelo.MAX_DATOS+"\n":"\nSe imprimieron los "+m+" comparendos.\n";
 
 		return retorno;
 	}
@@ -180,7 +175,7 @@ public class Modelo {
 		}
 		
 
-		mensaje+=m>MAX_DATOS?"\nDebido a que se quiso imprimir una cantidad de comparendos mayor a la permitida ("+Modelo.MAX_DATOS+"), se imprimieron solo "+m+".\n":"\nSe imprimieron los "+m+" comparendos.\n";
+		mensaje+=m>MAX_DATOS?"\nDebido a que se quiso imprimir una cantidad de comparendos mayor a la permitida ("+m+"), se imprimieron solo "+Modelo.MAX_DATOS+".\n":"\nSe imprimieron los "+m+" comparendos.\n";
 
 		return mensaje;
 	}
@@ -192,10 +187,26 @@ public class Modelo {
 	 * @param localidad localidad de los comparendos
 	 * @return Iterator con los comparendos que tienen como llave (deteccion-servicio-localidad)
 	 */
-	public Iterator<Comparendo> darComparendosPorDeteccionVehiculoLocalidad(String deteccion, String vehiculo, String servicio, String localidad)
+	public Comparable[] darComparendosPorDeteccionVehiculoLocalidad(String deteccion, String vehiculo, String servicio, String localidad)
 	{
 		String llave = deteccion + vehiculo + servicio + localidad;
-		return hashDeteVehiServiLoc.getSet(llave.toLowerCase());
+		
+		Iterator<Comparendo> it = hashDeteVehiServiLoc.getSet(llave);
+		
+		if(it==null)
+			return null;
+		
+		ListaEncadenada<Comparendo> lista = new ListaEncadenada<Comparendo>();
+		Comparendo.ComparadorXFecha comp = new Comparendo.ComparadorXFecha();
+		
+		while(it.hasNext())
+			lista.agregarFinal(it.next());
+		
+		Comparable[] arreglo = lista.darArreglo();
+		Ordenamientos.mergeSort(arreglo, comp);
+		
+		
+		return arreglo;
 	}
 
 
@@ -386,8 +397,9 @@ public class Modelo {
 	 * Método que carga los comparendos
 	 * @param ruta Rita archivo con los comparendos
 	 * @throws FileNotFoundException si no encuentra el archivo
+	 * @throws UnsupportedEncodingException 
 	 */
-	public void cargarComparendos(String ruta) throws FileNotFoundException, ParseException 
+	public void cargarComparendos(String ruta) throws FileNotFoundException, ParseException, UnsupportedEncodingException 
 	{
 		 File archivo = new File(ruta);
 		 
@@ -399,8 +411,9 @@ public class Modelo {
 	 	 hashDeteVehiServiLoc = new HashSeparateChaining<String, Comparendo>(7);
 	 	 redBlackLatitud = new RedBlackBST<Double, Comparendo>();
 	 	 		 
-		 JsonReader lector = new JsonReader(new FileReader(archivo));
-		 JsonObject obj = JsonParser.parseReader(lector).getAsJsonObject();
+	 	JsonReader lector = new JsonReader(new InputStreamReader(new FileInputStream(ruta), "UTF-8"));
+	 	JsonObject obj = JsonParser.parseReader(lector).getAsJsonObject();
+		 
 		 
 		 JsonArray arregloComparendos = obj.get("features").getAsJsonArray();  
 		 		 

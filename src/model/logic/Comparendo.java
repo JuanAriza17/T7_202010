@@ -224,7 +224,14 @@ public class Comparendo implements Comparable<Comparendo>
 			return c1.darInfraccion().compareTo(c2.darInfraccion());
 		}
 	}
-
+	
+	public static class ComparadorXFecha implements Comparator<Comparendo>{
+		
+		public int compare(Comparendo c1, Comparendo c2)
+		{
+			return c1.darFecha().compareTo(c2.darFecha());
+		}
+	}
 
 	@Override
 	/**

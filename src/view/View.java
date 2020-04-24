@@ -69,5 +69,14 @@ public class View
 			}
 			System.out.println("\n");
 		}
+		
+		public void printArreglo(Object[] arg, int max)
+		{
+			for (int i = 0; i < arg.length&&i<max; ++i) 
+			{
+				System.out.println(arg[i].toString());
+			}
+			System.out.println("\n");
+		}
 }
 

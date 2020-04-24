@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.FileNotFoundException;
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.util.Iterator;
 
@@ -53,8 +54,9 @@ public class TestModelo {
 	 * Carga de los comparendos
 	 * @throws FileNotFoundException
 	 * @throws ParseException
+	 * @throws UnsupportedEncodingException 
 	 */
-	public void setUp2() throws FileNotFoundException, ParseException {
+	public void setUp2() throws FileNotFoundException, ParseException, UnsupportedEncodingException {
 		modelo = new Modelo();
 		modelo.cargarComparendos(RUTA);
 	}
@@ -110,7 +112,7 @@ public class TestModelo {
 		{
 			assertEquals(0, modelo.darLongitud());
 		}
-		catch(ParseException e)
+		catch(Exception e)
 		{
 			e.printStackTrace();
 		}

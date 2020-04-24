@@ -76,7 +76,7 @@ public class Controller {
 							view.printMessage("No se pudo crear la lista porque no existe el archivo de comparendos");
 							view.printMessage("\n---------\n" + "Numero actual de comparendos en la lista " + modelo.darLongitud()+"\n");	
 						}
-						catch(ParseException e)
+						catch(Exception e)
 						{
 							view.printMessage("Ocurrió un error cargando los comparendos");
 							view.printMessage("\n---------\n" + "Numero actual de comparendos en la lista " + modelo.darLongitud()+"\n");	
@@ -121,7 +121,7 @@ public class Controller {
 					if(numComparendos>Modelo.MAX_DATOS)
 					{
 						view.printIterator(iteratorMesDia, Modelo.MAX_DATOS);
-						view.printMessage("\nDebido a que se quiso imprimir una cantidad de comparendos mayor a la permitida ("+Modelo.MAX_DATOS+"), se imprimieron solo "+numComparendos+".\n");
+						view.printMessage("\nDebido a que se quiso imprimir una cantidad de comparendos mayor a la permitida ("+numComparendos+"), se imprimieron solo "+Modelo.MAX_DATOS+".\n");
 					}
 					else
 					{
@@ -183,31 +183,24 @@ public class Controller {
 					numComparendos=Integer.parseInt(lector.nextLine());
 					view.printMessage("Por favor ingrese el medio de detección.");
 					String dete=lector.nextLine();
-					view.printMessage("Por favor ingrese el vehículo.");
+					view.printMessage("Por favor ingrese el vehículo (Tenga buena ortografía).");
 					String vehiculo = lector.nextLine();
-					view.printMessage("Por favor ingrese el tipo de servicio.");
+					view.printMessage("Por favor ingrese el tipo de servicio (Tenga buena ortografía).");
 					String servicio = lector.nextLine();
 					view.printMessage("Por favor ingrese la localidad.");
 					String localidad = lector.nextLine();
 					
-					if(vehiculo.equalsIgnoreCase("automovil")||vehiculo.equalsIgnoreCase("automóvil"))
-						vehiculo = "AUTOMÃ“VIL";
-					if(servicio.equalsIgnoreCase("público")||servicio.equalsIgnoreCase("público"))
-						servicio = "PÃºblico";
-					if(localidad.equalsIgnoreCase("antonio nariño"))
-						localidad = "ANTONIO NARIÃ‘O";
-					
-					Iterator<Comparendo> iteratorDeteVehi = modelo.darComparendosPorDeteccionVehiculoLocalidad(dete, vehiculo, servicio, localidad);
-					if(iteratorDeteVehi!=null)
+					Comparable[] arregloDeteVehi = modelo.darComparendosPorDeteccionVehiculoLocalidad(dete, vehiculo, servicio, localidad);
+					if(arregloDeteVehi!=null)
 					{
 						if(numComparendos>Modelo.MAX_DATOS)
 						{
-							view.printIterator(iteratorDeteVehi, Modelo.MAX_DATOS);
-							view.printMessage("\nDebido a que se quiso imprimir una cantidad de comparendos mayor a la permitida ("+Modelo.MAX_DATOS+"), se imprimieron solo "+numComparendos+".\n");
+							view.printArreglo(arregloDeteVehi, Modelo.MAX_DATOS);
+							view.printMessage("\nDebido a que se quiso imprimir una cantidad de comparendos mayor a la permitida ("+numComparendos+"), se imprimieron solo "+Modelo.MAX_DATOS +".\n");
 						}
 						else
 						{
-							view.printIterator(iteratorDeteVehi,numComparendos);
+							view.printArreglo(arregloDeteVehi,numComparendos);
 							view.printMessage("\nSe imprimieron los "+numComparendos+" comparendos.\n");
 						}
 					}
@@ -228,17 +221,14 @@ public class Controller {
 					try
 					{
 						view.printMessage("--------- \n ");
-						view.printMessage("Por favor ingrese la latitud inicial.");
-						double latitud1=Double.parseDouble(lector.nextLine());
-						view.printMessage("Por favor ingrese la latitud final.");
-						double latitud2 = Double.parseDouble(lector.nextLine());
+						view.printMessage("Por favor ingrese el rango de latitud de la forma [latitud_inicial,latitud_final].");
+						String rango=lector.nextLine();
 						view.printMessage("Por favor ingrese el vehiculo.");
 						String vehi = lector.nextLine();
 						
-						if(vehi.equalsIgnoreCase("automovil")||vehi.equalsIgnoreCase("automóvil"))
-							vehi = "AUTOMÃ“VIL";
+						String latitudes[] = rango.replace('[', ',').replace(']', ',').split(",");
 						
-						view.printMessage(modelo.darComparendosEnRangoLatitudYVehiculo(latitud1, latitud2, vehi));
+						view.printMessage(modelo.darComparendosEnRangoLatitudYVehiculo(Double.parseDouble(latitudes[1]), Double.parseDouble(latitudes[2]), vehi));
 						
 						view.printMessage("\n");	
 					}

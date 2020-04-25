@@ -59,24 +59,12 @@ public class Modelo {
 	public final static int MAX_DATOS = 20;
 
 	/**
-	 * Tabla de Hash de comparendos con llave de medio de deteccion
-	 */
-	private IHashTable<String, Comparendo> hashDeteVehiServiLoc;
-
-	/**
-	 * Árbol RedBlack de comparendos por latitud.
-	 */
-	private IRedBlackBST<Double, Comparendo>redBlackLatitud;
-	
-	/**
 	 * Constructor del modelo del mundo con capacidad predefinida.
 	 * @post: Inicializa la lista de comparendos vacía.
 	 */
 	public Modelo()
 	{
 		listaComparendos = new ListaEncadenada<Comparendo>();
-		hashDeteVehiServiLoc = new HashSeparateChaining<String, Comparendo>(7);
-		redBlackLatitud = new RedBlackBST<Double, Comparendo>();
 	}
 
 	/**
@@ -156,7 +144,7 @@ public class Modelo {
 		}
 		
 		respuesta+=(Modelo.MAX_DATOS==i)?"\nSe imprimieron "+Modelo.MAX_DATOS+ " comparendos. El número máximo permitido.\n":"\nSe imprimieron "+i+ " comparendos.\n";
-		
+		respuesta+="Se analizaron un total de "+redBlackFechas.size()+" comparendos.\n";
 		return respuesta;
 	}
 
@@ -259,7 +247,8 @@ public class Modelo {
 			}
 		}
 		mensaje+=(Modelo.MAX_DATOS==i)?"\nSe imprimieron "+Modelo.MAX_DATOS+ " comparendos. El número máximo permitido.\n":"\nSe imprimieron "+i+ " comparendos.\n";
-
+		mensaje+="Se analizaron un total de "+redBlackLatitud.size()+" comparendos.\n";
+		
 		return mensaje;
 	}
 
@@ -275,16 +264,29 @@ public class Modelo {
 		int numTotalAstericos=0;
 		int numeroCompa=0;
 		int num=0;
+		int numRed=0;
+		int numHash=0;
 		try 
 		{
 			pRango=pRango-1;
 			Iterator<Comparendo>iterator=listaComparendos.iterator();
 			IRedBlackBST<Date, Comparendo>redBlackAscii=new RedBlackBST<Date, Comparendo>();
+			IHashTable<Date, Comparendo>hashTable=new HashSeparateChaining<Date, Comparendo>(7);
 			while(iterator.hasNext())
 			{
 				Comparendo actual=iterator.next();
 				Date fecha=actual.darFecha();
-				redBlackAscii.put(actual.darFecha(), actual);
+				if(redBlackAscii.contains(fecha))
+				{
+					hashTable.putInSet(actual.darFecha(), actual);
+					++numHash;
+				}
+				else
+				{
+					redBlackAscii.put(actual.darFecha(), actual);
+					++numRed;
+				}
+				
 				++num;
 			}
 			numeroCompa=redBlackAscii.size();
@@ -319,7 +321,10 @@ public class Modelo {
 		tabla+="\nCada * representa "+200+" comparendos (o fracción de los mismos).\n"
 				+ "Se imprimieron un total de: "+numTotalAstericos+".\n"
 				+ "El número total de comparendos analizados fue de: "+numTotalComparendos+".\n"
-				+ "Teóricamente se debería obtener: "+numeroCompa+".\n "+num+"\n";
+				+ "Número de comparendos en árbol RedBlack: "+numRed+".\n"
+				+ "Número de comparendos en la tabla de hash: "+numHash+".\n"
+				+ "Suma: "+(numHash+numRed)+".\n"
+				+ "Total comparendos: "+listaComparendos.darLongitud();
 		return tabla;
 		
 	}
@@ -331,7 +336,15 @@ public class Modelo {
 	 */
 	public String costoTiempoEsperaHoyEnDia()
 	{
-		return null;
+		String tabla="Fecha       |Comparendos procesados              ***\n"
+					+"            |Comparendos que están en espera     ###\n"
+				    +"----------------------------------------------------\n"
+				    +"2018/01/01  |*******                                \n"
+				    +"            |###	                                  \n"		
+				    +"2018/01/31  |*******                                \n"
+				    +"            |###									  \n";
+		
+		return tabla;
 	}
 
 	/**
@@ -341,7 +354,15 @@ public class Modelo {
 	 */
 	public String costoTiempoEsperaNuevoSistema()
 	{
-		return null;
+		String tabla="Fecha       |Comparendos procesados              ***\n"
+					+"            |Comparendos que están en espera     ###\n"
+					+"----------------------------------------------------\n"
+					+"2018/01/01  |*******                                \n"
+					+"            |###	                                  \n"		
+					+"2018/01/31  |*******                                \n"
+					+"            |###									  \n";
+	
+	return tabla;
 	}
 
 
@@ -481,8 +502,6 @@ public class Modelo {
 		File archivo = new File(ruta);
 
 		listaComparendos = new ListaEncadenada<Comparendo>();
-		hashDeteVehiServiLoc = new HashSeparateChaining<String, Comparendo>(7);
-		redBlackLatitud = new RedBlackBST<Double, Comparendo>();
 
 		JsonReader lector = new JsonReader(new InputStreamReader(new FileInputStream(ruta), "UTF-8"));
 		JsonObject obj = JsonParser.parseReader(lector).getAsJsonObject();

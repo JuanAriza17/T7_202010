@@ -249,8 +249,7 @@ public class Controller {
 				
 				case 8:
 					view.printMessage("--------- \n ");
-					
-					view.printMessage("Aún no se ha implementado el requerimiento");						
+					view.printMessage(modelo.costoTiempoEsperaHoyEnDia());
 					break;
 				
 				case 9:

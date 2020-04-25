@@ -241,8 +241,10 @@ public class Controller {
 				
 				case 7:
 					view.printMessage("--------- \n ");
-					
-					view.printMessage("Aún no se ha implementda el requerimiento");						
+					view.printMessage("Por favor ingrese el rango de fecha que desea visualizar: (i.e) si ingresa 7, se van a visualizar comparendos entre rango 2018/01/01 - 2018/01/07 ...\n");
+					int rango=Integer.parseInt(lector.nextLine());
+					String impresion=modelo.generarASCII(rango);
+					view.printMessage(impresion);
 					break;
 				
 				case 8:
@@ -253,8 +255,7 @@ public class Controller {
 				
 				case 9:
 					view.printMessage("--------- \n ");
-					
-					view.printMessage("Aún no se ha implementda el requerimiento");						
+					view.printMessage("Aún no se ha implementda el requerimiento");		
 					break;
 					
 				case 10: 

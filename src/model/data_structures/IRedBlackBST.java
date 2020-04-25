@@ -104,4 +104,10 @@ public interface IRedBlackBST<K extends Comparable<K>, V extends Comparable<V>>
 	 * @return Iterator que contine los las hojas del árbol
 	 */
 	Iterator<RedBlackBST<K, V>.Node> darHojas();
+	
+	/**
+	 * Método que retorna el número de elementos en el rango de llaves.
+	 * @return numValuesInRange;
+	 */
+	int darNumValuesInRange();
 }

@@ -5,8 +5,12 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -25,6 +29,7 @@ import model.data_structures.IRedBlackBST;
 import model.data_structures.ListaEncadenada;
 import model.data_structures.MaxHeapCP;
 import model.data_structures.RedBlackBST;
+import model.logic.Comparendo.ComparadorXFecha;
 
 
 /**
@@ -262,9 +267,61 @@ public class Modelo {
 	 * Método que se encarga de solucionar el requerimiento 1C
 	 * @return Una tabla ASCII de todos los comparendos según un rango de fechas. 
 	 */
-	public String generarASCII()
+	public String generarASCII(int pRango)
 	{
-		return null;
+		String tabla="Rango de fechas		| Comparendos durante el año\n"
+					+"----------------------------------------------------\n";
+		int numTotalComparendos=0;
+		int numTotalAstericos=0;
+		int numeroCompa=0;
+		int num=0;
+		try 
+		{
+			pRango=pRango-1;
+			Iterator<Comparendo>iterator=listaComparendos.iterator();
+			IRedBlackBST<Date, Comparendo>redBlackAscii=new RedBlackBST<Date, Comparendo>();
+			while(iterator.hasNext())
+			{
+				Comparendo actual=iterator.next();
+				Date fecha=actual.darFecha();
+				redBlackAscii.put(actual.darFecha(), actual);
+				++num;
+			}
+			numeroCompa=redBlackAscii.size();
+			int repeticiones=365/(pRango+1)==0?365/(pRango+1):(365/(pRango+1))+1;
+			SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+			Date inicial=parser.parse("2018-01-01T00:00:00.000Z");
+			for(int i=0; i<repeticiones;++i)
+			{
+				Date fin=darFechaNDias(inicial,pRango).getYear()+1900==2018?darFechaNDias(inicial, pRango):parser.parse("2018-12-31T23:59:59.000Z");
+				Iterator<Comparendo>iteratorRango=redBlackAscii.valuesInRange(inicial, fin);
+				int numeroValoresEnRango=redBlackAscii.darNumValuesInRange();
+				numTotalComparendos+=numeroValoresEnRango;
+				tabla+=imprimirFormatoFecha(inicial)+"-"+imprimirFormatoFecha(fin)+"   |";
+				int numAsteriscos=numeroValoresEnRango/200==0?numeroValoresEnRango/200:(redBlackAscii.darNumValuesInRange()/200)+1;
+				numTotalAstericos+=numAsteriscos;
+				
+				for(int j=0;j<numAsteriscos;++j)
+				{
+					tabla+="*";
+				}
+				tabla+="\n";
+				LocalDateTime localDateTime = fin.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+				localDateTime=localDateTime.plusSeconds(1);
+				inicial=Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+			}	
+			
+		} 
+		catch (ParseException e) 
+		{
+			
+		} 
+		tabla+="\nCada * representa "+200+" comparendos (o fracción de los mismos).\n"
+				+ "Se imprimieron un total de: "+numTotalAstericos+".\n"
+				+ "El número total de comparendos analizados fue de: "+numTotalComparendos+".\n"
+				+ "Teóricamente se debería obtener: "+numeroCompa+".\n "+num+"\n";
+		return tabla;
+		
 	}
 
 	/**
@@ -305,7 +362,6 @@ public class Modelo {
 				id = c.darId();
 			}
 		}
-
 		return comp;
 	}
 
@@ -465,6 +521,7 @@ public class Modelo {
 		}
 	}
 
+	//MÉTODO AUXILIARES:
 	/**
 	 * Método que cambiar el formato de fecha de YYYY/MM/DD-HH:MM:ss a yyyy-MM-dd'T'HH:mm:ss.SSS'Z' para cumplir con el requerimiento 3A. 
 	 * @param pFecha Fecha que será modificada.
@@ -479,5 +536,32 @@ public class Modelo {
 		arreglo=temp.split("-");
 		fecha+=arreglo[0]+"T"+arreglo[1]+".000Z";
 		return fecha;
+	}
+	
+	/**
+	 * Método que retorna la fecha al cabo de N días. Este método fue basado en el foro: https://mkyong.com/java/java-how-to-add-days-to-current-date/.
+	 * @param inicial. Fecha inicial que ingresa por parámetro.
+	 * @param num. Rango de fecha.
+	 * @return Fecha en N días.
+	 */
+	public Date darFechaNDias(Date inicial, int num)
+	{
+		LocalDateTime localDateTime = inicial.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+		localDateTime=localDateTime.plusDays(num).plusHours(23).plusMinutes(59).plusSeconds(59);
+		return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+	}
+	
+	/**
+	 * Método que retorna en formato de una fecha en "YYYY-MM-DD"-
+	 * @param pDate. Fecha que ingresa por parámetro. 
+	 * @return
+	 */
+	public String imprimirFormatoFecha(Date pDate)
+	{
+		DateFormat formato = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");  
+        String strDate = formato.format(pDate);
+        String[] arr=strDate.split(" ");
+        String[] cambiarFormato=arr[0].split("-");
+        return cambiarFormato[0]+"/"+cambiarFormato[1]+"/"+cambiarFormato[2];
 	}
 }

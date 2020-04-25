@@ -32,52 +32,32 @@ import model.data_structures.RedBlackBST;
  *
  */
 public class Modelo { 
-	
+
 	/**
 	 * Atributos del modelo del mundo.
 	 */
 	private IListaEncadenada<Comparendo> listaComparendos;
-	
+
 	/**
 	 * Arreglo con las muestras
 	 */
 	private Comparendo[] muestras;
-	
+
 	/**
 	 * Arreglo que representa una copia de la lista.
 	 */
 	private Comparable[] copia;
-	
+
 	/**
 	 * Número de datos en caso de ser necesario imprimir números muy grandes.
 	 */
 	public final static int MAX_DATOS = 20;
-	
-	/**
-	 * Heap de comparendos por infracción.
-	 */
-	private IMaxHeapCP<Comparendo> heapInfraccion;
-	
-	/**
-	 * Heap de comparendos por distancia a la estación.
-	 */
-	private IMaxHeapCP<Comparendo> heapDistancia;
-	
-	/**
-	 * Tabla de Hash de comparendos con llave de dias de la semana.
-	 */
-	private IHashTable<String, Comparendo> hashDiasSemana;
 
 	/**
 	 * Tabla de Hash de comparendos con llave de medio de deteccion
 	 */
 	private IHashTable<String, Comparendo> hashDeteVehiServiLoc;
-	
-	/**
-	 * Árbol RedBlack de comparendos por fechas.
-	 */
-	private IRedBlackBST<Date, Comparendo>redBlackFechas;
-	
+
 	/**
 	 * Árbol RedBlack de comparendos por latitud.
 	 */
@@ -90,14 +70,10 @@ public class Modelo {
 	public Modelo()
 	{
 		listaComparendos = new ListaEncadenada<Comparendo>();
-		heapInfraccion=new MaxHeapCP<Comparendo>(527656);
-		hashDiasSemana=new HashSeparateChaining<String, Comparendo>(7);
-		redBlackFechas= new RedBlackBST<Date, Comparendo>();
-		heapDistancia = new MaxHeapCP<Comparendo>(527656);
 		hashDeteVehiServiLoc = new HashSeparateChaining<String, Comparendo>(7);
 		redBlackLatitud = new RedBlackBST<Double, Comparendo>();
 	}
-	
+
 	/**
 	 * Método que se encarga de solucionar el requerimiento 1A
 	 * @param m número de comparendos que se quiere imprimir.
@@ -105,7 +81,13 @@ public class Modelo {
 	 */
 	public String darMComparendosConMayorGravedad(int m)
 	{
+		Iterator<Comparendo>iterator=listaComparendos.iterator();
+		IMaxHeapCP<Comparendo> heapInfraccion=new MaxHeapCP<Comparendo>(527656);
 		Comparendo.ComparadorXInfraccion compInfra = new Comparendo.ComparadorXInfraccion();
+		while(iterator.hasNext())
+		{
+			heapInfraccion.agregar(iterator.next(), compInfra);
+		}
 		String retorno="";
 		int max = m>MAX_DATOS?MAX_DATOS:m;
 		for(int i=0; i<max;++i)
@@ -118,7 +100,7 @@ public class Modelo {
 
 		return retorno;
 	}
-
+	
 
 	/**
 	 * Método que se encarga de solucionar el requerimiento 2A
@@ -128,7 +110,14 @@ public class Modelo {
 	 */
 	public Iterator<Comparendo> darComparendosPorMesYDiaSemana(int mes, String diaSemana)
 	{
+		Iterator<Comparendo>iterator=listaComparendos.iterator();
+		IHashTable<String, Comparendo>hashDiasSemana=new HashSeparateChaining<String, Comparendo>(7);
 		String llave = diaSemana+mes;
+		while(iterator.hasNext())
+		{
+			Comparendo actual=iterator.next();
+			hashDiasSemana.putInSet(actual.darLlaveDiaSemana(), actual);
+		}
 		return hashDiasSemana.getSet(llave);
 	}
 
@@ -141,6 +130,13 @@ public class Modelo {
 	 */
 	public String darComparendosEnRangoDeFechaYLocalidad(Date fecha1, Date fecha2, String localidad)
 	{
+		Iterator<Comparendo>iterator=listaComparendos.iterator();
+		IRedBlackBST<Date, Comparendo>redBlackFechas= new RedBlackBST<Date, Comparendo>();
+		while(iterator.hasNext())
+		{
+			Comparendo actual=iterator.next();
+			redBlackFechas.put(actual.darFecha(), actual);
+		}
 		String respuesta="";
 		Iterator<Comparendo> iterador=redBlackFechas.valuesInRange(fecha1, fecha2); 
 		int i =0;
@@ -153,6 +149,9 @@ public class Modelo {
 				++i;
 			}
 		}
+		
+		respuesta+=(Modelo.MAX_DATOS==i)?"\nSe imprimieron "+Modelo.MAX_DATOS+ " comparendos. El número máximo permitido.\n":"\nSe imprimieron "+i+ " comparendos.\n";
+		
 		return respuesta;
 	}
 
@@ -164,22 +163,30 @@ public class Modelo {
 	 */ 
 	public String darMComparendosMasCercaEstacion(int m)
 	{
+		Iterator<Comparendo>iterator=listaComparendos.iterator();
+		IMaxHeapCP<Comparendo> heapDistancia=new MaxHeapCP<Comparendo>(527656);
+		Comparendo.ComparadorXDistanciaAscendente compInfra = new Comparendo.ComparadorXDistanciaAscendente();
+		while(iterator.hasNext())
+		{
+			heapDistancia.agregar(iterator.next(), compInfra);
+		}
+		
 		String mensaje = "";
 		int max = m>MAX_DATOS?MAX_DATOS:m;
 
-		Comparendo.ComparadorXDistanciaAscendente comp = new Comparendo.ComparadorXDistanciaAscendente();
+		
 		for (int i=0;i<max; ++i) 
 		{
-			Comparendo c = heapDistancia.sacarMax(comp);
+			Comparendo c = heapDistancia.sacarMax(compInfra);
 			mensaje+=c.toString()+" LONGITUD:"+ c.darLongitud()+" LATITUD: "+c.darLatitud()+ " DISTANCIA: "+c.darDistanciaEstacion()+"\n";
 		}
-		
+
 
 		mensaje+=m>MAX_DATOS?"\nDebido a que se quiso imprimir una cantidad de comparendos mayor a la permitida ("+m+"), se imprimieron solo "+Modelo.MAX_DATOS+".\n":"\nSe imprimieron los "+m+" comparendos.\n";
 
 		return mensaje;
 	}
-	
+
 	/**
 	 * Método que se encarga de solucionar el requerimiento 2B
 	 * @param deteccion medio de deteccion de los comparendos
@@ -189,23 +196,29 @@ public class Modelo {
 	 */
 	public Comparable[] darComparendosPorDeteccionVehiculoLocalidad(String deteccion, String vehiculo, String servicio, String localidad)
 	{
+		Iterator<Comparendo>iterator=listaComparendos.iterator();
+		IHashTable<String, Comparendo> hashDeteVehiServiLoc=new HashSeparateChaining<String, Comparendo>(7);
 		String llave = deteccion + vehiculo + servicio + localidad;
 		
+		while(iterator.hasNext())
+		{
+			Comparendo actual=iterator.next();
+			hashDeteVehiServiLoc.putInSet(actual.darLlaveDeteccionVehiculoServicioLocalidad(), actual);
+		}
+				
 		Iterator<Comparendo> it = hashDeteVehiServiLoc.getSet(llave);
-		
 		if(it==null)
 			return null;
-		
+
 		ListaEncadenada<Comparendo> lista = new ListaEncadenada<Comparendo>();
 		Comparendo.ComparadorXFecha comp = new Comparendo.ComparadorXFecha();
-		
+
 		while(it.hasNext())
 			lista.agregarFinal(it.next());
-		
+
 		Comparable[] arreglo = lista.darArreglo();
 		Ordenamientos.mergeSort(arreglo, comp);
-		
-		
+
 		return arreglo;
 	}
 
@@ -219,21 +232,29 @@ public class Modelo {
 	 */
 	public String darComparendosEnRangoLatitudYVehiculo(double latitud1, double latitud2, String vehiculo)
 	{
+		Iterator<Comparendo>iterator=listaComparendos.iterator();
+		IRedBlackBST<Double, Comparendo>redBlackLatitud=new RedBlackBST<Double, Comparendo>();
+		while(iterator.hasNext())
+		{
+			Comparendo actual=iterator.next();
+			redBlackLatitud.put(actual.darLatitud(), actual);
+		}
 		Iterator<Comparendo> it = redBlackLatitud.valuesInRange(latitud1, latitud2);
 		String mensaje = "";
-		
+
 		int i =0;
-		while(it.hasNext()&& i<20)
+		while(it.hasNext()&& i<MAX_DATOS)
 		{
 			Comparendo c = it.next();
-			
+
 			if(c.darVehiculo().equalsIgnoreCase(vehiculo))
 			{
 				mensaje += c.toString()+" LATITUD: "+c.darLatitud()+"\n";
 				++i;
 			}
 		}
-		
+		mensaje+=(Modelo.MAX_DATOS==i)?"\nSe imprimieron "+Modelo.MAX_DATOS+ " comparendos. El número máximo permitido.\n":"\nSe imprimieron "+i+ " comparendos.\n";
+
 		return mensaje;
 	}
 
@@ -245,7 +266,7 @@ public class Modelo {
 	{
 		return null;
 	}
-	
+
 	/**
 	 * Método que se encarga de solucionar el requerimiento 2C
 	 * @return Una tabla ASCII con el número de comparendos procesados por día y los que están en espera.
@@ -255,7 +276,7 @@ public class Modelo {
 	{
 		return null;
 	}
-	
+
 	/**
 	 * Método que se encarga de solucionar el requerimiento 3C
 	 * @return Una tabla ASCII con el número de comparendos procesados por día y los que están en espera.
@@ -266,7 +287,7 @@ public class Modelo {
 		return null;
 	}
 
-	
+
 	/**
 	 * Da el comparendo con el mayor ID
 	 * @return Comparendo con mayor ID
@@ -287,7 +308,7 @@ public class Modelo {
 
 		return comp;
 	}
-	
+
 	/**
 	 * Método que retorna la lista de comparendos.
 	 * @return Lista de comaparendos.
@@ -296,7 +317,7 @@ public class Modelo {
 	{
 		return listaComparendos;
 	}
-	
+
 	/**
 	 * Servicio de consulta de numero de elementos presentes en el modelo .
 	 * @return numero de elementos presentes en el modelo.
@@ -305,7 +326,7 @@ public class Modelo {
 	{
 		return listaComparendos.darLongitud();
 	}
-	
+
 	/**
 	 * Agregar dato al final.
 	 * @param dato Comparendo que llega por parámetro.
@@ -314,7 +335,7 @@ public class Modelo {
 	{
 		listaComparendos.agregarFinal(dato);
 	}
-	
+
 	/**
 	 * Requerimiento de agregar dato.
 	 * @param dato Comparendo que llega por parámetro.
@@ -323,8 +344,8 @@ public class Modelo {
 	{
 		listaComparendos.agregar(dato);
 	}
-	
-	
+
+
 	/**
 	 * Requerimiento buscar dato.
 	 * @param dato Dato a buscar.
@@ -334,7 +355,7 @@ public class Modelo {
 	{
 		return listaComparendos.buscar(dato);
 	}
-	
+
 	/**
 	 * Elimina un dato.
 	 * @param dato Dato a eliminar.
@@ -344,7 +365,7 @@ public class Modelo {
 	{
 		return listaComparendos.eliminar(dato);
 	}
-	
+
 	/**
 	 * Método que retorna el arreglo de elementos. Dicho arreglo retornado será comparable.
 	 * @return Arreglo de elementos que es comparable.
@@ -353,7 +374,7 @@ public class Modelo {
 	{		
 		copia = listaComparendos.darArreglo();
 	}
-	
+
 	/**
 	 * Método que genera una muestra de datos aleatorios de la lista
 	 * @param n tamaño de la muestra.
@@ -363,7 +384,7 @@ public class Modelo {
 		copiarComparendos();
 		muestras = new Comparendo[n];
 		Ordenamientos.shuffle(copia);
-		
+
 		int i =0;
 		while(i<n)
 		{
@@ -371,9 +392,9 @@ public class Modelo {
 			muestras[i]=c;
 			++i;
 		}
-		
+
 	}
-	
+
 	/**
 	 * Da el primer comparendo de la lista
 	 * @return primer dato
@@ -382,7 +403,7 @@ public class Modelo {
 	{
 		return listaComparendos.darPrimero().darElemento();
 	}
-	
+
 	/**
 	 * Da el ultimo comparendo de la lista
 	 * @return ultimo dato
@@ -391,8 +412,8 @@ public class Modelo {
 	{
 		return listaComparendos.darUltimo().darElemento();
 	}
-	
-	
+
+
 	/**
 	 * Método que carga los comparendos
 	 * @param ruta Rita archivo con los comparendos
@@ -401,39 +422,28 @@ public class Modelo {
 	 */
 	public void cargarComparendos(String ruta) throws FileNotFoundException, ParseException, UnsupportedEncodingException 
 	{
-		 File archivo = new File(ruta);
-		 
-		 listaComparendos = new ListaEncadenada<Comparendo>();
-		 heapInfraccion=new MaxHeapCP<Comparendo>(527656);
-	 	 hashDiasSemana=new HashSeparateChaining<String, Comparendo>(7);
-	  	 redBlackFechas= new RedBlackBST<Date, Comparendo>();
-		 heapDistancia = new MaxHeapCP<Comparendo>(527656);
-	 	 hashDeteVehiServiLoc = new HashSeparateChaining<String, Comparendo>(7);
-	 	 redBlackLatitud = new RedBlackBST<Double, Comparendo>();
-	 	 		 
-	 	JsonReader lector = new JsonReader(new InputStreamReader(new FileInputStream(ruta), "UTF-8"));
-	 	JsonObject obj = JsonParser.parseReader(lector).getAsJsonObject();
-		 
-		 
-		 JsonArray arregloComparendos = obj.get("features").getAsJsonArray();  
-		 		 
-		 SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-		 //SimpleDateFormat parserRedBlack= new SimpleDateFormat("YYYY/MM/DD-HH:mm:ss");
-		 Calendar calendario= Calendar.getInstance();
-		 
-		 Comparendo.ComparadorXInfraccion compInfra = new Comparendo.ComparadorXInfraccion();
-		 Comparendo.ComparadorXDistanciaAscendente compLat = new Comparendo.ComparadorXDistanciaAscendente();
+		File archivo = new File(ruta);
 
-		 for (JsonElement e: arregloComparendos) 	
-		 {
-			
+		listaComparendos = new ListaEncadenada<Comparendo>();
+		hashDeteVehiServiLoc = new HashSeparateChaining<String, Comparendo>(7);
+		redBlackLatitud = new RedBlackBST<Double, Comparendo>();
+
+		JsonReader lector = new JsonReader(new InputStreamReader(new FileInputStream(ruta), "UTF-8"));
+		JsonObject obj = JsonParser.parseReader(lector).getAsJsonObject();
+
+		JsonArray arregloComparendos = obj.get("features").getAsJsonArray();  
+
+		SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+		Calendar calendario= Calendar.getInstance();
+
+		for (JsonElement e: arregloComparendos) 	
+		{
+
 			JsonObject propiedades = e.getAsJsonObject().get("properties").getAsJsonObject();
-			
+
 			int id = propiedades.get("OBJECTID").getAsInt();
 			String f = propiedades.get("FECHA_HORA").getAsString();
-			//String transformado=transformarFormatoFecha(f);
 			Date fecha = parser.parse(f);
-			//Date fechaRedBlack=parserRedBlack.parse(transformado);
 			calendario.setTime(fecha);
 			String vehiculo = propiedades.get("CLASE_VEHICULO").getAsString();
 			String servicio = propiedades.get("TIPO_SERVICIO").getAsString();
@@ -449,37 +459,25 @@ public class Modelo {
 			{
 				coordenadas[j]=coords.get(j).getAsDouble();
 			}
-			
-			//(L, M, I, J, V, S, D)
-			
+
 			Comparendo comparendo = new Comparendo(id, fecha, vehiculo, servicio, infraccion, descripcion, localidad,coordenadas, medioDete);
-			//Comparendo comparendoRedBlack=new Comparendo(id, fechaRedBlack, vehiculo, servicio, infraccion, descripcion, localidad, coordenadas);
-			heapInfraccion.agregar(comparendo, compInfra);
-			heapDistancia.agregar(comparendo, compLat);
-			hashDiasSemana.putInSet(comparendo.darLlaveDiaSemana(), comparendo);
-			hashDeteVehiServiLoc.putInSet(comparendo.darLlaveDeteccionVehiculoServicioLocalidad(), comparendo);
-			redBlackFechas.put(fecha, comparendo);
-			redBlackLatitud.put(comparendo.darLatitud(), comparendo);
 			agregarFinal(comparendo);
 		}
 	}
-	
+
 	/**
-	 * Método que cambiar el formato de fecha de yyyy-MM-dd'T'HH:mm:ss.SSS'Z' a YYYY/MM/DD-HH:MM:ss para cumplir con el requerimiento 3A. 
+	 * Método que cambiar el formato de fecha de YYYY/MM/DD-HH:MM:ss a yyyy-MM-dd'T'HH:mm:ss.SSS'Z' para cumplir con el requerimiento 3A. 
 	 * @param pFecha Fecha que será modificada.
 	 * @return Fecha modificada.
 	 */
 	public String transformarFormatoFecha(String pFecha)
 	{
 		String fecha="";
-		String[] arreglo=pFecha.split("-");
+		String[] arreglo=pFecha.split("/");
 		String temp=arreglo[2];
-		fecha+=arreglo[0]+"/"+arreglo[1]+"/";
-		arreglo=temp.split("T");
-		fecha+=arreglo[0];
-		temp=arreglo[1];
-		temp=temp.replaceAll(".000Z", "");
-		fecha+="-"+temp;
+		fecha+=arreglo[0]+"-"+arreglo[1]+"-";
+		arreglo=temp.split("-");
+		fecha+=arreglo[0]+"T"+arreglo[1]+".000Z";
 		return fecha;
 	}
 }

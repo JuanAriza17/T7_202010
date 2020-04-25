@@ -70,6 +70,11 @@ public class View
 			System.out.println("\n");
 		}
 		
+		/**
+		 * Imprimir arreglo.
+		 * @param arg Arreglo que ingresa por parámetro.
+		 * @param max Valor máximo de impresión.
+		 */
 		public void printArreglo(Object[] arg, int max)
 		{
 			for (int i = 0; i < arg.length&&i<max; ++i) 

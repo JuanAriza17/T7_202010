@@ -7,10 +7,20 @@ import java.util.Date;
 
 public class Comparendo implements Comparable<Comparendo>
 {
-	
+	/**
+	 * Constante de longitud de la coordenada de la estación de policía.
+	 */
 	private final static double LONGITUD_ESTACION = -74.078122;
 	
+	/**
+	 * Constante de latitud de la coordenada de la estación de policía.
+	 */
 	private final static double LATITUD_ESTACION = 4.647586;
+	
+	/**
+	 * Constante del radio de la tierra.
+	 */
+	private static final int EARTH_RADIUS = 6371; // Approx Earth radius in KM
 	
 	/**
 	 * ID comparendo
@@ -172,6 +182,10 @@ public class Comparendo implements Comparable<Comparendo>
 		return medioDete;
 	}
 	
+	/**
+	 * Método que retorna una llave conformada por el día de la semana y el mes.
+	 * @return Llave com día de la semana y mes.
+	 */
 	public String darLlaveDiaSemana()
 	{
 		Calendar calendario = Calendar.getInstance();
@@ -185,6 +199,10 @@ public class Comparendo implements Comparable<Comparendo>
 		return llave;
 	}
 	
+	/**
+	 * Método que retorna una llave con base en el medio detección, vehículo, servicio y localidad.
+	 * @return Llave con medio detección, vehículo, servicio y localidad.
+	 */
 	public String darLlaveDeteccionVehiculoServicioLocalidad()
 	{	
 		String llave = medioDete+vehiculo+servicio+localidad;
@@ -197,7 +215,7 @@ public class Comparendo implements Comparable<Comparendo>
 	 */
 	public double darDistanciaEstacion()
 	{
-		return Haversine.distance(LATITUD_ESTACION, LONGITUD_ESTACION, darLatitud(), darLongitud());
+		return distanceHaversine(LATITUD_ESTACION, LONGITUD_ESTACION, darLatitud(), darLongitud());
 	}
 
 	/**
@@ -208,7 +226,11 @@ public class Comparendo implements Comparable<Comparendo>
 		return id - o.darId();
 	}
 	
-	
+	/**
+	 * Clase que implementa comparador de comparendo para la distancia.
+	 * @author ASUS Juan Ariza y Sergio Zona.
+	 *
+	 */
 	public static class ComparadorXDistanciaAscendente implements Comparator<Comparendo>{
 		
 		public int compare(Comparendo c1, Comparendo c2)
@@ -217,6 +239,11 @@ public class Comparendo implements Comparable<Comparendo>
 		}
 	}
 	
+	/**
+	 * Clase que implementa comparador de comparendo para la infracción.
+	 * @author ASUS Juan Ariza y Sergio Zona.
+	 *
+	 */
 	public static class ComparadorXInfraccion implements Comparator<Comparendo>{
 		
 		public int compare(Comparendo c1, Comparendo c2)
@@ -225,6 +252,11 @@ public class Comparendo implements Comparable<Comparendo>
 		}
 	}
 	
+	/**
+	 * Clase que implementa comparador de comparendo para la fecha.
+	 * @author ASUS Juan Ariza y Sergio Zona.
+	 *
+	 */
 	public static class ComparadorXFecha implements Comparator<Comparendo>{
 		
 		public int compare(Comparendo c1, Comparendo c2)
@@ -249,6 +281,40 @@ public class Comparendo implements Comparable<Comparendo>
 		
 		return "OBJECTID: "+id+", FECHA Y HORA: "+f+", INFRACCION: "+infraccion+",  CLASE VEHICULO: "+vehiculo+", TIPO SERVICIO: "+servicio+", LOCALIDAD: "+localidad;
 	}
+	
+	
+	//ACLARACIÓN: Los siguientes dos métodos fueron sacados del repositorio de "Haversine" a modo de recomendación del diseño.
+	//LINK: https://github.com/jasonwinn/haversine/blob/master/Haversine.java.
+	/**
+	 * Método que retorna la distancia entre dos coordenadas con base en el diametro de la tierra.
+	 * @param startLat Latitud inicial.
+	 * @param startLong Longitud inicial.
+	 * @param endLat Latitud final.
+	 * @param endLong Longitud final.
+	 * @return Distancia entre las dos coordenadas.
+	 */
+    public double distanceHaversine(double startLat, double startLong,double endLat, double endLong) 
+    {
+        double dLat  = Math.toRadians((endLat - startLat));
+        double dLong = Math.toRadians((endLong - startLong));
 
+        startLat = Math.toRadians(startLat);
+        endLat   = Math.toRadians(endLat);
 
+        double a = haversin(dLat) + Math.cos(startLat) * Math.cos(endLat) * haversin(dLong);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        return EARTH_RADIUS * c; // <-- d
+    }
+
+    /**
+     * Método auxiliar del que calcula la distancia.
+     * @param val Valor.
+     * @return Retorna formula presentada.
+     */
+    public double haversin(double val) 
+    {
+        return Math.pow(Math.sin(val / 2), 2);
+    }
+	
 }

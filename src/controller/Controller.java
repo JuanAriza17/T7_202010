@@ -140,12 +140,12 @@ public class Controller {
 							break;
 						}
 						view.printMessage("--------- \n ");
-						view.printMessage("Por favor ingrese la fecha menor en el siguiente formato: yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-						String dato1=lector.nextLine();
+						view.printMessage("Por favor ingrese la fecha menor en el siguiente formato: YYYY/MM/DD-HH:MM:ss. (i.e) 2018/01/01-00:00:00");
+						String dato1=modelo.transformarFormatoFecha(lector.nextLine());
 						SimpleDateFormat format1=new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 						Date fecha1=format1.parse(dato1);
-						view.printMessage("Por favor ingrese la fecha mayor en el siguiente formato: yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-						String dato2=lector.nextLine();
+						view.printMessage("Por favor ingrese la fecha mayor en el siguiente formato: YYYY/MM/DD-HH:MM:ss. (i.e) 2018/12/31-11:59:59");
+						String dato2=modelo.transformarFormatoFecha(lector.nextLine());
 						SimpleDateFormat format2=new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 						Date fecha2=format2.parse(dato2);
 						view.printMessage("Por favor ingrese la localidad:");
@@ -182,13 +182,13 @@ public class Controller {
 					view.printMessage("Por favor ingrese el número de comparendos que desea visualizar.");
 					numComparendos=Integer.parseInt(lector.nextLine());
 					view.printMessage("Por favor ingrese el medio de detección.");
-					String dete=lector.nextLine();
+					String dete=lector.nextLine().toLowerCase();
 					view.printMessage("Por favor ingrese el vehículo (Tenga buena ortografía).");
-					String vehiculo = lector.nextLine();
+					String vehiculo = lector.nextLine().toLowerCase();
 					view.printMessage("Por favor ingrese el tipo de servicio (Tenga buena ortografía).");
-					String servicio = lector.nextLine();
+					String servicio = lector.nextLine().toLowerCase();
 					view.printMessage("Por favor ingrese la localidad.");
-					String localidad = lector.nextLine();
+					String localidad = lector.nextLine().toLowerCase();
 					
 					Comparable[] arregloDeteVehi = modelo.darComparendosPorDeteccionVehiculoLocalidad(dete, vehiculo, servicio, localidad);
 					if(arregloDeteVehi!=null)
@@ -196,12 +196,12 @@ public class Controller {
 						if(numComparendos>Modelo.MAX_DATOS)
 						{
 							view.printArreglo(arregloDeteVehi, Modelo.MAX_DATOS);
-							view.printMessage("\nDebido a que se quiso imprimir una cantidad de comparendos mayor a la permitida ("+numComparendos+"), se imprimieron solo "+Modelo.MAX_DATOS +".\n");
+							view.printMessage("\nDebido a que se quiso imprimir una cantidad de comparendos mayor a la permitida ("+numComparendos+"), se imprimieron solo "+Modelo.MAX_DATOS +" ordenados por fecha de menor a mayor.\n");
 						}
 						else
 						{
 							view.printArreglo(arregloDeteVehi,numComparendos);
-							view.printMessage("\nSe imprimieron los "+numComparendos+" comparendos.\n");
+							view.printMessage("\nSe imprimieron los "+numComparendos+" comparendos ordenados por fecha de menor a mayor. \n");
 						}
 					}
 					else

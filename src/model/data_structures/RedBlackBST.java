@@ -25,16 +25,16 @@ public class RedBlackBST<K extends Comparable<K>, V extends Comparable<V>> imple
 	 * Nodo que será la raíz del árbol.
 	 */
 	private Node raiz;
-	
-	
+
+
 	/**
 	 * Método constructor que construye el árbol. 
 	 */
 	public RedBlackBST()
 	{
-		
+
 	}
-	
+
 	/**
 	 * Método que retorna el número de elementos en el rango de llaves.
 	 * @return numValuesInRange;
@@ -46,7 +46,7 @@ public class RedBlackBST<K extends Comparable<K>, V extends Comparable<V>> imple
 		if (end == null) throw new IllegalArgumentException("Segundo parámetro nulo");
 		Queue<V >queue = new Queue<V>();
 		values(raiz, queue, init, end);
-		
+
 		return queue.darElementos().darLongitud();
 	}
 
@@ -158,7 +158,7 @@ public class RedBlackBST<K extends Comparable<K>, V extends Comparable<V>> imple
 		}
 		return darNodo(raiz, key);
 	}
-	
+
 	/**
 	 * Método auxiliar para retornar el nodo
 	 * @param x Nodo con la llave
@@ -305,7 +305,7 @@ public class RedBlackBST<K extends Comparable<K>, V extends Comparable<V>> imple
 	{
 		if(raiz==null)
 			return 0;
-		
+
 		return height(raiz);
 	}
 
@@ -338,7 +338,7 @@ public class RedBlackBST<K extends Comparable<K>, V extends Comparable<V>> imple
 			return getHeight(key, raiz);
 		}
 		return -1;
-		
+
 	}
 
 	private int getHeight(K key, Node x)
@@ -436,78 +436,78 @@ public class RedBlackBST<K extends Comparable<K>, V extends Comparable<V>> imple
 		if(!isBST()) return false;
 		if(!is23()) return false;
 		if(!isBalanced()) return false;
-		
+
 		return true;
 	}
-	
+
 	/**
-     * Método que comprueba si el árbol es BST.
-     * @param Nodo que ingresa por parámetro.
-     * @return True si está balanceado. False en caso contrario.
-     */
+	 * Método que comprueba si el árbol es BST.
+	 * @param Nodo que ingresa por parámetro.
+	 * @return True si está balanceado. False en caso contrario.
+	 */
 	private boolean isBST() {
-        return isBST(raiz, null, null);
-    }
+		return isBST(raiz, null, null);
+	}
 
 	/**
-     * Método auxiliar que comprueba si el árbol es BST.
-     * @param Nodo que ingresa por parámetro.
-     * @param Llave mínima.
-     * @param Llave maxima.
-     * @return True si está balanceado. False en caso contrario.
-     */
-    private boolean isBST(Node x, K min, K max) {
-        if (x == null) return true;
-        if (min != null && x.key.compareTo(min) <= 0) return false;
-        if (max != null && x.key.compareTo(max) >= 0) return false;
-        return isBST(x.left, min, x.key) && isBST(x.right, x.key, max);
-    } 
+	 * Método auxiliar que comprueba si el árbol es BST.
+	 * @param Nodo que ingresa por parámetro.
+	 * @param Llave mínima.
+	 * @param Llave maxima.
+	 * @return True si está balanceado. False en caso contrario.
+	 */
+	private boolean isBST(Node x, K min, K max) {
+		if (x == null) return true;
+		if (min != null && x.key.compareTo(min) <= 0) return false;
+		if (max != null && x.key.compareTo(max) >= 0) return false;
+		return isBST(x.left, min, x.key) && isBST(x.right, x.key, max);
+	} 
 
 
-    /**
-     * Método que comprueba si el árbol es 2-3.
-     * @return True si está balanceado. False en caso contrario.
-     */
-    private boolean is23() { return is23(raiz); }
-    
-    /**
-     * Método auxiliar que comprueba si el árbol es 2-3.
-     * @param Nodo que ingresa por parámetro.
-     * @return True si está balanceado. False en caso contrario.
-     */
-    private boolean is23(Node x) {
-        if (x == null) return true;
-        if (isRed(x.right)) return false;
-        if (x != raiz && isRed(x) && isRed(x.left))
-            return false;
-        return is23(x.left) && is23(x.right);
-    } 
+	/**
+	 * Método que comprueba si el árbol es 2-3.
+	 * @return True si está balanceado. False en caso contrario.
+	 */
+	private boolean is23() { return is23(raiz); }
 
-    /**
-     * Método que comprueba si el árbol es balanceado.
-     * @return True si está balanceado. False en caso contrario.
-     */
-    private boolean isBalanced() { 
-        int black = 0;     
-        Node x = raiz;
-        while (x != null) {
-            if (!isRed(x)) black++;
-            x = x.left;
-        }
-        return isBalanced(raiz, black);
-    }
+	/**
+	 * Método auxiliar que comprueba si el árbol es 2-3.
+	 * @param Nodo que ingresa por parámetro.
+	 * @return True si está balanceado. False en caso contrario.
+	 */
+	private boolean is23(Node x) {
+		if (x == null) return true;
+		if (isRed(x.right)) return false;
+		if (x != raiz && isRed(x) && isRed(x.left))
+			return false;
+		return is23(x.left) && is23(x.right);
+	} 
 
-    /**
-     * Método auxiliar que comprueba si el árbol es balanceado.
-     * @param x Nodo que ingresa por parámetro.
-     * @param black Número de nodos negros que ingresan por parámetro.
-     * @return True si está balanceado. False en caso contrario.
-     */
-    private boolean isBalanced(Node x, int black) {
-        if (x == null) return black == 0;
-        if (!isRed(x)) black--;
-        return isBalanced(x.left, black) && isBalanced(x.right, black);
-    } 
+	/**
+	 * Método que comprueba si el árbol es balanceado.
+	 * @return True si está balanceado. False en caso contrario.
+	 */
+	private boolean isBalanced() { 
+		int black = 0;     
+		Node x = raiz;
+		while (x != null) {
+			if (!isRed(x)) black++;
+			x = x.left;
+		}
+		return isBalanced(raiz, black);
+	}
+
+	/**
+	 * Método auxiliar que comprueba si el árbol es balanceado.
+	 * @param x Nodo que ingresa por parámetro.
+	 * @param black Número de nodos negros que ingresan por parámetro.
+	 * @return True si está balanceado. False en caso contrario.
+	 */
+	private boolean isBalanced(Node x, int black) {
+		if (x == null) return black == 0;
+		if (!isRed(x)) black--;
+		return isBalanced(x.left, black) && isBalanced(x.right, black);
+	} 
 
 
 	/**
@@ -584,7 +584,7 @@ public class RedBlackBST<K extends Comparable<K>, V extends Comparable<V>> imple
 			keys(x.right, queue, lo, hi); 
 		}
 	} 
-	
+
 	/**
 	 * Método que auxilia el método auxiliar keysInRange
 	 * @param x Nodo que ingresa por parámetro.
@@ -637,7 +637,7 @@ public class RedBlackBST<K extends Comparable<K>, V extends Comparable<V>> imple
 			return 0;
 		}
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -647,7 +647,7 @@ public class RedBlackBST<K extends Comparable<K>, V extends Comparable<V>> imple
 		llenarHojas(raiz,lista);
 		return lista.iterator();
 	}
-	
+
 	/**
 	 * Método que llena la lista que contiene las hojas.
 	 * @param x Nodo con las hojas
@@ -672,5 +672,5 @@ public class RedBlackBST<K extends Comparable<K>, V extends Comparable<V>> imple
 	}
 
 
-	
+
 }

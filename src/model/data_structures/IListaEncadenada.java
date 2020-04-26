@@ -103,7 +103,7 @@ public interface IListaEncadenada<T extends Comparable<T>> extends Iterable<T>
 	 * @return Retorna arreglo de la lista.
 	 */
 	Comparable[] darArreglo();
-	
+
 	/**
 	 * Método que agrega en orden
 	 * @param Nuevo dato

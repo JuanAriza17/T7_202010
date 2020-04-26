@@ -13,35 +13,35 @@ public interface IMaxColaCP<T extends Comparable<T>>
 	 * @param elemento Elemento que será agregado a la cola de prioridad.
 	 */
 	public void agregar(T elemento);
-	
+
 	/**
 	 * Saca/atiende el elemento máximo en la cola y lo retorna.
 	 * @return Elemento máximo de la cola. Si la cola está vacía retorna null.
 	 */
 	public T sacarMax();
-	
+
 	/**
 	 * Obtiene el elemento máximo (sin sacarlo de la cola).
 	 * @return  Elemento máximo de la cola. Si la cola esta vacía retorna null.
 	 */
 	public T darMax();
-	
+
 	/**
 	 * Retorna si la cola está vacía o no.
 	 * @return True en caso de que este vacía. False en caso contrario.
 	 */
 	public boolean esVacia();
-	
+
 	/**
 	 * Retorna el arreglo con la lista de la cola.
 	 * @return Arreglo con la lista de la cola.
 	 */
 	public Comparable[] darListaCola();
-	
+
 	/**
 	 * Retorna la cola.
 	 * @return cola.
 	 */
 	public IQueue darCola();
-	
+
 }

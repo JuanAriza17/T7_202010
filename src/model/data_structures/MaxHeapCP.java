@@ -8,7 +8,7 @@ public class MaxHeapCP<T extends Comparable<T>> implements IMaxHeapCP<T> {
 	//Los métodos utilizados para la implementación de esta clase fueron tomados
 	//textualmente del libro guía del curso (Algorithms 4th). 
 	//Se da entonces crédito total a los autores del libro y sus algoritmos.
-	
+
 	/**
 	 * Arreglo dinámico que maneja la cola de prioridad.
 	 */
@@ -18,7 +18,7 @@ public class MaxHeapCP<T extends Comparable<T>> implements IMaxHeapCP<T> {
 	 * Número de elementos presentes en la cola de prioridad.
 	 */
 	public int numPresentes; 
-	
+
 	private Comparator<T> comparator;
 
 	/**
@@ -33,7 +33,7 @@ public class MaxHeapCP<T extends Comparable<T>> implements IMaxHeapCP<T> {
 		comparator = null;
 
 	}
-	
+
 	public MaxHeapCP(int n, Comparator<T> comp)
 	{
 		heap=(T[]) new Comparable[n+1];
@@ -49,7 +49,7 @@ public class MaxHeapCP<T extends Comparable<T>> implements IMaxHeapCP<T> {
 	{
 		return numPresentes;
 	}
-	
+
 
 	/**
 	 * Método que agrega un elemento en el heap de prioridad. Utiliza el comparador natural de la clase T.
@@ -57,21 +57,21 @@ public class MaxHeapCP<T extends Comparable<T>> implements IMaxHeapCP<T> {
 	 */
 	public void agregar(T elemento)
 	{
-        if (numPresentes == heap.length - 1) resize(2 * heap.length);
+		if (numPresentes == heap.length - 1) resize(2 * heap.length);
 
 		heap[++numPresentes]=elemento;
 		swim(numPresentes);
 	}
-	
-    private void resize(int capacity) {
-        T[] temp = (T[]) new Comparable[capacity];
-        for (int i = 1; i <= numPresentes; i++) {
-            temp[i] = heap[i];
-        }
-        heap = temp;
-    }
 
-	
+	private void resize(int capacity) {
+		T[] temp = (T[]) new Comparable[capacity];
+		for (int i = 1; i <= numPresentes; i++) {
+			temp[i] = heap[i];
+		}
+		heap = temp;
+	}
+
+
 	/**
 	 * Saca/atiende el elemento máximo en el heap y lo retorna.
 	 * @return Elemento máximo de la cola. Si la cola está vacía retorna null.
@@ -102,7 +102,7 @@ public class MaxHeapCP<T extends Comparable<T>> implements IMaxHeapCP<T> {
 	{
 		return numPresentes==0;
 	}
-	
+
 	/**
 	 * Método que envía un elemento de la parte superior a la inferior del heap para preservar el orden.
 	 */
@@ -120,11 +120,11 @@ public class MaxHeapCP<T extends Comparable<T>> implements IMaxHeapCP<T> {
 				break;
 			}
 			intercambiarPosiciones(pPosicion, j);
-			
+
 			pPosicion = j;
 		} 
 	}
-	
+
 	/**
 	 * Método que envía un elemento de la parte inferior a la superior del heap para preservar el orden.
 	 */
@@ -145,7 +145,7 @@ public class MaxHeapCP<T extends Comparable<T>> implements IMaxHeapCP<T> {
 	{
 		return heap;
 	}
-	
+
 	/**
 	 * Método que compara por una característica natural de la clase del elemento comparable.
 	 * @param i
@@ -174,7 +174,7 @@ public class MaxHeapCP<T extends Comparable<T>> implements IMaxHeapCP<T> {
 		heap[j]=elemento;
 	}
 
-	
+
 
 
 

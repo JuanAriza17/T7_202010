@@ -3,10 +3,10 @@ package model.data_structures;
 public class Queue<T extends Comparable<T>> implements IQueue<T> 
 {
 	/**
-     * Interfaz de la lista implementada en la cola.
-     */
+	 * Interfaz de la lista implementada en la cola.
+	 */
 	private IListaEncadenada<T> elementos;	
-	
+
 	/**
 	 * Método constructor de la clase Queue
 	 * @post:Declara una ListaEncadenada genérica vacía.
@@ -15,7 +15,7 @@ public class Queue<T extends Comparable<T>> implements IQueue<T>
 	{
 		elementos = new ListaEncadenada<T>();
 	}
-	
+
 	/**
 	 * Método que agrega al final de la cola un elemento que llega por parámetro.
 	 * @param Elemento que será agregado en la cola.
@@ -33,7 +33,7 @@ public class Queue<T extends Comparable<T>> implements IQueue<T>
 	public T dequeue() 
 	{
 		T elemento = elementos.eliminarPrimero();
-		
+
 		return elemento;
 	}
 
@@ -65,7 +65,7 @@ public class Queue<T extends Comparable<T>> implements IQueue<T>
 
 		return elemento!=null?elemento.darElemento():null;	
 	}
-	
+
 	/**
 	 * String que retorna un mensaje con los elementos de la cola.
 	 * @return Mensaje con los elementos de la cola.
@@ -73,15 +73,15 @@ public class Queue<T extends Comparable<T>> implements IQueue<T>
 	public String darLista()
 	{
 		String mensaje="";
-		
+
 		for (int i = 0; i < elementos.darLongitud(); i++)
 		{
 			mensaje+=elementos.darElemento(i).toString()+"\n";
 		}
-		
+
 		return mensaje;
 	}
-	
+
 	/**
 	 * Método que retorna la lista de elementos.
 	 * @return Lista de elementos.
@@ -90,7 +90,7 @@ public class Queue<T extends Comparable<T>> implements IQueue<T>
 	{
 		return  elementos;
 	}
-	
+
 	public void enqueueOrden(T elemento)
 	{
 		elementos.agregarOrden(elemento);

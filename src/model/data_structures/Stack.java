@@ -3,10 +3,10 @@ package model.data_structures;
 public class Stack<T extends Comparable<T>> implements IStack<T>
 {
 	/**
-     * Interfaz de la lista implementada en la pila.
-     */		
+	 * Interfaz de la lista implementada en la pila.
+	 */		
 	private IListaEncadenada<T> elementos;	
-	
+
 	/**
 	 * Método constructor de la clase Stack.
 	 * @post:Declara una ListaEncadenada genérica vacía.
@@ -15,7 +15,7 @@ public class Stack<T extends Comparable<T>> implements IStack<T>
 	{
 		elementos = new ListaEncadenada<T>();
 	}
-	
+
 	/**
 	 * Método que agrega al final de la pila un elemento que llega por parámetro.
 	 * @post: Se agrega el elemento que llega por parámetro.
@@ -63,7 +63,7 @@ public class Stack<T extends Comparable<T>> implements IStack<T>
 
 		return elemento!=null?elemento.darElemento():null;	
 	}
-	
+
 	/**
 	 * String que retorna un mensaje con los elementos de la pila.
 	 * @return Mensaje con los elementos de la pila.
@@ -71,12 +71,12 @@ public class Stack<T extends Comparable<T>> implements IStack<T>
 	public String darLista()
 	{
 		String mensaje="";
-		
+
 		for (int i = 0; i < elementos.darLongitud(); i++)
 		{
 			mensaje+=elementos.darElemento(i).toString()+"\n";
 		}
-		
+
 		return mensaje;
 	}
 

@@ -18,12 +18,12 @@ public class HashSeparateChaining<K extends Comparable<K>, V extends Comparable<
 	 * Tamaño de la tabla.
 	 */
 	private int m;
-	
+
 	/**
 	 * Nodo de la clase
 	 */
 	private Node[] st;
-	
+
 	/**
 	 * Factor de carga
 	 */
@@ -33,64 +33,64 @@ public class HashSeparateChaining<K extends Comparable<K>, V extends Comparable<
 	 * Contador de rehashes
 	 */
 	private int contador;
-	
+
 	/**
 	 * Método constructor. Inicializa los pares en 0, el tamaño según llega por parámetro, el contador en 0 e inicializa la tabla.
 	 * @param tamano
 	 */
-    public HashSeparateChaining(int tamano) 
-    {
-    	n=0;
-    	m = tamano;
-    	contador = 0;
-    	st= new HashSeparateChaining.Node[tamano];
+	public HashSeparateChaining(int tamano) 
+	{
+		n=0;
+		m = tamano;
+		contador = 0;
+		st= new HashSeparateChaining.Node[tamano];
 	}
-	
-    /**
-     * Clase interna que maneja el nodo.
-     * @author Juan Ariza
-     * @author Sergio Zona
-     *
-     */
-    private class Node {
-    	/**
-    	 * Llave del nodo
-    	 */
-        private K key;
-        
-        /**
-         * Lista encadenada de valores.
-         */
-        private ListaEncadenada<V> values;
-        
-        /**
-         * Referencia al siguiente nodo.
-         */
-        private Node next;
-        
-        /**
-         * Método constructor, inicializa los atributos por los que llegan por parámetro.
-         * @param pKey Llave que será inicializada.
-         * @param pValues Lista encadenada de valores que será inicializada.
-         * @param pNext Nodo siguiente que será inicializado.
-         */
-        public Node(K pKey, ListaEncadenada<V> pValues, Node pNext)  {
-            key  = pKey;
-            values  = pValues;
-            next = pNext;
-        }
-        
-    }
-    
-    /**
-     * Método que retorn el número de rehashes
-     * @return Número de rehashes.
-     */
-    public int darNumeroRehashes()
-    {
-    	return contador;
-    }
-    
+
+	/**
+	 * Clase interna que maneja el nodo.
+	 * @author Juan Ariza
+	 * @author Sergio Zona
+	 *
+	 */
+	private class Node {
+		/**
+		 * Llave del nodo
+		 */
+		private K key;
+
+		/**
+		 * Lista encadenada de valores.
+		 */
+		private ListaEncadenada<V> values;
+
+		/**
+		 * Referencia al siguiente nodo.
+		 */
+		private Node next;
+
+		/**
+		 * Método constructor, inicializa los atributos por los que llegan por parámetro.
+		 * @param pKey Llave que será inicializada.
+		 * @param pValues Lista encadenada de valores que será inicializada.
+		 * @param pNext Nodo siguiente que será inicializado.
+		 */
+		public Node(K pKey, ListaEncadenada<V> pValues, Node pNext)  {
+			key  = pKey;
+			values  = pValues;
+			next = pNext;
+		}
+
+	}
+
+	/**
+	 * Método que retorn el número de rehashes
+	 * @return Número de rehashes.
+	 */
+	public int darNumeroRehashes()
+	{
+		return contador;
+	}
+
 	/**
 	 * Método que retorna el número de pares de la tabla.
 	 * @return Número de pares de la tabla.
@@ -108,7 +108,7 @@ public class HashSeparateChaining<K extends Comparable<K>, V extends Comparable<
 	{
 		return m;
 	}
-    
+
 	/**
 	 * Método que agrega una dupla (pKey, pValue) a la tabla. Si la llave pKey existe, se reemplaza su valor pValue asociado. 
 	 * @param pKey Llave que será agregada o buscada. 
@@ -120,9 +120,9 @@ public class HashSeparateChaining<K extends Comparable<K>, V extends Comparable<
 		{
 			rehash(nextPrime(2*m));
 		}
-		
+
 		int i = hash(pKey);
-		
+
 		Node x = st[i];
 		while(x!=null)
 		{
@@ -131,10 +131,10 @@ public class HashSeparateChaining<K extends Comparable<K>, V extends Comparable<
 				x.values.agregarFinal(pValue); 
 				return; 
 			}
-			
+
 			x = x.next;
 		}
-		
+
 		ListaEncadenada<V> lista = new ListaEncadenada<V>();
 		lista.agregarFinal(pValue);		
 		st[i] = new Node(pKey, lista, st[i]); 
@@ -152,7 +152,7 @@ public class HashSeparateChaining<K extends Comparable<K>, V extends Comparable<
 		{
 			rehash(nextPrime(2*m));
 		}
-		
+
 		int i = hash(pKey);
 		for (Node x = st[i]; x != null; x = x.next)
 		{
@@ -162,7 +162,7 @@ public class HashSeparateChaining<K extends Comparable<K>, V extends Comparable<
 				return; 
 			}
 		}
-		
+
 		st[i] = new Node(pKey, pValue, st[i]);
 		n++;
 	}
@@ -178,7 +178,7 @@ public class HashSeparateChaining<K extends Comparable<K>, V extends Comparable<
 		for (Node x = st[i]; x != null; x = x.next)
 			if (pKey.equals(x.key))
 				return x.values.iterator();
-		
+
 		return null; 
 	}
 
@@ -193,36 +193,36 @@ public class HashSeparateChaining<K extends Comparable<K>, V extends Comparable<
 		{
 			return null;
 		}
-        int i = hash(pKey);
-        
-        Iterator<V> iterator = null;
-        Node a=st[i];
-        Node x=a.next;
-        if(pKey.equals(a.key))
-        {
-        	iterator=a.values.iterator();
-        	st[i]=st[i].next;
-        	--n;
-        }
-        else
-        {
-        	while(x!=null)
-            {
-            	if (pKey.equals(x.key)) 
-    			{ 
-    				--n;
-    				iterator = x.values.iterator();
-    				x=null;
-    			}
-            	a=x;
-            	x=x.next;
-            		
-            	
-            }
-        }
-        
+		int i = hash(pKey);
+
+		Iterator<V> iterator = null;
+		Node a=st[i];
+		Node x=a.next;
+		if(pKey.equals(a.key))
+		{
+			iterator=a.values.iterator();
+			st[i]=st[i].next;
+			--n;
+		}
+		else
+		{
+			while(x!=null)
+			{
+				if (pKey.equals(x.key)) 
+				{ 
+					--n;
+					iterator = x.values.iterator();
+					x=null;
+				}
+				a=x;
+				x=x.next;
+
+
+			}
+		}
+
 		return iterator;
-  	}
+	}
 
 	/**
 	 * Conjunto de llaves T presentes en la tabla.
@@ -230,12 +230,12 @@ public class HashSeparateChaining<K extends Comparable<K>, V extends Comparable<
 	 */
 	public Iterator<K> keys() 
 	{
-		 ListaEncadenada<K> lista = new ListaEncadenada<K>();
-	     for (int i = 0; i < m; i++)
-	         if (st[i] != null) lista.agregarFinal(st[i].key);
-	     return lista.iterator();
+		ListaEncadenada<K> lista = new ListaEncadenada<K>();
+		for (int i = 0; i < m; i++)
+			if (st[i] != null) lista.agregarFinal(st[i].key);
+		return lista.iterator();
 	}
-	
+
 	/**
 	 * Convierte el hashCode() en un índice.
 	 * @param pKey. Llave que ingresa por parámetro.
@@ -245,7 +245,7 @@ public class HashSeparateChaining<K extends Comparable<K>, V extends Comparable<
 	{ 
 		return (pKey.hashCode() & 0x7fffffff) % m;
 	} 
-	
+
 	/**
 	 * Método que modifica el tamaño de la tabla de ser necesario si se queda sin espacio.
 	 * @param chains Cadena de valores que será agregada.
@@ -265,14 +265,14 @@ public class HashSeparateChaining<K extends Comparable<K>, V extends Comparable<
 						x = x.next;
 					}
 				}
-	        }
+			}
 		}
 		m = temp.darTamano();
 		n = temp.darNumPares();
 		st = temp.st;
 		contador++;
 	}
-	   
+
 	/**
 	 * Método que indica si una llave se encuentra en el arreglo de llaves.
 	 * @param key Llave que es buscada
@@ -296,7 +296,7 @@ public class HashSeparateChaining<K extends Comparable<K>, V extends Comparable<
 		{
 			isPrime[i]=true;
 		}
-		
+
 		for (int factor = 2; factor*factor <= pn; factor++) 
 		{
 			if (isPrime[factor]) 
@@ -306,7 +306,7 @@ public class HashSeparateChaining<K extends Comparable<K>, V extends Comparable<
 				}
 			}
 		}
-		
+
 		int primo = 0;
 		for (int i = pm; i <= pn; i++) {
 			if(isPrime[i])
@@ -314,17 +314,17 @@ public class HashSeparateChaining<K extends Comparable<K>, V extends Comparable<
 				primo=i;
 			}
 		}
-		
+
 		return primo;
 	}
-	
+
 	public IListaEncadenada<V> darListaValores(K pKey)
 	{
 		int i = hash(pKey);
 		for (Node x = st[i]; x != null; x = x.next)
 			if (pKey.equals(x.key))
 				return x.values;
-		
+
 		return null;
 	}
 

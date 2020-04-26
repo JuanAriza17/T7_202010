@@ -6,17 +6,17 @@ public class NodoLista<T>
 	 * Nodo del siguiente elemento de la lista.
 	 */
 	private NodoLista<T> siguiente;
-	
+
 	/**
 	 * Nodo del anterior elemento de la lista.
 	 */
 	private NodoLista<T> anterior;
-	
+
 	/**
 	 * Elemento T genérico que es guardado en el nodo actual.
 	 */
 	private T elemento;
-	
+
 	/**
 	 * Constructor de la clase NodoLista.
 	 * @post:Se inicializa el dato T por el que llega por parámetro.
@@ -29,7 +29,7 @@ public class NodoLista<T>
 		siguiente = null;
 		anterior = null;
 	}
-	
+
 	/**
 	 * Cambia el puntero del siguiente nodo por el que llega por parámetro.
 	 * @param sig Nodo que será el nuevo puntero siguiente.
@@ -38,8 +38,8 @@ public class NodoLista<T>
 	{
 		siguiente = sig;
 	}
-	
-		/**
+
+	/**
 	 * Cambia el puntero del anterior nodo por el que llega por parámetro.
 	 * @param sig Nodo que será el nuevo puntero anterior.
 	 */
@@ -47,7 +47,7 @@ public class NodoLista<T>
 	{
 		anterior = ant;
 	}
-	
+
 	/**
 	 * Método que retorna el elemento que guarda el nodo actual.
 	 * @return Elemento T
@@ -56,7 +56,7 @@ public class NodoLista<T>
 	{
 		return elemento;
 	}
-	
+
 	/**
 	 * Método que retorna el siguiente nodo.
 	 * @return Siguiente nodo.
@@ -65,7 +65,7 @@ public class NodoLista<T>
 	{
 		return siguiente;
 	}
-	
+
 	/**
 	 * Método que retorna el anterior nodo.
 	 * @return Anterior nodo.

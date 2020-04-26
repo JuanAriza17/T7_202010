@@ -8,12 +8,12 @@ public class MaxColaCP<T extends Comparable<T>> implements IMaxColaCP<T> {
 	 * Arreglo dinámico que maneja la cola de prioridad.
 	 */
 	public IQueue<T> cola;
-	
+
 	/**
 	 * Número de elementos presentes en la cola de prioridad.
 	 */
 	public int numPresentes; 
-	
+
 	/**
 	 * Método constructor de la clase MaxHeapCP.
 	 * @post:-Inicializa el arreglo dinámico que manejará la cola de prioridad.
@@ -52,7 +52,7 @@ public class MaxColaCP<T extends Comparable<T>> implements IMaxColaCP<T> {
 		numPresentes--;
 		return cola.dequeue();
 	}
-	
+
 	/**
 	 * Obtiene el elemento máximo (sin sacarlo de la cola).
 	 * @return  Elemento máximo de la cola. Si la cola esta vacía retorna null.
@@ -61,7 +61,7 @@ public class MaxColaCP<T extends Comparable<T>> implements IMaxColaCP<T> {
 	{
 		return  cola.peek();
 	}
-	
+
 	/**
 	 * Retorna si la cola está vacía o no.
 	 * @return True en caso de que este vacía. False en caso contrario.
@@ -70,7 +70,7 @@ public class MaxColaCP<T extends Comparable<T>> implements IMaxColaCP<T> {
 	{
 		return numPresentes==0;
 	}
-	
+
 	/**
 	 * Retorna el arreglo con la lista de la cola.
 	 * @return Arreglo con la lista de la cola.
@@ -79,7 +79,7 @@ public class MaxColaCP<T extends Comparable<T>> implements IMaxColaCP<T> {
 	{
 		return cola.darElementos().darArreglo();
 	}
-	
+
 	/**
 	 * Retorna la cola.
 	 * @return cola.

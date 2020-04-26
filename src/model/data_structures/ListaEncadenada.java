@@ -367,12 +367,12 @@ public class ListaEncadenada<T extends Comparable<T>> implements IListaEncadenad
 
 		return comparable;
 	}
-	
+
 	public void agregarOrden(T elemento)
 	{
 		boolean respuesta = false;
 		NodoLista<T> nuevo = new NodoLista<T>(elemento);
-		
+
 		if(primero==null)
 		{
 			primero = nuevo;
@@ -395,7 +395,7 @@ public class ListaEncadenada<T extends Comparable<T>> implements IListaEncadenad
 				ant = act;
 				act = act.darSiguiente();
 			}
-			
+
 			if(act==null||elemento.compareTo(act.darElemento())>0)
 			{
 				ant.cambiarSiguiente(nuevo);
@@ -407,9 +407,9 @@ public class ListaEncadenada<T extends Comparable<T>> implements IListaEncadenad
 					act.cambiarAnterior(nuevo);
 				respuesta = true;
 			}
-			
+
 		}
-		
+
 		if(respuesta)
 			longitud++;
 	}

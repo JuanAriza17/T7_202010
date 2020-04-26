@@ -23,18 +23,18 @@ public class HashLinearProbing<K extends Comparable<K>, V extends Comparable<V>>
 	 * Arreglo de las llaves.
 	 */
 	private K[] keys;
-	
+
 	/**
 	 * Numero de rehashes realizados
 	 */
-	
+
 	private int contador;
 
 	/**
 	 * Arreglo de los valores.
 	 */
 	private ListaEncadenada<V>[] values;
-	
+
 	/**
 	 * Factor de carga máximo.
 	 */
@@ -115,16 +115,16 @@ public class HashLinearProbing<K extends Comparable<K>, V extends Comparable<V>>
 				return;
 			}
 		}
-		
+
 		ListaEncadenada<V> lista = new ListaEncadenada<V>();
 		lista.agregarFinal(pValue);
-		
+
 		keys[i]=pKey;
 		values[i]=lista;
 		++n;
 
 	}
-	
+
 	/**
 	 * Método que agrega la llave y la cadena de valores.
 	 * @param pKey Llave que será agregada.
@@ -155,7 +155,7 @@ public class HashLinearProbing<K extends Comparable<K>, V extends Comparable<V>>
 	 * @return El valor asociado a esa llave. Retorna null en caso de que no se encuentre la llave.
 	 */
 	public Iterator<V> getSet(K pKey) {
-		
+
 		for (int i= hash(pKey); keys[i]!=null; i=(i+1)%m)
 		{
 			if (keys[i].equals(pKey))
@@ -194,8 +194,8 @@ public class HashLinearProbing<K extends Comparable<K>, V extends Comparable<V>>
 		}
 		--n;
 		return retorno;
-		
-		
+
+
 	}
 
 	/**
@@ -204,10 +204,10 @@ public class HashLinearProbing<K extends Comparable<K>, V extends Comparable<V>>
 	 */
 	@Override
 	public Iterator<K> keys() {
-		 ListaEncadenada<K> lista = new ListaEncadenada<K>();
-	     for (int i = 0; i < m; i++)
-	         if (keys[i] != null) lista.agregarFinal(keys[i]);
-	     return lista.iterator();
+		ListaEncadenada<K> lista = new ListaEncadenada<K>();
+		for (int i = 0; i < m; i++)
+			if (keys[i] != null) lista.agregarFinal(keys[i]);
+		return lista.iterator();
 	}
 
 	/**
@@ -251,7 +251,7 @@ public class HashLinearProbing<K extends Comparable<K>, V extends Comparable<V>>
 	{
 		return getSet(key) != null; 
 	}
-	
+
 	/**
 	 * Método que busca números primos para ser enviados al tamaño de la tabla de hash para mayor eficiencia en el algoritmo.
 	 * @param pm Valor del rango del primo.
@@ -265,7 +265,7 @@ public class HashLinearProbing<K extends Comparable<K>, V extends Comparable<V>>
 		{
 			isPrime[i]=true;
 		}
-		
+
 		for (int factor = 2; factor*factor <= pn; factor++) 
 		{
 			if (isPrime[factor]) 
@@ -275,7 +275,7 @@ public class HashLinearProbing<K extends Comparable<K>, V extends Comparable<V>>
 				}
 			}
 		}
-		
+
 		int primo = 0;
 		for (int i = pm; i <= pn; i++) {
 			if(isPrime[i])
@@ -283,10 +283,10 @@ public class HashLinearProbing<K extends Comparable<K>, V extends Comparable<V>>
 				primo=i;
 			}
 		}
-		
+
 		return primo;
 	}
-	
+
 	public IListaEncadenada<V> darListaValores(K pKey)
 	{
 		for (int i= hash(pKey); keys[i]!=null; i=(i+1)%m)

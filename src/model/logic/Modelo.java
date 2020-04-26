@@ -72,33 +72,42 @@ public class Modelo {
 	}
 
 	/**
-	 * Método que se encarga de solucionar el requerimiento 1A
-	 * @param m número de comparendos que se quiere imprimir.
-	 * @return Los m comparendos con mayor prioridad en una cola de prioridad por gravedad.
-	 */
-	public String darMComparendosConMayorGravedad(int m)
-	{
-		//INICIALIZACIÓN DEL HEAP DE COMPARENDOS CON PRIORIDAD POR INFRACCIÓN.
-		Iterator<Comparendo>iterator=listaComparendos.iterator();
-		Comparendo.ComparadorXInfraccion compInfra = new Comparendo.ComparadorXInfraccion();
-		IMaxHeapCP<Comparendo> heapInfraccion=new MaxHeapCP<Comparendo>(527656, compInfra);
-		while(iterator.hasNext())
-		{
-			heapInfraccion.agregar(iterator.next());
-		}
-		//IMPRESIÓN:
-		String retorno="";
-		int max = m>MAX_DATOS?MAX_DATOS:m;
-		for(int i=0; i<max;++i)
-		{
-			Comparendo actual=heapInfraccion.sacarMax();
-			retorno+=actual.toString()+"\n";
-		}
+     * Método que se encarga de solucionar el requerimiento 1A
+     * @param m número de comparendos que se quiere imprimir.
+     * @return Los m comparendos con mayor prioridad en una cola de prioridad por gravedad.
+     */
+    public String darMComparendosConMayorGravedad(int m)
+    {
+        //INICIALIZACIÓN DEL HEAP DE COMPARENDOS CON PRIORIDAD POR INFRACCIÓN.
+        Iterator<Comparendo>iterator=listaComparendos.iterator();
+        Comparendo.ComparadorXTipoServicio compServi = new Comparendo.ComparadorXTipoServicio();
+        IMaxHeapCP<Comparendo> heapInfraccion=new MaxHeapCP<Comparendo>(527656, compServi);
+        while(iterator.hasNext())
+        {
+            heapInfraccion.agregar(iterator.next());
+        }
+        Comparendo.ComparadorXInfraccion compInfra=new Comparendo.ComparadorXInfraccion();
+        int j=0;
+        Comparable[]arreglo=new Comparable[m];
+        while(!heapInfraccion.esVacia() && j<m)
+        {
+            arreglo[j]=heapInfraccion.sacarMax();
+            ++j;
+        }
+        Ordenamientos.mergeSort(arreglo, compInfra);
+        //IMPRESIÓN:
+        String retorno="";
+        int max = m>MAX_DATOS?MAX_DATOS:m;
+        for(int i=0; i<max;++i)
+        {
+            Comparendo actual=(Comparendo) arreglo[i];
+            retorno+=actual.toString()+"\n";
+        }
 
-		retorno+=m>MAX_DATOS?"\nDebido a que se quiso imprimir una cantidad de comparendos mayor a la permitida ("+m+"), se imprimieron solo "+Modelo.MAX_DATOS+"\n":"\nSe imprimieron los "+m+" comparendos.\n";
+        retorno+=m>MAX_DATOS?"\nDebido a que se quiso imprimir una cantidad de comparendos mayor a la permitida ("+m+"), se imprimieron solo "+Modelo.MAX_DATOS+"\n":"\nSe imprimieron los "+m+" comparendos.\n";
 
-		return retorno;
-	}
+        return retorno;
+    }
 
 
 	/**

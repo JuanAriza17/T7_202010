@@ -255,17 +255,40 @@ public class Comparendo implements Comparable<Comparendo>
 	}
 
 	/**
-	 * Clase que implementa comparador de comparendo para la infracción.
-	 * @author ASUS Juan Ariza y Sergio Zona.
-	 *
-	 */
-	public static class ComparadorXInfraccion implements Comparator<Comparendo>{
+     * Clase que implementa comparador de comparendo para la fecha.
+     * @author ASUS Juan Ariza y Sergio Zona.
+     *
+     */
+    public static class ComparadorXTipoServicio implements Comparator<Comparendo>{
 
-		public int compare(Comparendo c1, Comparendo c2)
-		{
-			return c1.darInfraccion().compareTo(c2.darInfraccion());
-		}
-	}
+        public int compare(Comparendo c1, Comparendo c2)
+        {
+            if(c1.darServicio().equalsIgnoreCase("Público") && (c2.darServicio().equalsIgnoreCase("Oficial")|c2.darServicio().equalsIgnoreCase("Particular")))
+            {
+                return 1;
+            }
+            else if(c1.darServicio().equalsIgnoreCase("Oficial") && c2.darServicio().equalsIgnoreCase("Particular"))
+            {
+                return 1;
+            }
+            else
+            {
+                return -1;
+            }
+        }
+    }
+/**
+     * Clase que implementa comparador de comparendo para la infracción.
+     * @author ASUS Juan Ariza y Sergio Zona.
+     *
+     */
+    public static class ComparadorXInfraccion implements Comparator<Comparendo>{
+
+        public int compare(Comparendo c1, Comparendo c2)
+        {
+            return c2.darInfraccion().compareTo(c1.darInfraccion());
+        }
+    }}
 
 	/**
 	 * Clase que implementa comparador de comparendo para la fecha.

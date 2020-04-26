@@ -317,6 +317,15 @@ public class HashSeparateChaining<K extends Comparable<K>, V extends Comparable<
 		
 		return primo;
 	}
-
+	
+	public IListaEncadenada<V> darListaValores(K pKey)
+	{
+		int i = hash(pKey);
+		for (Node x = st[i]; x != null; x = x.next)
+			if (pKey.equals(x.key))
+				return x.values;
+		
+		return null;
+	}
 
 }

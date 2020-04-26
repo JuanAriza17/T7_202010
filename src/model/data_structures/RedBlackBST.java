@@ -26,10 +26,6 @@ public class RedBlackBST<K extends Comparable<K>, V extends Comparable<V>> imple
 	 */
 	private Node raiz;
 	
-	/**
-	 * Atributo de la Queue de valores entre llaves.
-	 */
-	Queue<V> queue = new Queue<V>();
 	
 	/**
 	 * Método constructor que construye el árbol. 
@@ -43,8 +39,14 @@ public class RedBlackBST<K extends Comparable<K>, V extends Comparable<V>> imple
 	 * Método que retorna el número de elementos en el rango de llaves.
 	 * @return numValuesInRange;
 	 */
-	public int darNumValuesInRange()
+	public int darNumValuesInRange(K init, K end)
 	{
+
+		if (init == null) throw new IllegalArgumentException("Primer parámetro nulo");
+		if (end == null) throw new IllegalArgumentException("Segundo parámetro nulo");
+		Queue<V >queue = new Queue<V>();
+		values(raiz, queue, init, end);
+		
 		return queue.darElementos().darLongitud();
 	}
 
@@ -533,7 +535,7 @@ public class RedBlackBST<K extends Comparable<K>, V extends Comparable<V>> imple
 	{
 		if (init == null) throw new IllegalArgumentException("Primer parámetro nulo");
 		if (end == null) throw new IllegalArgumentException("Segundo parámetro nulo");
-		queue = new Queue<V>();
+		Queue<V >queue = new Queue<V>();
 		values(raiz, queue, init, end);
 		return queue.darElementos().iterator();
 	}

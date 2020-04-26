@@ -66,7 +66,12 @@ public class Comparendo implements Comparable<Comparendo>
 	 * Medio de deteccion
 	 */
 	private String medioDete;
-
+	
+	/**
+	 * Costo de penalización
+	 */
+	private int precio;
+	
 	/**
 	 * Metodo constructor para crear un comparendo
 	 * @param pId ID comparendo
@@ -78,7 +83,7 @@ public class Comparendo implements Comparable<Comparendo>
 	 * @param pLocalidad localidad comparendo
 	 * @param pCoordenadas coordenadas comparendo
 	 */
-	public Comparendo(int pId, Date pFecha, String pVehiculo, String pServicio, String pInfraccion, String pDescripcion, String pLocalidad, double[] pCoordenadas, String pDete)
+	public Comparendo(int pId, Date pFecha, String pVehiculo, String pServicio, String pInfraccion, String pDescripcion, String pLocalidad, double[] pCoordenadas, String pDete, int pPrecio)
 	{
 		id = pId;
 		fecha = pFecha;
@@ -89,6 +94,7 @@ public class Comparendo implements Comparable<Comparendo>
 		localidad = pLocalidad;
 		coordenadas = pCoordenadas;
 		medioDete = pDete;
+		precio = pPrecio;
 	}
 
 	/**

@@ -25,9 +25,11 @@ import model.data_structures.HashSeparateChaining;
 import model.data_structures.IHashTable;
 import model.data_structures.IListaEncadenada;
 import model.data_structures.IMaxHeapCP;
+import model.data_structures.IQueue;
 import model.data_structures.IRedBlackBST;
 import model.data_structures.ListaEncadenada;
 import model.data_structures.MaxHeapCP;
+import model.data_structures.Queue;
 import model.data_structures.RedBlackBST;
 import model.logic.Comparendo.ComparadorXFecha;
 
@@ -57,6 +59,8 @@ public class Modelo {
 	 * Número de datos en caso de ser necesario imprimir números muy grandes.
 	 */
 	public final static int MAX_DATOS = 20;
+	
+	public final static int MAX_COMPARENDOS_DIARIO = 1500;
 
 	/**
 	 * Constructor del modelo del mundo con capacidad predefinida.
@@ -75,17 +79,17 @@ public class Modelo {
 	public String darMComparendosConMayorGravedad(int m)
 	{
 		Iterator<Comparendo>iterator=listaComparendos.iterator();
-		IMaxHeapCP<Comparendo> heapInfraccion=new MaxHeapCP<Comparendo>(527656);
 		Comparendo.ComparadorXInfraccion compInfra = new Comparendo.ComparadorXInfraccion();
+		IMaxHeapCP<Comparendo> heapInfraccion=new MaxHeapCP<Comparendo>(527656, compInfra);
 		while(iterator.hasNext())
 		{
-			heapInfraccion.agregar(iterator.next(), compInfra);
+			heapInfraccion.agregar(iterator.next());
 		}
 		String retorno="";
 		int max = m>MAX_DATOS?MAX_DATOS:m;
 		for(int i=0; i<max;++i)
 		{
-			Comparendo actual=heapInfraccion.sacarMax(compInfra);
+			Comparendo actual=heapInfraccion.sacarMax();
 			retorno+=actual.toString()+"\n";
 		}
 
@@ -124,14 +128,18 @@ public class Modelo {
 	public String darComparendosEnRangoDeFechaYLocalidad(Date fecha1, Date fecha2, String localidad)
 	{
 		Iterator<Comparendo>iterator=listaComparendos.iterator();
-		IRedBlackBST<Date, Comparendo>redBlackFechas= new RedBlackBST<Date, Comparendo>();
+		IRedBlackBST<String, Comparendo>redBlackFechas= new RedBlackBST<String, Comparendo>();
+
+		SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 		while(iterator.hasNext())
 		{
 			Comparendo actual=iterator.next();
-			redBlackFechas.put(actual.darFecha(), actual);
+			String key=parser.format(actual.darFecha())+actual.darId();
+			redBlackFechas.put(key, actual);
 		}
+		
 		String respuesta="";
-		Iterator<Comparendo> iterador=redBlackFechas.valuesInRange(fecha1, fecha2); 
+		Iterator<Comparendo> iterador=redBlackFechas.valuesInRange(parser.format(fecha1)+1, parser.format(fecha2)+listaComparendos.darLongitud()); 
 		int i =0;
 		while(iterador.hasNext()&&i<MAX_DATOS)
 		{
@@ -157,11 +165,11 @@ public class Modelo {
 	public String darMComparendosMasCercaEstacion(int m)
 	{
 		Iterator<Comparendo>iterator=listaComparendos.iterator();
-		IMaxHeapCP<Comparendo> heapDistancia=new MaxHeapCP<Comparendo>(527656);
-		Comparendo.ComparadorXDistanciaAscendente compInfra = new Comparendo.ComparadorXDistanciaAscendente();
+		Comparendo.ComparadorXDistanciaAscendente compDist = new Comparendo.ComparadorXDistanciaAscendente();
+		IMaxHeapCP<Comparendo> heapDistancia=new MaxHeapCP<Comparendo>(500,compDist);
 		while(iterator.hasNext())
 		{
-			heapDistancia.agregar(iterator.next(), compInfra);
+			heapDistancia.agregar(iterator.next());
 		}
 		
 		String mensaje = "";
@@ -170,7 +178,7 @@ public class Modelo {
 		
 		for (int i=0;i<max; ++i) 
 		{
-			Comparendo c = heapDistancia.sacarMax(compInfra);
+			Comparendo c = heapDistancia.sacarMax();
 			mensaje+=c.toString()+" LONGITUD:"+ c.darLongitud()+" LATITUD: "+c.darLatitud()+ " DISTANCIA: "+c.darDistanciaEstacion()+"\n";
 		}
 
@@ -199,16 +207,8 @@ public class Modelo {
 			hashDeteVehiServiLoc.putInSet(actual.darLlaveDeteccionVehiculoServicioLocalidad(), actual);
 		}
 				
-		Iterator<Comparendo> it = hashDeteVehiServiLoc.getSet(llave);
-		if(it==null)
-			return null;
-
-		ListaEncadenada<Comparendo> lista = new ListaEncadenada<Comparendo>();
+		IListaEncadenada<Comparendo> lista = hashDeteVehiServiLoc.darListaValores(llave);
 		Comparendo.ComparadorXFecha comp = new Comparendo.ComparadorXFecha();
-
-		while(it.hasNext())
-			lista.agregarFinal(it.next());
-
 		Comparable[] arreglo = lista.darArreglo();
 		Ordenamientos.mergeSort(arreglo, comp);
 
@@ -226,15 +226,24 @@ public class Modelo {
 	public String darComparendosEnRangoLatitudYVehiculo(double latitud1, double latitud2, String vehiculo)
 	{
 		Iterator<Comparendo>iterator=listaComparendos.iterator();
-		IRedBlackBST<Double, Comparendo>redBlackLatitud=new RedBlackBST<Double, Comparendo>();
+		IRedBlackBST<String, Comparendo>redBlackLatitud=new RedBlackBST<String, Comparendo>();
 		while(iterator.hasNext())
 		{
 			Comparendo actual=iterator.next();
-			redBlackLatitud.put(actual.darLatitud(), actual);
+			redBlackLatitud.put(actual.darLatitud()+"-"+actual.darId(), actual);
 		}
-		Iterator<Comparendo> it = redBlackLatitud.valuesInRange(latitud1, latitud2);
+		
+		if(latitud1>latitud2)
+		{
+			return "La latitud inicial debe ser menor que la latitud final";
+		}
+		if(latitud2>9)
+		{
+			latitud2=9;
+		}
+		
+		Iterator<Comparendo> it = redBlackLatitud.valuesInRange(latitud1+"-"+1, latitud2+"-"+listaComparendos.darLongitud());
 		String mensaje = "";
-
 		int i =0;
 		while(it.hasNext()&& i<MAX_DATOS)
 		{
@@ -262,55 +271,38 @@ public class Modelo {
 					+"----------------------------------------------------\n";
 		int numTotalComparendos=0;
 		int numTotalAstericos=0;
-		int numeroCompa=0;
-		int num=0;
 		int numRed=0;
-		int numHash=0;
+		int valorSimbolo=pRango*300/5;
 		try 
 		{
-			pRango=pRango-1;
+			Calendar calendario = Calendar.getInstance();
 			Iterator<Comparendo>iterator=listaComparendos.iterator();
-			IRedBlackBST<Date, Comparendo>redBlackAscii=new RedBlackBST<Date, Comparendo>();
-			IHashTable<Date, Comparendo>hashTable=new HashSeparateChaining<Date, Comparendo>(7);
+			IRedBlackBST<String, Comparendo>redBlackAscii=new RedBlackBST<String, Comparendo>();
+			SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 			while(iterator.hasNext())
 			{
 				Comparendo actual=iterator.next();
-				Date fecha=actual.darFecha();
-				if(redBlackAscii.contains(fecha))
-				{
-					hashTable.putInSet(actual.darFecha(), actual);
-					++numHash;
-				}
-				else
-				{
-					redBlackAscii.put(actual.darFecha(), actual);
-					++numRed;
-				}
-				
-				++num;
+				String key=parser.format(actual.darFecha())+actual.darId();
+				redBlackAscii.put(key, actual);
+				++numRed;
 			}
-			numeroCompa=redBlackAscii.size();
-			int repeticiones=365/(pRango+1)==0?365/(pRango+1):(365/(pRango+1))+1;
-			SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+			int repeticiones=365%(pRango)==0?365/(pRango):(365/(pRango))+1;
 			Date inicial=parser.parse("2018-01-01T00:00:00.000Z");
 			for(int i=0; i<repeticiones;++i)
 			{
-				Date fin=darFechaNDias(inicial,pRango).getYear()+1900==2018?darFechaNDias(inicial, pRango):parser.parse("2018-12-31T23:59:59.000Z");
-				Iterator<Comparendo>iteratorRango=redBlackAscii.valuesInRange(inicial, fin);
-				int numeroValoresEnRango=redBlackAscii.darNumValuesInRange();
+				calendario.setTime(darFechaNDias(inicial,pRango-1,23,59,59));
+				Date fin=calendario.get(Calendar.YEAR)==2018?darFechaNDias(inicial,pRango-1,23,59,59):parser.parse("2018-12-31T23:59:59.000Z");
+				int numeroValoresEnRango=redBlackAscii.darNumValuesInRange(parser.format(inicial)+1, parser.format(fin)+listaComparendos.darLongitud());
 				numTotalComparendos+=numeroValoresEnRango;
 				tabla+=imprimirFormatoFecha(inicial)+"-"+imprimirFormatoFecha(fin)+"   |";
-				int numAsteriscos=numeroValoresEnRango/200==0?numeroValoresEnRango/200:(redBlackAscii.darNumValuesInRange()/200)+1;
+				int numAsteriscos=numeroValoresEnRango%valorSimbolo==0?numeroValoresEnRango/valorSimbolo:(numeroValoresEnRango/valorSimbolo)+1;
 				numTotalAstericos+=numAsteriscos;
-				
 				for(int j=0;j<numAsteriscos;++j)
 				{
 					tabla+="*";
 				}
-				tabla+="\n";
-				LocalDateTime localDateTime = fin.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-				localDateTime=localDateTime.plusSeconds(1);
-				inicial=Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+				tabla+=" "+numeroValoresEnRango+"\n";
+				inicial=darFechaNDias(fin,0,0,0,1);
 			}	
 			
 		} 
@@ -318,13 +310,11 @@ public class Modelo {
 		{
 			
 		} 
-		tabla+="\nCada * representa "+200+" comparendos (o fracción de los mismos).\n"
+		tabla+="\nCada * representa "+valorSimbolo+" comparendos (o fracción de los mismos).\n"
 				+ "Se imprimieron un total de: "+numTotalAstericos+".\n"
 				+ "El número total de comparendos analizados fue de: "+numTotalComparendos+".\n"
 				+ "Número de comparendos en árbol RedBlack: "+numRed+".\n"
-				+ "Número de comparendos en la tabla de hash: "+numHash+".\n"
-				+ "Suma: "+(numHash+numRed)+".\n"
-				+ "Total comparendos: "+listaComparendos.darLongitud();
+				+ "Total comparendos: "+listaComparendos.darLongitud()+".\n";
 		return tabla;
 		
 	}
@@ -333,16 +323,64 @@ public class Modelo {
 	 * Método que se encarga de solucionar el requerimiento 2C
 	 * @return Una tabla ASCII con el número de comparendos procesados por día y los que están en espera.
 	 * Además, retorna una tabla con el costo del comparendo y el tiempo de espera.
+	 * @throws ParseException 
 	 */
-	public String costoTiempoEsperaHoyEnDia()
+	public String costoTiempoEsperaHoyEnDia() throws ParseException
 	{
 		String tabla="Fecha       |Comparendos procesados              ***\n"
 					+"            |Comparendos que están en espera     ###\n"
-				    +"----------------------------------------------------\n"
-				    +"2018/01/01  |*******                                \n"
-				    +"            |###	                                  \n"		
-				    +"2018/01/31  |*******                                \n"
-				    +"            |###									  \n";
+				    +"----------------------------------------------------\n";
+		
+		Iterator<Comparendo>iterator=listaComparendos.iterator();
+		IHashTable<String, Comparendo> hash=new HashSeparateChaining<String, Comparendo>(7);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+		String llave = "";
+		while(iterator.hasNext())
+		{
+			Comparendo actual=iterator.next();
+			llave = sdf.format(actual.darFecha());
+			hash.putInSet(llave, actual);
+		}
+				
+		Date fecha = sdf.parse("2018/01/01");
+		IQueue<Comparendo> cola = new Queue<Comparendo>();
+		int valorSimbolo = 300;
+		
+		for (int i = 0; i <hash.darNumPares(); i++) 
+		{
+			String f = sdf.format(fecha);
+			Iterator<Comparendo> it = hash.getSet(f);
+
+			int procesados = 0;
+			while(it.hasNext())
+			{
+				cola.enqueue(it.next());
+			}
+			
+			while(procesados<1500&&!cola.isEmpty())
+			{
+				cola.dequeue();
+				++procesados;
+			}
+			
+			tabla+=f+"  |";
+			int enEspera = cola.size();
+			
+			int asteriscos = procesados/valorSimbolo + (procesados%valorSimbolo==0?0:1);
+			int numerales = enEspera/valorSimbolo + (enEspera%valorSimbolo==0?0:1);
+			
+			for (int k = 0; k < asteriscos; ++k) 
+			{
+				tabla+="*";
+			}
+			tabla+="\n            |";
+			for (int j = 0; j< numerales; ++j) 
+			{
+				tabla+="#";
+			}
+			tabla+="\n";
+			fecha = darFechaNDias(fecha, 1,0,0,0);
+		}
 		
 		return tabla;
 	}
@@ -534,8 +572,9 @@ public class Modelo {
 			{
 				coordenadas[j]=coords.get(j).getAsDouble();
 			}
-
-			Comparendo comparendo = new Comparendo(id, fecha, vehiculo, servicio, infraccion, descripcion, localidad,coordenadas, medioDete);
+			
+			int precio = (descripcion.equalsIgnoreCase("SERA INMOVILIZADO")||descripcion.equalsIgnoreCase("SERÁ INMOVILIZADO"))?400:descripcion.equalsIgnoreCase("LICENCIA DE CONDUCCION")?40:4;
+			Comparendo comparendo = new Comparendo(id, fecha, vehiculo, servicio, infraccion, descripcion, localidad,coordenadas, medioDete,precio);
 			agregarFinal(comparendo);
 		}
 	}
@@ -558,15 +597,15 @@ public class Modelo {
 	}
 	
 	/**
-	 * Método que retorna la fecha al cabo de N días. Este método fue basado en el foro: https://mkyong.com/java/java-how-to-add-days-to-current-date/.
+	 * Método que retorna la fecha al cabo de N días (también se pueden modificar los minutos y segundos). Este método fue basado en el foro: https://mkyong.com/java/java-how-to-add-days-to-current-date/.
 	 * @param inicial. Fecha inicial que ingresa por parámetro.
 	 * @param num. Rango de fecha.
 	 * @return Fecha en N días.
 	 */
-	public Date darFechaNDias(Date inicial, int num)
+	public Date darFechaNDias(Date inicial, int pDays, int pHoras, int pMinutos, int pSegundos)
 	{
 		LocalDateTime localDateTime = inicial.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-		localDateTime=localDateTime.plusDays(num).plusHours(23).plusMinutes(59).plusSeconds(59);
+		localDateTime=localDateTime.plusDays(pDays).plusHours(pHoras).plusMinutes(pMinutos).plusSeconds(pSegundos);
 		return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
 	}
 	

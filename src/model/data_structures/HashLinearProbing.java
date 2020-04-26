@@ -286,5 +286,16 @@ public class HashLinearProbing<K extends Comparable<K>, V extends Comparable<V>>
 		
 		return primo;
 	}
-
+	
+	public IListaEncadenada<V> darListaValores(K pKey)
+	{
+		for (int i= hash(pKey); keys[i]!=null; i=(i+1)%m)
+		{
+			if (keys[i].equals(pKey))
+			{
+				return values[i];
+			}
+		}
+		return null;
+	}
 }

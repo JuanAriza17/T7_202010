@@ -64,6 +64,7 @@ public interface IHashTable<K extends Comparable<K>, V extends Comparable<V>>
 	 */
 	public boolean contains(K key);
 	
+	public IListaEncadenada<V> darListaValores(K pKey);
 	
 	
 	

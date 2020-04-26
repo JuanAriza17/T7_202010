@@ -240,6 +240,11 @@ public class Controller {
 					break;
 				
 				case 7:
+					if(cargado==false)
+					{
+						view.printMessage("Por favor inicialice la lista de comparendos.\n");
+						break;
+					}
 					view.printMessage("--------- \n ");
 					view.printMessage("Por favor ingrese el rango de fecha que desea visualizar: (i.e) si ingresa 7, se van a visualizar comparendos entre rango 2018/01/01 - 2018/01/07 ...\n");
 					int rango=Integer.parseInt(lector.nextLine());
@@ -248,16 +253,38 @@ public class Controller {
 					break;
 				
 				case 8:
+					if(cargado==false)
+					{
+						view.printMessage("Por favor inicialice la lista de comparendos.\n");
+						break;
+					}
 					view.printMessage("--------- \n ");
-					view.printMessage(modelo.costoTiempoEsperaHoyEnDia());
+					try
+					{
+						view.printMessage(modelo.costoTiempoEsperaHoyEnDia());
+					}
+					catch(ParseException e)
+					{
+						view.printMessage("Hubo un problema generando las tablas");
+					}
 					break;
 				
 				case 9:
+					if(cargado==false)
+					{
+						view.printMessage("Por favor inicialice la lista de comparendos.\n");
+						break;
+					}
 					view.printMessage("--------- \n ");
 					view.printMessage("Aún no se ha implementda el requerimiento");		
 					break;
 					
 				case 10: 
+					if(cargado==false)
+					{
+						view.printMessage("Por favor inicialice la lista de comparendos.\n");
+						break;
+					}
 					view.printMessage("--------- \n Hasta pronto !! \n---------"); 
 					lector.close();
 					fin = true;

@@ -109,5 +109,5 @@ public interface IRedBlackBST<K extends Comparable<K>, V extends Comparable<V>>
 	 * Método que retorna el número de elementos en el rango de llaves.
 	 * @return numValuesInRange;
 	 */
-	int darNumValuesInRange();
+	int darNumValuesInRange(K init, K end);
 }

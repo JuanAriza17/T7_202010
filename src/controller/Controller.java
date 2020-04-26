@@ -191,8 +191,6 @@ public class Controller {
 							break;
 						}
 						view.printMessage("--------- \n ");
-						view.printMessage("Por favor ingrese el número de comparendos que desea visualizar.");
-						numComparendos=Integer.parseInt(lector.nextLine());
 						view.printMessage("Por favor ingrese el medio de detección.");
 						String dete=lector.nextLine().toLowerCase();
 						view.printMessage("Por favor ingrese el vehículo (Tenga buena ortografía).");
@@ -201,20 +199,11 @@ public class Controller {
 						String servicio = lector.nextLine().toLowerCase();
 						view.printMessage("Por favor ingrese la localidad.");
 						String localidad = lector.nextLine().toLowerCase();
-
 						Comparable[] arregloDeteVehi = modelo.darComparendosPorDeteccionVehiculoLocalidad(dete, vehiculo, servicio, localidad);
 						if(arregloDeteVehi!=null)
 						{
-							if(numComparendos>Modelo.MAX_DATOS)
-							{
-								view.printArreglo(arregloDeteVehi, Modelo.MAX_DATOS);
-								view.printMessage("\nDebido a que se quiso imprimir una cantidad de comparendos mayor a la permitida ("+numComparendos+"), se imprimieron solo "+Modelo.MAX_DATOS +" ordenados por fecha de menor a mayor.\n");
-							}
-							else
-							{
-								view.printArreglo(arregloDeteVehi,numComparendos);
-								view.printMessage("\nSe imprimieron los "+numComparendos+" comparendos ordenados por fecha de menor a mayor. \n");
-							}
+							view.printArreglo(arregloDeteVehi, Modelo.MAX_DATOS);
+							view.printMessage("\nSe imprimieron los "+(Modelo.MAX_DATOS)+" comparendos ordenados por fecha de menor a mayor. \n");
 						}
 						else
 						{

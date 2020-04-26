@@ -8,7 +8,6 @@ import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Calendar;
@@ -59,7 +58,7 @@ public class Modelo {
 	 * Número de datos en caso de ser necesario imprimir números muy grandes.
 	 */
 	public final static int MAX_DATOS = 20;
-	
+
 	public final static int MAX_COMPARENDOS_DIARIO = 1500;
 
 	/**
@@ -97,7 +96,7 @@ public class Modelo {
 
 		return retorno;
 	}
-	
+
 
 	/**
 	 * Método que se encarga de solucionar el requerimiento 2A
@@ -137,7 +136,7 @@ public class Modelo {
 			String key=parser.format(actual.darFecha())+actual.darId();
 			redBlackFechas.put(key, actual);
 		}
-		
+
 		String respuesta="";
 		Iterator<Comparendo> iterador=redBlackFechas.valuesInRange(parser.format(fecha1)+1, parser.format(fecha2)+listaComparendos.darLongitud()); 
 		int i =0;
@@ -150,7 +149,7 @@ public class Modelo {
 				++i;
 			}
 		}
-		
+
 		respuesta+=(Modelo.MAX_DATOS==i)?"\nSe imprimieron "+Modelo.MAX_DATOS+ " comparendos. El número máximo permitido.\n":"\nSe imprimieron "+i+ " comparendos.\n";
 		respuesta+="Se analizaron un total de "+redBlackFechas.size()+" comparendos.\n";
 		return respuesta;
@@ -171,11 +170,11 @@ public class Modelo {
 		{
 			heapDistancia.agregar(iterator.next());
 		}
-		
+
 		String mensaje = "";
 		int max = m>MAX_DATOS?MAX_DATOS:m;
 
-		
+
 		for (int i=0;i<max; ++i) 
 		{
 			Comparendo c = heapDistancia.sacarMax();
@@ -200,13 +199,13 @@ public class Modelo {
 		Iterator<Comparendo>iterator=listaComparendos.iterator();
 		IHashTable<String, Comparendo> hashDeteVehiServiLoc=new HashSeparateChaining<String, Comparendo>(7);
 		String llave = deteccion + vehiculo + servicio + localidad;
-		
+
 		while(iterator.hasNext())
 		{
 			Comparendo actual=iterator.next();
 			hashDeteVehiServiLoc.putInSet(actual.darLlaveDeteccionVehiculoServicioLocalidad(), actual);
 		}
-				
+
 		IListaEncadenada<Comparendo> lista = hashDeteVehiServiLoc.darListaValores(llave);
 		Comparendo.ComparadorXFecha comp = new Comparendo.ComparadorXFecha();
 		Comparable[] arreglo = lista.darArreglo();
@@ -232,7 +231,7 @@ public class Modelo {
 			Comparendo actual=iterator.next();
 			redBlackLatitud.put(actual.darLatitud()+"-"+actual.darId(), actual);
 		}
-		
+
 		if(latitud1>latitud2)
 		{
 			return "La latitud inicial debe ser menor que la latitud final";
@@ -241,7 +240,7 @@ public class Modelo {
 		{
 			latitud2=9;
 		}
-		
+
 		Iterator<Comparendo> it = redBlackLatitud.valuesInRange(latitud1+"-"+1, latitud2+"-"+listaComparendos.darLongitud());
 		String mensaje = "";
 		int i =0;
@@ -257,7 +256,7 @@ public class Modelo {
 		}
 		mensaje+=(Modelo.MAX_DATOS==i)?"\nSe imprimieron "+Modelo.MAX_DATOS+ " comparendos. El número máximo permitido.\n":"\nSe imprimieron "+i+ " comparendos.\n";
 		mensaje+="Se analizaron un total de "+redBlackLatitud.size()+" comparendos.\n";
-		
+
 		return mensaje;
 	}
 
@@ -268,7 +267,7 @@ public class Modelo {
 	public String generarASCII(int pRango)
 	{
 		String tabla="Rango de fechas		| Comparendos durante el año\n"
-					+"----------------------------------------------------\n";
+				+"----------------------------------------------------\n";
 		int numTotalComparendos=0;
 		int numTotalAstericos=0;
 		int numRed=0;
@@ -304,11 +303,11 @@ public class Modelo {
 				tabla+=" "+numeroValoresEnRango+"\n";
 				inicial=darFechaNDias(fin,0,0,0,1);
 			}	
-			
+
 		} 
 		catch (ParseException e) 
 		{
-			
+
 		} 
 		tabla+="\nCada * representa "+valorSimbolo+" comparendos (o fracción de los mismos).\n"
 				+ "Se imprimieron un total de: "+numTotalAstericos+".\n"
@@ -316,7 +315,7 @@ public class Modelo {
 				+ "Número de comparendos en árbol RedBlack: "+numRed+".\n"
 				+ "Total comparendos: "+listaComparendos.darLongitud()+".\n";
 		return tabla;
-		
+
 	}
 
 	/**
@@ -328,9 +327,9 @@ public class Modelo {
 	public String costoTiempoEsperaHoyEnDia() throws ParseException
 	{
 		String tabla="Fecha       |Comparendos procesados              ***\n"
-					+"            |Comparendos que están en espera     ###\n"
-				    +"----------------------------------------------------\n";
-		
+				+"            |Comparendos que están en espera     ###\n"
+				+"----------------------------------------------------\n";
+
 		Iterator<Comparendo>iterator=listaComparendos.iterator();
 		IHashTable<String, Comparendo> hash=new HashSeparateChaining<String, Comparendo>(7);
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
@@ -341,11 +340,27 @@ public class Modelo {
 			llave = sdf.format(actual.darFecha());
 			hash.putInSet(llave, actual);
 		}
-				
+
 		Date fecha = sdf.parse("2018/01/01");
 		IQueue<Comparendo> cola = new Queue<Comparendo>();
 		int valorSimbolo = 300;
-		
+		int costoTotal = 0;
+		int min400 = 999;
+		int min40 = 999;
+		int min4 = 999;
+		int max400 = 0;
+		int max40 = 0;
+		int max4 = 0;
+		int suma400 = 0;
+		int suma40 = 0;
+		int suma4 = 0;
+		int contador400 = 0;
+		int contador40 = 0;
+		int contador4 = 0;
+		int promedio400=0;
+		int promedio40=0;
+		int promedio4=0;
+
 		for (int i = 0; i <hash.darNumPares(); i++) 
 		{
 			String f = sdf.format(fecha);
@@ -356,32 +371,104 @@ public class Modelo {
 			{
 				cola.enqueue(it.next());
 			}
-			
+
 			while(procesados<1500&&!cola.isEmpty())
 			{
-				cola.dequeue();
+				Comparendo c = cola.dequeue();
+				Date f1 = sdf.parse(sdf.format(c.darFecha()));
+
+				int diasRetrasado= (int) ((fecha.getTime()-f1.getTime())/86400000);
+				int precio = c.darPrecio();
+				costoTotal+=precio*diasRetrasado;
+
+				if(diasRetrasado!=0)
+				{
+					if(precio==400)
+					{
+						min400 = (diasRetrasado<min400)?diasRetrasado:min400;
+						max400 = (diasRetrasado>max400)?diasRetrasado:max400;
+						suma400+=diasRetrasado;
+						++contador400;
+
+					}
+					else if(precio==40)
+					{
+						min40 = (diasRetrasado<min40)?diasRetrasado:min40;
+						max40 = (diasRetrasado>max40)?diasRetrasado:max40;
+						suma40+=diasRetrasado;
+						++contador40;
+					}
+					else
+					{
+						min4= (diasRetrasado<min4)?diasRetrasado:min4;
+						max4 = (diasRetrasado>max4)?diasRetrasado:max4;
+						suma4+=diasRetrasado;
+						++contador4;
+					}
+				}
+
 				++procesados;
 			}
-			
+
 			tabla+=f+"  |";
 			int enEspera = cola.size();
-			
+
 			int asteriscos = procesados/valorSimbolo + (procesados%valorSimbolo==0?0:1);
 			int numerales = enEspera/valorSimbolo + (enEspera%valorSimbolo==0?0:1);
-			
+
 			for (int k = 0; k < asteriscos; ++k) 
 			{
 				tabla+="*";
 			}
-			tabla+="\n            |";
+			tabla+=procesados+"\n            |";
 			for (int j = 0; j< numerales; ++j) 
 			{
 				tabla+="#";
 			}
-			tabla+="\n";
+			tabla+=enEspera+"\n";
 			fecha = darFechaNDias(fecha, 1,0,0,0);
 		}
-		
+
+		if(contador4==0)
+		{
+			promedio4=0;
+			min4=0;
+			max4=0;
+		}
+		else
+			promedio4=suma4/contador4;
+
+
+		if(contador40==0)
+		{
+			promedio40=0;
+			min40=0;
+			max40=0;
+		}
+		else
+			promedio40=suma40/contador40;
+
+		if(contador400==0)
+		{
+			promedio400=0;
+			min400=0;
+			max400=0;
+		}
+		else
+			promedio400=suma400/contador400;
+
+		tabla+="\nCada * y # representa "+valorSimbolo+" Comparendos"
+				+ "\nCosto Total: "+costoTotal+
+				"\nNúmero de comparendos de 400$ en espera: "+contador400+
+				"\nNúmero de comparendos de 40$ en espera: "+contador40+
+				"\nNúmero de comparendos de 4$ en espera: "+contador4+"\n\n";
+
+		tabla+=" Costo diario   | Tiempo mínimo de | Tiempo promedio de | Tiempo máximo de \n"
+				+" del comparendo |   espera (días)  |    espera (días)   |  espera (días)\n"
+				+"     $400       |"+min400+"                 |"+promedio400+"                   |"+max400+"              \n"
+				+"     $40        |"+min40+"                 |"+promedio40+"                   |"+max40+"              \n"
+				+"     $4         |"+min4+"                 |"+promedio4+"                   |"+max4+"              \n";
+
 		return tabla;
 	}
 
@@ -389,18 +476,152 @@ public class Modelo {
 	 * Método que se encarga de solucionar el requerimiento 3C
 	 * @return Una tabla ASCII con el número de comparendos procesados por día y los que están en espera.
 	 * Además, retorna una tabla con el costo del comparendo y el tiempo de espera. Todo esto según el nuevo sistema
+	 * @throws ParseException 
 	 */
-	public String costoTiempoEsperaNuevoSistema()
+	public String costoTiempoEsperaNuevoSistema() throws ParseException
 	{
 		String tabla="Fecha       |Comparendos procesados              ***\n"
-					+"            |Comparendos que están en espera     ###\n"
-					+"----------------------------------------------------\n"
-					+"2018/01/01  |*******                                \n"
-					+"            |###	                                  \n"		
-					+"2018/01/31  |*******                                \n"
-					+"            |###									  \n";
-	
-	return tabla;
+				+"            |Comparendos que están en espera     ###\n"
+				+"----------------------------------------------------\n";
+
+		Iterator<Comparendo>iterator=listaComparendos.iterator();
+		IHashTable<String, Comparendo> hash=new HashSeparateChaining<String, Comparendo>(7);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+		String llave = "";
+		while(iterator.hasNext())
+		{
+			Comparendo actual=iterator.next();
+			llave = sdf.format(actual.darFecha());
+			hash.putInSet(llave, actual);
+		}
+
+		Date fecha = sdf.parse("2018/01/01");
+		IMaxHeapCP<Comparendo> heap = new MaxHeapCP<Comparendo>(5000,new Comparendo.ComparadorXPrecio());
+		int valorSimbolo = 300;
+		int costoTotal = 0;
+		int min400 = 999;
+		int min40 = 999;
+		int min4 = 999;
+		int max400 = 0;
+		int max40 = 0;
+		int max4 = 0;
+		int suma400 = 0;
+		int suma40 = 0;
+		int suma4 = 0;
+		int contador400 = 0;
+		int contador40 = 0;
+		int contador4 = 0;
+		int promedio400=0;
+		int promedio40=0;
+		int promedio4=0;
+
+		for (int i = 0; i <hash.darNumPares(); i++) 
+		{
+			String f = sdf.format(fecha);
+			Iterator<Comparendo> it = hash.getSet(f);
+
+			int procesados = 0;
+			while(it.hasNext())
+			{
+				heap.agregar(it.next());
+			}
+
+			while(procesados<1500&&!heap.esVacia())
+			{
+				Comparendo c = heap.sacarMax();
+				Date f1 = sdf.parse(sdf.format(c.darFecha()));
+
+				int diasRetrasado= (int) ((fecha.getTime()-f1.getTime())/86400000);
+				int precio = c.darPrecio();
+				costoTotal+=precio*diasRetrasado;
+
+				if(diasRetrasado!=0)
+				{
+					if(precio==400)
+					{
+						min400 = (diasRetrasado<min400)?diasRetrasado:min400;
+						max400 = (diasRetrasado>max400)?diasRetrasado:max400;
+						suma400+=diasRetrasado;
+						++contador400;
+
+					}
+					else if(precio==40)
+					{
+						min40 = (diasRetrasado<min40)?diasRetrasado:min40;
+						max40 = (diasRetrasado>max40)?diasRetrasado:max40;
+						suma40+=diasRetrasado;
+						++contador40;
+					}
+					else
+					{
+						min4= (c.darPrecio()==4&&diasRetrasado<min4)?diasRetrasado:min4;
+						max4 = (diasRetrasado>max4)?diasRetrasado:max4;
+						suma4+=diasRetrasado;
+						++contador4;
+					}
+				}
+				++procesados;
+			}
+
+			tabla+=f+"  |";
+			int enEspera = heap.darNumElementos();
+
+			int asteriscos = procesados/valorSimbolo + (procesados%valorSimbolo==0?0:1);
+			int numerales = enEspera/valorSimbolo + (enEspera%valorSimbolo==0?0:1);
+
+			for (int k = 0; k < asteriscos; ++k) 
+			{
+				tabla+="*";
+			}
+			tabla+=procesados+"\n            |";
+			for (int j = 0; j< numerales; ++j) 
+			{
+				tabla+="#";
+			}
+			tabla+=enEspera+"\n";
+			fecha = darFechaNDias(fecha, 1,0,0,0);
+		}
+
+		if(contador4==0)
+		{
+			promedio4=0;
+			min4=0;
+			max4=0;
+		}
+		else
+			promedio4=suma4/contador4;
+
+		if(contador40==0)
+		{
+			promedio40=0;
+			min40=0;
+			max40=0;
+		}
+		else
+			promedio4=suma40/contador40;
+
+		if(contador400==0)
+		{
+			promedio400=0;
+			min400=0;
+			max400=0;
+		}
+		else
+			promedio4=suma400/contador400;
+
+		tabla+="\nCada * y # representa "+valorSimbolo+" Comparendos"
+				+ "\nCosto Total: "+costoTotal+
+				"\nNúmero de comparendos de 400$ en espera: "+contador400+
+				"\nNúmero de comparendos de 40$ en espera: "+contador40+
+				"\nNúmero de comparendos de 4$ en espera: "+contador4+"\n\n";
+
+		tabla+=" Costo diario   | Tiempo mínimo de | Tiempo promedio de | Tiempo máximo de \n"
+				+" del comparendo |   espera (días)  |    espera (días)   |  espera (días)\n"
+				+"     $400       |"+min400+"                 |"+promedio400+"                   |"+max400+"              \n"
+				+"     $40        |"+min40+"                 |"+promedio40+"                   |"+max40+"              \n"
+				+"     $4         |"+min4+"                 |"+promedio4+"                   |"+max4+"              \n";
+
+		return tabla;
 	}
 
 
@@ -572,8 +793,8 @@ public class Modelo {
 			{
 				coordenadas[j]=coords.get(j).getAsDouble();
 			}
-			
-			int precio = (descripcion.equalsIgnoreCase("SERA INMOVILIZADO")||descripcion.equalsIgnoreCase("SERÁ INMOVILIZADO"))?400:descripcion.equalsIgnoreCase("LICENCIA DE CONDUCCION")?40:4;
+
+			int precio = (descripcion.contains("SERA INMOVILIZADO")||descripcion.contains("SERÁ INMOVILIZADO"))?400:descripcion.contains("LICENCIA")?40:4;
 			Comparendo comparendo = new Comparendo(id, fecha, vehiculo, servicio, infraccion, descripcion, localidad,coordenadas, medioDete,precio);
 			agregarFinal(comparendo);
 		}
@@ -595,7 +816,7 @@ public class Modelo {
 		fecha+=arreglo[0]+"T"+arreglo[1]+".000Z";
 		return fecha;
 	}
-	
+
 	/**
 	 * Método que retorna la fecha al cabo de N días (también se pueden modificar los minutos y segundos). Este método fue basado en el foro: https://mkyong.com/java/java-how-to-add-days-to-current-date/.
 	 * @param inicial. Fecha inicial que ingresa por parámetro.
@@ -608,7 +829,7 @@ public class Modelo {
 		localDateTime=localDateTime.plusDays(pDays).plusHours(pHoras).plusMinutes(pMinutos).plusSeconds(pSegundos);
 		return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
 	}
-	
+
 	/**
 	 * Método que retorna en formato de una fecha en "YYYY-MM-DD"-
 	 * @param pDate. Fecha que ingresa por parámetro. 
@@ -617,9 +838,9 @@ public class Modelo {
 	public String imprimirFormatoFecha(Date pDate)
 	{
 		DateFormat formato = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");  
-        String strDate = formato.format(pDate);
-        String[] arr=strDate.split(" ");
-        String[] cambiarFormato=arr[0].split("-");
-        return cambiarFormato[0]+"/"+cambiarFormato[1]+"/"+cambiarFormato[2];
+		String strDate = formato.format(pDate);
+		String[] arr=strDate.split(" ");
+		String[] cambiarFormato=arr[0].split("-");
+		return cambiarFormato[0]+"/"+cambiarFormato[1]+"/"+cambiarFormato[2];
 	}
 }

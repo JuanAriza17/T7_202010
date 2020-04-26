@@ -11,17 +11,17 @@ public class Comparendo implements Comparable<Comparendo>
 	 * Constante de longitud de la coordenada de la estación de policía.
 	 */
 	private final static double LONGITUD_ESTACION = -74.078122;
-	
+
 	/**
 	 * Constante de latitud de la coordenada de la estación de policía.
 	 */
 	private final static double LATITUD_ESTACION = 4.647586;
-	
+
 	/**
 	 * Constante del radio de la tierra.
 	 */
 	private static final int EARTH_RADIUS = 6371; // Approx Earth radius in KM
-	
+
 	/**
 	 * ID comparendo
 	 */
@@ -61,17 +61,17 @@ public class Comparendo implements Comparable<Comparendo>
 	 * Coordenadas comparendo
 	 */
 	private double[] coordenadas;
-	
+
 	/**
 	 * Medio de deteccion
 	 */
 	private String medioDete;
-	
+
 	/**
 	 * Costo de penalización
 	 */
 	private int precio;
-	
+
 	/**
 	 * Metodo constructor para crear un comparendo
 	 * @param pId ID comparendo
@@ -169,7 +169,7 @@ public class Comparendo implements Comparable<Comparendo>
 	{
 		return coordenadas[0];
 	}
-	
+
 	/**
 	 * Da latitud de la coordenada
 	 * @return latitud
@@ -178,7 +178,7 @@ public class Comparendo implements Comparable<Comparendo>
 	{
 		return coordenadas[1];
 	}
-	
+
 	/**
 	 * Da el medio de detección.
 	 * @return medio de deteccion
@@ -187,7 +187,16 @@ public class Comparendo implements Comparable<Comparendo>
 	{
 		return medioDete;
 	}
-	
+
+	/**
+	 * Da el costo de penalización
+	 * @return precio
+	 */
+	public int darPrecio()
+	{
+		return precio;
+	}
+
 	/**
 	 * Método que retorna una llave conformada por el día de la semana y el mes.
 	 * @return Llave com día de la semana y mes.
@@ -196,15 +205,15 @@ public class Comparendo implements Comparable<Comparendo>
 	{
 		Calendar calendario = Calendar.getInstance();
 		calendario.setTime(fecha);
-		
+
 		int diaSemana= calendario.get(Calendar.DAY_OF_WEEK)-1;
 		int mes = calendario.get(Calendar.MONTH)+1;
 		String dia=(1==diaSemana)?"L":(2==diaSemana)?"M":(3==diaSemana)?"I":(4==diaSemana)?"J":(5==diaSemana)?"V":(6==diaSemana)?"S":"D";
 		String llave = dia+mes;
-		
+
 		return llave;
 	}
-	
+
 	/**
 	 * Método que retorna una llave con base en el medio detección, vehículo, servicio y localidad.
 	 * @return Llave con medio detección, vehículo, servicio y localidad.
@@ -214,7 +223,7 @@ public class Comparendo implements Comparable<Comparendo>
 		String llave = medioDete+vehiculo+servicio+localidad;
 		return llave.toLowerCase();
 	}
-	
+
 	/**
 	 * Método que retorna la distancia a la estación.
 	 * @return  distancia a la estación de policía.
@@ -231,43 +240,56 @@ public class Comparendo implements Comparable<Comparendo>
 
 		return id - o.darId();
 	}
-	
+
 	/**
 	 * Clase que implementa comparador de comparendo para la distancia.
 	 * @author ASUS Juan Ariza y Sergio Zona.
 	 *
 	 */
 	public static class ComparadorXDistanciaAscendente implements Comparator<Comparendo>{
-		
+
 		public int compare(Comparendo c1, Comparendo c2)
 		{
 			return c2.darDistanciaEstacion()>c1.darDistanciaEstacion()?1:c2.darDistanciaEstacion()<c1.darDistanciaEstacion()?-1:0;
 		}
 	}
-	
+
 	/**
 	 * Clase que implementa comparador de comparendo para la infracción.
 	 * @author ASUS Juan Ariza y Sergio Zona.
 	 *
 	 */
 	public static class ComparadorXInfraccion implements Comparator<Comparendo>{
-		
+
 		public int compare(Comparendo c1, Comparendo c2)
 		{
 			return c1.darInfraccion().compareTo(c2.darInfraccion());
 		}
 	}
-	
+
 	/**
 	 * Clase que implementa comparador de comparendo para la fecha.
 	 * @author ASUS Juan Ariza y Sergio Zona.
 	 *
 	 */
 	public static class ComparadorXFecha implements Comparator<Comparendo>{
-		
+
 		public int compare(Comparendo c1, Comparendo c2)
 		{
 			return c1.darFecha().compareTo(c2.darFecha());
+		}
+	}
+
+	/**
+	 * Clase que implementa comparador de comparendo para la fecha.
+	 * @author ASUS Juan Ariza y Sergio Zona.
+	 *
+	 */
+	public static class ComparadorXPrecio implements Comparator<Comparendo>{
+
+		public int compare(Comparendo c1, Comparendo c2)
+		{
+			return c1.darPrecio()-c2.darPrecio();
 		}
 	}
 
@@ -284,11 +306,11 @@ public class Comparendo implements Comparable<Comparendo>
 			f=parser.format(fecha);
 		else
 			f="00";
-		
+
 		return "OBJECTID: "+id+", FECHA Y HORA: "+f+", INFRACCION: "+infraccion+",  CLASE VEHICULO: "+vehiculo+", TIPO SERVICIO: "+servicio+", LOCALIDAD: "+localidad;
 	}
-	
-	
+
+
 	//ACLARACIÓN: Los siguientes dos métodos fueron sacados del repositorio de "Haversine" a modo de recomendación del diseño.
 	//LINK: https://github.com/jasonwinn/haversine/blob/master/Haversine.java.
 	/**
@@ -299,28 +321,28 @@ public class Comparendo implements Comparable<Comparendo>
 	 * @param endLong Longitud final.
 	 * @return Distancia entre las dos coordenadas.
 	 */
-    public double distanceHaversine(double startLat, double startLong,double endLat, double endLong) 
-    {
-        double dLat  = Math.toRadians((endLat - startLat));
-        double dLong = Math.toRadians((endLong - startLong));
+	public double distanceHaversine(double startLat, double startLong,double endLat, double endLong) 
+	{
+		double dLat  = Math.toRadians((endLat - startLat));
+		double dLong = Math.toRadians((endLong - startLong));
 
-        startLat = Math.toRadians(startLat);
-        endLat   = Math.toRadians(endLat);
+		startLat = Math.toRadians(startLat);
+		endLat   = Math.toRadians(endLat);
 
-        double a = haversin(dLat) + Math.cos(startLat) * Math.cos(endLat) * haversin(dLong);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+		double a = haversin(dLat) + Math.cos(startLat) * Math.cos(endLat) * haversin(dLong);
+		double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-        return EARTH_RADIUS * c; // <-- d
-    }
+		return EARTH_RADIUS * c; // <-- d
+	}
 
-    /**
-     * Método auxiliar del que calcula la distancia.
-     * @param val Valor.
-     * @return Retorna formula presentada.
-     */
-    public double haversin(double val) 
-    {
-        return Math.pow(Math.sin(val / 2), 2);
-    }
-	
+	/**
+	 * Método auxiliar del que calcula la distancia.
+	 * @param val Valor.
+	 * @return Retorna formula presentada.
+	 */
+	public double haversin(double val) 
+	{
+		return Math.pow(Math.sin(val / 2), 2);
+	}
+
 }

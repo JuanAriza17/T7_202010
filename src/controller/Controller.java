@@ -27,7 +27,7 @@ public class Controller {
 	 * Constante con la ruta del archivo que guarda los comparnedos.
 	 */
 	public final static String RUTA = "./data/Comparendos_DEI_2018_Bogotá_D.C.geojson";
-	
+
 	/**
 	 * Constante de número de impresión en comparendo de consola.
 	 */
@@ -89,7 +89,7 @@ public class Controller {
 					}
 
 					break;
-					
+
 				case 1:
 					if(cargado==false)
 					{
@@ -102,7 +102,7 @@ public class Controller {
 					String mayorGravedadInfraccion=modelo.darMComparendosConMayorGravedad(numComparendos);
 					view.printMessage(mayorGravedadInfraccion);
 					break;
-				
+
 				case 2:
 					if(cargado==false)
 					{
@@ -117,7 +117,7 @@ public class Controller {
 					view.printMessage("Por favor ingrese el número del mes: (1-12).");
 					int mes=Integer.parseInt(lector.nextLine());
 					Iterator<Comparendo> iteratorMesDia=modelo.darComparendosPorMesYDiaSemana(mes,dia);
-					
+
 					if(numComparendos>Modelo.MAX_DATOS)
 					{
 						view.printIterator(iteratorMesDia, Modelo.MAX_DATOS);
@@ -130,7 +130,7 @@ public class Controller {
 					}
 					view.printMessage("\n");
 					break;
-					
+
 				case 3:
 					try 
 					{
@@ -158,7 +158,7 @@ public class Controller {
 						view.printMessage("Formato inválido de la fecha.\n");
 					}
 					break;
-					
+
 				case 4:
 					if(cargado==false)
 					{
@@ -171,7 +171,7 @@ public class Controller {
 					String menorDistancia=modelo.darMComparendosMasCercaEstacion(numComparendos);
 					view.printMessage(menorDistancia);
 					break;
-				
+
 				case 5:
 					if(cargado==false)
 					{
@@ -189,7 +189,7 @@ public class Controller {
 					String servicio = lector.nextLine().toLowerCase();
 					view.printMessage("Por favor ingrese la localidad.");
 					String localidad = lector.nextLine().toLowerCase();
-					
+
 					Comparable[] arregloDeteVehi = modelo.darComparendosPorDeteccionVehiculoLocalidad(dete, vehiculo, servicio, localidad);
 					if(arregloDeteVehi!=null)
 					{
@@ -210,14 +210,14 @@ public class Controller {
 					}
 					view.printMessage("\n");
 					break;
-					
+
 				case 6:
 					if(cargado==false)
 					{
 						view.printMessage("Por favor inicialice la lista de comparendos.\n");
 						break;
 					}
-					
+
 					try
 					{
 						view.printMessage("--------- \n ");
@@ -225,20 +225,20 @@ public class Controller {
 						String rango=lector.nextLine();
 						view.printMessage("Por favor ingrese el vehiculo.");
 						String vehi = lector.nextLine();
-						
+
 						String latitudes[] = rango.replace('[', ',').replace(']', ',').split(",");
-						
+
 						view.printMessage(modelo.darComparendosEnRangoLatitudYVehiculo(Double.parseDouble(latitudes[1]), Double.parseDouble(latitudes[2]), vehi));
-						
+
 						view.printMessage("\n");	
 					}
 					catch(Exception e)
 					{
 						view.printMessage("Ingrese una latitud válida.\n");
 					}
-								
+
 					break;
-				
+
 				case 7:
 					if(cargado==false)
 					{
@@ -251,7 +251,7 @@ public class Controller {
 					String impresion=modelo.generarASCII(rango);
 					view.printMessage(impresion);
 					break;
-				
+
 				case 8:
 					if(cargado==false)
 					{
@@ -268,7 +268,7 @@ public class Controller {
 						view.printMessage("Hubo un problema generando las tablas");
 					}
 					break;
-				
+
 				case 9:
 					if(cargado==false)
 					{
@@ -276,9 +276,16 @@ public class Controller {
 						break;
 					}
 					view.printMessage("--------- \n ");
-					view.printMessage("Aún no se ha implementda el requerimiento");		
+					try
+					{
+						view.printMessage(modelo.costoTiempoEsperaNuevoSistema());
+					}
+					catch(ParseException e)
+					{
+						view.printMessage("Hubo un problema generando las tablas");
+					}
 					break;
-					
+
 				case 10: 
 					if(cargado==false)
 					{

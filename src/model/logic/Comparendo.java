@@ -288,7 +288,7 @@ public class Comparendo implements Comparable<Comparendo>
         {
             return c2.darInfraccion().compareTo(c1.darInfraccion());
         }
-    }}
+    }
 
 	/**
 	 * Clase que implementa comparador de comparendo para la fecha.

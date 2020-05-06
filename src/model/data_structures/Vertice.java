@@ -48,6 +48,7 @@ public class Vertice <K extends Comparable<K>, V extends Comparable<V>> implemen
 	{
 		idVtce=id;
 		infoVtce=info;
+		adyacentes=new ListaEncadenada<Arco<K,V>>();
 	}
 	
 	/**
@@ -73,7 +74,7 @@ public class Vertice <K extends Comparable<K>, V extends Comparable<V>> implemen
 	 */
 	public void agregarArco(Arco<K,V>arco)
 	{
-		adyacentes.agregar(arco);
+		adyacentes.agregarFinal(arco);
 	}
 	
 	/**

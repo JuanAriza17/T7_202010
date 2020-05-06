@@ -267,7 +267,7 @@ public class Modelo {
 			int objectId=Integer.parseInt(vertice[0].trim());
 			double longitud=Double.parseDouble(vertice[1].trim());
 			double latitud=Double.parseDouble(vertice[2].trim());
-			grafo.addVertex(objectId, new UbicacionGeografica(longitud,latitud));		
+			grafo.addVertex(objectId, new UbicacionGeografica(longitud,latitud));
 			linea=br.readLine();
 		}
 

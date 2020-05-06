@@ -80,8 +80,8 @@ public class Controller {
 							cargado = true;
 							view.printMessage("Ubicaciones cargadas en el mapa.\n");
 							IGrafoNoDirigido<Integer, UbicacionGeografica>grafo=modelo.darGrafo();
-							view.printMessage("\nNúmero de vértices: "+grafo.V());
-							view.printMessage("\nNúmero de arcos: "+grafo.E());
+							view.printMessage("Número de vértices: "+grafo.V());
+							view.printMessage("Número de arcos: "+grafo.E());
 						}
 						catch(FileNotFoundException e)
 						{

@@ -289,7 +289,7 @@ public class ListaEncadenada<T extends Comparable<T>> implements IListaEncadenad
 	{
 		return new IteratorLista<T>(primero);
 	}
-
+	
 	/**
 	 * Elimina el último elemento de la lista.
 	 * @return Retorna el elemento eliminado.

@@ -85,12 +85,11 @@ public class Controller {
 						}
 						catch(FileNotFoundException e)
 						{
-							
+							view.printMessage("No se encuentran todos los archivos para cargar el grafo.");
 						}
 						catch(Exception e)
 						{
-								
-
+							view.printMessage("Hubo un problema cargando los archivos del grafo.");
 						}
 					}
 					else

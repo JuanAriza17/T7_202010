@@ -56,16 +56,13 @@ public class GrafoNoDirigido <K extends Comparable<K>, V extends Comparable<V>> 
 	 */
 	public void addEdge(K idVertexIni, K idVertexFin, double cost)
 	{
-		if(getInfoVertex(idVertexIni)!=null && getInfoVertex(idVertexFin)!=null)
-		{
-			++arcos;
-			Vertice<K,V>verticeIni=tabla.getSet(idVertexIni).next();
-			Vertice<K,V>verticeFin=tabla.getSet(idVertexFin).next();
-			Arco<K,V>arco1=new Arco<K,V>(verticeIni,verticeFin,cost);
-			Arco<K,V>arco2=new Arco<K,V>(verticeFin,verticeIni,cost);
-			verticeIni.agregarArco(arco1);
-			verticeFin.agregarArco(arco2);
-		}
+		Vertice<K,V>verticeIni=tabla.getSet(idVertexIni).next();
+		Vertice<K,V>verticeFin=tabla.getSet(idVertexFin).next();
+		Arco<K,V>arco=new Arco<K,V>(verticeIni,verticeFin,cost);
+		verticeIni.agregarArco(arco);
+		arco=new Arco<K,V>(verticeFin,verticeIni,cost);
+		verticeFin.agregarArco(arco);
+		++arcos;
 	}
 
 	/**

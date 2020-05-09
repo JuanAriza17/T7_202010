@@ -56,13 +56,16 @@ public class GrafoNoDirigido <K extends Comparable<K>, V extends Comparable<V>> 
 	 */
 	public void addEdge(K idVertexIni, K idVertexFin, double cost)
 	{
-		Vertice<K,V>verticeIni=tabla.getSet(idVertexIni).next();
-		Vertice<K,V>verticeFin=tabla.getSet(idVertexFin).next();
-		Arco<K,V>arco=new Arco<K,V>(verticeIni,verticeFin,cost);
-		verticeIni.agregarArco(arco);
-		arco=new Arco<K,V>(verticeFin,verticeIni,cost);
-		verticeFin.agregarArco(arco);
-		++arcos;
+		if(getInfoVertex(idVertexIni)!=null && getInfoVertex(idVertexFin)!=null)
+		{
+			++arcos;
+			Vertice<K,V>verticeIni=tabla.getSet(idVertexIni).next();
+			Vertice<K,V>verticeFin=tabla.getSet(idVertexFin).next();
+			Arco<K,V>arco=new Arco<K,V>(verticeIni,verticeFin,cost);
+			verticeIni.agregarArco(arco);
+			arco=new Arco<K,V>(verticeFin,verticeIni,cost);
+			verticeFin.agregarArco(arco);
+		}
 	}
 
 	/**
@@ -237,6 +240,15 @@ public class GrafoNoDirigido <K extends Comparable<K>, V extends Comparable<V>> 
 			}
 		}
 		return (Iterable<K>) CC;
+	}
+	
+	/**
+	 * Método que retorna la tabla de Hash que implementa el grafo.
+	 * @return Tabla de Hash del grafo.
+	 */
+	public IHashTable<K,Vertice<K,V>> darTabla()
+	{
+		return tabla;
 	}
 	
 }

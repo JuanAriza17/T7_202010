@@ -90,6 +90,12 @@ public interface IGrafoNoDirigido <K extends Comparable<K>, V extends Comparable
 	 */
 	public Iterable<K> getCC(K idVertex);
 	
+	/**
+	 * Método que retorna la tabla de Hash que implementa el grafo.
+	 * @return Tabla de Hash del grafo.
+	 */
+	public IHashTable<K,Vertice<K,V>> darTabla();
+	
 
 
 	

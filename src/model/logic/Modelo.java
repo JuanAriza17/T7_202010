@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
@@ -12,6 +13,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -37,6 +39,11 @@ public class Modelo {
 	private IListaEncadenada<Comparendo> listaComparendos;
 
 	/**
+	 * Atributos del modelo del mundo.
+	 */
+	private IListaEncadenada<EstacionDePolicia> listaEstaciones;
+
+	/**
 	 * Arreglo con las muestras
 	 */
 	private Comparendo[] muestras;
@@ -50,7 +57,7 @@ public class Modelo {
 	 * Constante del radio de la tierra.
 	 */
 	private static final int EARTH_RADIUS = 6371; // Approx Earth radius in KM
-	
+
 	/**
 	 * Grafo de valores.
 	 */
@@ -63,7 +70,8 @@ public class Modelo {
 	public Modelo()
 	{
 		listaComparendos = new ListaEncadenada<Comparendo>();
-		grafo=new GrafoNoDirigido<Integer, UbicacionGeografica>(7);
+		listaEstaciones = new ListaEncadenada<EstacionDePolicia>();
+		grafo=new GrafoNoDirigido<Integer, UbicacionGeografica>(228046);
 	}
 
 	/**
@@ -87,12 +95,21 @@ public class Modelo {
 	}
 
 	/**
-	 * MÃ©todo que retorna la lista de comparendos.
+	 * Método que retorna la lista de comparendos.
 	 * @return Lista de comaparendos.
 	 */
-	public IListaEncadenada<Comparendo> darLista()
+	public IListaEncadenada<Comparendo> darListaComparendos()
 	{
 		return listaComparendos;
+	}
+
+	/**
+	 * Método que retorna la lista de estaciones.
+	 * @return Lista de estaciones.
+	 */
+	public IListaEncadenada<EstacionDePolicia> darListaEstaciones()
+	{
+		return listaEstaciones;
 	}
 
 	/**
@@ -188,7 +205,7 @@ public class Modelo {
 	{
 		return listaComparendos.darUltimo().darElemento();
 	}
-	
+
 	/**
 	 * Método que retorna el mapa del grafo.
 	 * @return Retorno del mapa del grafo.
@@ -270,7 +287,6 @@ public class Modelo {
 			grafo.addVertex(objectId, new UbicacionGeografica(longitud,latitud));
 			linea=br.readLine();
 		}
-
 		br.close();
 		fr.close();
 	}
@@ -311,9 +327,66 @@ public class Modelo {
 	/**
 	 * Método que carga del archivo JSON los datos de la estación de policía.
 	 */
-	public void cargarEstacionPolicia()
+	public void cargarEstacionPolicia(String pRutaEstacion) throws FileNotFoundException, ParseException, UnsupportedEncodingException 
 	{
-		
+		File archivo = new File(pRutaEstacion);
+		listaComparendos = new ListaEncadenada<Comparendo>();
+		JsonReader lector = new JsonReader(new InputStreamReader(new FileInputStream(pRutaEstacion), "UTF-8"));
+		JsonObject obj = JsonParser.parseReader(lector).getAsJsonObject();
+		JsonArray arregloEstaciones = obj.get("features").getAsJsonArray();  
+
+		for (JsonElement e: arregloEstaciones) 	
+		{
+			JsonObject propiedades = e.getAsJsonObject().get("properties").getAsJsonObject();
+			String nombre = propiedades.get("EPONOMBRE").getAsString();
+			int id = propiedades.get("OBJECTID").getAsInt();
+			double latitud = propiedades.get("EPOLATITUD").getAsDouble();
+			double longitud = propiedades.get("EPOLONGITU").getAsDouble();
+			String direccion = propiedades.get("EPODIR_SITIO").getAsString();
+			int telefono= propiedades.get("EPOTELEFON").getAsInt();
+
+			EstacionDePolicia estacion = new EstacionDePolicia(nombre, id, latitud, longitud, direccion, telefono);
+			listaEstaciones.agregarFinal(estacion);
+		}
+
+	}
+
+	//ACLARACIÓN PRELIMINAR: El siguiente código fue realizado con base en el código de la página http://javainutil.blogspot.com/2013/03/java-escribir-un-json.html
+	/**
+	 * Método que imprime los valores de las estaciones cargados en la lista de estaciones.
+	 * pre: Se inicializa la lista de estaciones.
+	 * @param pRutaImpresion Ruta en donde se va a imprimir el archivo JSON.
+	 */
+	public void imprimirJSONEstaciones(String pRutaImpresion)
+	{
+		try 
+		{
+			File archivo= new File(pRutaImpresion);
+			Iterator<Integer>vertices=grafo.darTabla().keys();
+			FileWriter file = new FileWriter(archivo);
+			JsonArray general = new JsonArray();
+			JsonArray features= new JsonArray();
+			
+			while(vertices.hasNext())
+			{
+				int llave=vertices.next();
+				Vertice<Integer,UbicacionGeografica>actual=grafo.darTabla().getSet(llave).next();
+				
+				JsonObject obj = new JsonObject();
+				obj.addProperty("LATVERTICE", actual.darInfo().darLatidud());
+				obj.addProperty("LONGVERTICE", actual.darInfo().darLongitud());
+				file.write(obj.toString());
+				
+			}
+			file.flush();
+			file.close();		
+
+		} 
+		catch (IOException e) 
+		{
+			
+		}
+
 	}
 
 	//ACLARACIÓN: Los siguientes dos métodos fueron sacados del repositorio de "Haversine" a modo de recomendación del diseño.

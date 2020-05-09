@@ -1,9 +1,13 @@
 package controller;
 
 import java.io.FileNotFoundException;
+import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
+import java.util.Iterator;
 import java.util.Scanner;
 
 import model.data_structures.IGrafoNoDirigido;
+import model.logic.EstacionDePolicia;
 import model.logic.Modelo;
 import model.logic.UbicacionGeografica;
 import view.View;
@@ -41,6 +45,11 @@ public class Controller {
 	public final static String RUTA_ESTACIONES="./data/estacionpolicia.geojson.json";
 
 	/**
+	 * Constante de impresion.
+	 */
+	private static final String RUTA_IMPRESION= "./data/grafo.json";
+	
+	/**
 	 * Constante de número de impresión en comparendo de consola.
 	 */
 	public final static int numImpresiones=20;
@@ -60,8 +69,8 @@ public class Controller {
 		Scanner lector = new Scanner(System.in);
 		lector.useDelimiter("\n");
 		boolean cargado = false;
+		boolean est = false;
 		boolean fin = false;
-		int numComparendos = 0;
 
 		while( !fin ){
 			view.printMenu();
@@ -81,25 +90,68 @@ public class Controller {
 							view.printMessage("Ubicaciones cargadas en el mapa.\n");
 							IGrafoNoDirigido<Integer, UbicacionGeografica>grafo=modelo.darGrafo();
 							view.printMessage("Número de vértices: "+grafo.V());
-							view.printMessage("Número de arcos: "+grafo.E());
+							view.printMessage("Número de arcos: "+grafo.E()+"\n");
 						}
 						catch(FileNotFoundException e)
 						{
-							view.printMessage("No se encuentran todos los archivos para cargar el grafo.");
+							view.printMessage("No se encontró el archivo.\n");
 						}
 						catch(Exception e)
 						{
-							view.printMessage("Hubo un problema cargando los archivos del grafo.");
+							view.printMessage("Error al cargar las ubicaciones.\n");
 						}
 					}
 					else
 					{
-						view.printMessage("Ya se han cargado las ubicaciones en el mapa.");
+						view.printMessage("Ya se han cargado las ubicaciones en el mapa.\n");
 					}
 
 					break;
 
 				case 1:
+					if(!est)
+					{
+						view.printMessage("---------\n");
+						try 
+						{
+							modelo.cargarEstacionPolicia(RUTA_ESTACIONES);
+							Iterator<EstacionDePolicia> estaciones= modelo.darListaEstaciones().iterator();
+							view.printIterator(estaciones, modelo.darListaEstaciones().darLongitud());
+							view.printMessage("Cantidad de estaciones de policía: "+modelo.darListaEstaciones().darLongitud()+"\n");
+							est=true;
+						} 
+						catch (FileNotFoundException e) 
+						{
+							view.printMessage("No se encontró el archivo.\n");
+						} 
+						catch (Exception e) 
+						{
+							view.printMessage("Error al cargar las estaciones.\n");
+						} 					
+					}
+					else
+					{
+						view.printMessage("Ya se han cargado las estaciones en la lista.\n");
+					}
+					
+					break;
+					
+				case 2:
+					view.printMessage("---------\n"); 
+					try 
+					{
+						modelo.imprimirJSONEstaciones(RUTA_IMPRESION);;
+					} 
+					catch (Exception e) 
+					{
+						view.printMessage("Error al cargar imprimir el grafo.\n");
+					} 
+					break;
+					
+				case 3:
+					view.printMessage("--------- \n Hasta pronto !! \n---------"); 
+					lector.close();
+					fin = true;
 					break;
 					
 

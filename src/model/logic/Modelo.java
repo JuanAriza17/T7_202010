@@ -21,11 +21,11 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 
+import model.data_structures.Arco;
 import model.data_structures.GrafoNoDirigido;
 import model.data_structures.IGrafoNoDirigido;
 import model.data_structures.IListaEncadenada;
 import model.data_structures.ListaEncadenada;
-import model.data_structures.Vertice;
 
 /**
  * Definicion del modelo del mundo
@@ -61,7 +61,12 @@ public class Modelo {
 	/**
 	 * Grafo de valores.
 	 */
-	private IGrafoNoDirigido<Integer, UbicacionGeografica> grafo;
+	private IGrafoNoDirigido<Integer, UbicacionGeografica> grafoTXT;
+	
+	/**
+	 * Grafo de valores del JSON.
+	 */
+	private IGrafoNoDirigido<Integer, UbicacionGeografica> grafoJSON;
 
 	/**
 	 * Constructor del modelo del mundo con capacidad predefinida.
@@ -71,7 +76,8 @@ public class Modelo {
 	{
 		listaComparendos = new ListaEncadenada<Comparendo>();
 		listaEstaciones = new ListaEncadenada<EstacionDePolicia>();
-		grafo=new GrafoNoDirigido<Integer, UbicacionGeografica>(228046);
+		grafoTXT = new GrafoNoDirigido<Integer, UbicacionGeografica>(100000);
+		grafoJSON = new GrafoNoDirigido<Integer, UbicacionGeografica>(100000);
 	}
 
 	/**
@@ -92,6 +98,11 @@ public class Modelo {
 			}
 		}
 		return comp;
+	}
+	
+	public IListaEncadenada<Comparendo> darLista()
+	{
+		return listaComparendos;
 	}
 
 	/**
@@ -207,14 +218,22 @@ public class Modelo {
 	}
 
 	/**
-	 * Método que retorna el mapa del grafo.
+	 * Método que retorna el mapa del grafo (TXT).
 	 * @return Retorno del mapa del grafo.
 	 */
-	public IGrafoNoDirigido<Integer, UbicacionGeografica> darGrafo()
+	public IGrafoNoDirigido<Integer, UbicacionGeografica> darGrafoTXT()
 	{
-		return grafo;
+		return grafoTXT;
 	}
-
+	
+	/**
+	 * Método que retorna el mapa del grafo (JSON).
+	 * @return Retorno del mapa del grafo.
+	 */
+	public IGrafoNoDirigido<Integer, UbicacionGeografica> darGrafoJSON()
+	{
+		return grafoJSON;
+	}
 
 	/**
 	 * MÃ©todo que carga los comparendos
@@ -224,7 +243,6 @@ public class Modelo {
 	 */
 	public void cargarComparendos(String ruta) throws FileNotFoundException, ParseException, UnsupportedEncodingException 
 	{
-		File archivo = new File(ruta);
 
 		listaComparendos = new ListaEncadenada<Comparendo>();
 
@@ -284,7 +302,7 @@ public class Modelo {
 			int objectId=Integer.parseInt(vertice[0].trim());
 			double longitud=Double.parseDouble(vertice[1].trim());
 			double latitud=Double.parseDouble(vertice[2].trim());
-			grafo.addVertex(objectId, new UbicacionGeografica(longitud,latitud));
+			grafoTXT.addVertex(objectId, new UbicacionGeografica(longitud,latitud));
 			linea=br.readLine();
 		}
 		br.close();
@@ -311,12 +329,12 @@ public class Modelo {
 		{
 			String[] arcos=linea.split(" ");
 			int idVerticeInit=Integer.parseInt(arcos[0].trim());
-			UbicacionGeografica geo1=grafo.getInfoVertex(idVerticeInit);
+			UbicacionGeografica geo1=grafoTXT.getInfoVertex(idVerticeInit);
 			for(int i=1; i<arcos.length;++i)
 			{
 				int idVerticeFin=Integer.parseInt(arcos[i].trim());
-				UbicacionGeografica geo2=grafo.getInfoVertex(idVerticeFin);
-				grafo.addEdge(idVerticeInit, idVerticeFin, distanceHaversine(geo1.darLatidud(), geo1.darLongitud(), geo2.darLatidud(), geo2.darLongitud()));
+				UbicacionGeografica geo2=grafoTXT.getInfoVertex(idVerticeFin);
+				grafoTXT.addEdge(idVerticeInit, idVerticeFin, distanceHaversine(geo1.darLatidud(), geo1.darLongitud(), geo2.darLatidud(), geo2.darLongitud()));
 			}
 			linea=br.readLine();
 		}
@@ -353,40 +371,92 @@ public class Modelo {
 
 	//ACLARACIÓN PRELIMINAR: El siguiente código fue realizado con base en el código de la página http://javainutil.blogspot.com/2013/03/java-escribir-un-json.html
 	/**
-	 * Método que imprime los valores de las estaciones cargados en la lista de estaciones.
+	 * Método que imprime los valores de las ubicaciones guardadas en el grafo.
 	 * pre: Se inicializa la lista de estaciones.
 	 * @param pRutaImpresion Ruta en donde se va a imprimir el archivo JSON.
+	 * @throws IOException 
 	 */
-	public void imprimirJSONEstaciones(String pRutaImpresion)
+	public void imprimirJSON(String pRutaImpresion) throws IOException
 	{
-		try 
+		FileWriter fw = new FileWriter(pRutaImpresion);
+		
+		JsonObject graph = new JsonObject();
+		JsonArray array = new JsonArray();
+		
+		for (int i = 0; i < grafoTXT.V(); i++) 
 		{
-			File archivo= new File(pRutaImpresion);
-			Iterator<Integer>vertices=grafo.darTabla().keys();
-			FileWriter file = new FileWriter(archivo);
-			JsonArray general = new JsonArray();
-			JsonArray features= new JsonArray();
+			JsonObject obj = new JsonObject();
+			obj.addProperty("OBJECT_ID", i);
+			obj.addProperty("LATITUD", grafoTXT.getInfoVertex(i).darLatidud());
+			obj.addProperty("LONGITUD", grafoTXT.getInfoVertex(i).darLongitud());
 			
-			while(vertices.hasNext())
+			Iterator<Arco<Integer,UbicacionGeografica>> it = grafoTXT.getVertex(i).darAdyacentes();
+			JsonArray list = new JsonArray();
+			while(it.hasNext())
 			{
-				int llave=vertices.next();
-				Vertice<Integer,UbicacionGeografica>actual=grafo.darTabla().getSet(llave).next();
-				
-				JsonObject obj = new JsonObject();
-				obj.addProperty("LATVERTICE", actual.darInfo().darLatidud());
-				obj.addProperty("LONGVERTICE", actual.darInfo().darLongitud());
-				file.write(obj.toString());
-				
+				JsonObject arc = new JsonObject();
+				Arco<Integer,UbicacionGeografica> arco = it.next();
+				arc.addProperty("VERTICE_DESTINO", arco.darDestino().darId());
+				arc.addProperty("COSTO", arco.darCosto());
+				list.add(arc);
 			}
-			file.flush();
-			file.close();		
-
-		} 
-		catch (IOException e) 
-		{
 			
+			obj.add("ARCOS",list);
+			array.add(obj);
 		}
+		
+		graph.add("features", array);
+		fw.write(graph.toString());
+		fw.flush();
+		fw.close();
+	}
+	
+	/**
+	 * M�todo que carga los valores del JSON a un grafo.
+	 * @param ruta Ruta del JSON
+	 * @throws UnsupportedEncodingException
+	 * @throws FileNotFoundException
+	 * @throws ParseException
+	 */
+	public void cargarJSON(String ruta) throws UnsupportedEncodingException, FileNotFoundException, ParseException
+	{
+		JsonReader lector = new JsonReader(new InputStreamReader(new FileInputStream(ruta), "UTF-8"));
+		JsonObject obj = JsonParser.parseReader(lector).getAsJsonObject();
 
+		JsonArray arregloVertices = obj.get("features").getAsJsonArray();  
+
+		for (JsonElement e: arregloVertices) 	
+		{
+			JsonObject propiedades = e.getAsJsonObject();
+
+			int objectId = propiedades.get("OBJECT_ID").getAsInt();
+			double latitud = propiedades.get("LATITUD").getAsDouble();
+			double longitud = propiedades.get("LONGITUD").getAsDouble();
+			
+			grafoJSON.addVertex(objectId, new UbicacionGeografica(longitud,latitud));
+
+			JsonArray arcos = propiedades.get("ARCOS").getAsJsonArray();
+			for (int i = 0; i < arcos.size() ; i++)
+			{
+				JsonObject arc = arcos.get(i).getAsJsonObject();
+				int destino = arc.get("VERTICE_DESTINO").getAsInt();
+				double costo = arc.get("COSTO").getAsDouble();
+				grafoJSON.addEdge(objectId, destino, costo);
+			}
+		}
+	}
+	
+	public void generarMapa()
+	{
+		Maps mapa = new Maps(grafoJSON, null);
+		mapa.initFrame();
+		
+	}
+	
+	public void generarMapaConEstaciones()
+	{
+		Maps mapa = new Maps(grafoJSON, listaEstaciones);
+		mapa.initFrame();
 	}
 
 	//ACLARACIÓN: Los siguientes dos métodos fueron sacados del repositorio de "Haversine" a modo de recomendación del diseño.

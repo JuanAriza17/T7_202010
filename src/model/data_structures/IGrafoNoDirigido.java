@@ -96,7 +96,12 @@ public interface IGrafoNoDirigido <K extends Comparable<K>, V extends Comparable
 	 */
 	public IHashTable<K,Vertice<K,V>> darTabla();
 	
-
+	/**
+	 * Método que retorna un vértice. Si el vértice no existe retorna null
+	 * @param idVertex Llave de identificación del vértice.
+	 * @return Vértice encontrado.
+	 */
+	public Vertice<K, V> getVertex(K idVertex);
 
 	
 	

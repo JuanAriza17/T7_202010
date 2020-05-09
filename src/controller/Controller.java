@@ -1,13 +1,12 @@
 package controller;
 
 import java.io.FileNotFoundException;
-import java.io.UnsupportedEncodingException;
-import java.text.ParseException;
 import java.util.Iterator;
 import java.util.Scanner;
 
 import model.data_structures.IGrafoNoDirigido;
 import model.logic.EstacionDePolicia;
+import model.logic.Maps;
 import model.logic.Modelo;
 import model.logic.UbicacionGeografica;
 import view.View;
@@ -42,7 +41,7 @@ public class Controller {
 	/**
 	 * Constante con la ruta del archivo que guarda los datos de las estaciones de policía.
 	 */
-	public final static String RUTA_ESTACIONES="./data/estacionpolicia.geojson.json";
+	public final static String RUTA_ESTACIONES="./data/estacionpolicia.geojson";
 
 	/**
 	 * Constante de impresion.
@@ -71,6 +70,8 @@ public class Controller {
 		boolean cargado = false;
 		boolean est = false;
 		boolean fin = false;
+		boolean json = false;
+		boolean cargadoJson = false;
 
 		while( !fin ){
 			view.printMenu();
@@ -88,9 +89,9 @@ public class Controller {
 							modelo.cargarArcos(RUTA_ARCOS);
 							cargado = true;
 							view.printMessage("Ubicaciones cargadas en el mapa.\n");
-							IGrafoNoDirigido<Integer, UbicacionGeografica>grafo=modelo.darGrafo();
-							view.printMessage("Número de vértices: "+grafo.V());
-							view.printMessage("Número de arcos: "+grafo.E()+"\n");
+							IGrafoNoDirigido<Integer, UbicacionGeografica>grafoTXT=modelo.darGrafoTXT();
+							view.printMessage("Número de vértices: "+grafoTXT.V());
+							view.printMessage("Número de arcos: "+grafoTXT.E()+"\n");
 						}
 						catch(FileNotFoundException e)
 						{
@@ -138,17 +139,86 @@ public class Controller {
 					
 				case 2:
 					view.printMessage("---------\n"); 
-					try 
+					if(cargado)
 					{
-						modelo.imprimirJSONEstaciones(RUTA_IMPRESION);;
-					} 
-					catch (Exception e) 
+						try 
+						{
+							modelo.imprimirJSON(RUTA_IMPRESION);
+							json = true;
+						} 
+						catch (Exception e) 
+						{
+							view.printMessage("Error al imprimir el grafo.\n");
+						} 
+					}
+					else
 					{
-						view.printMessage("Error al cargar imprimir el grafo.\n");
-					} 
+						view.printMessage("Por favor cargue el grafo.");
+					}
+					break;
+				
+				case 3:
+					view.printMessage("---------\n"); 
+					if(json)
+					{
+						if(!cargadoJson)
+						{
+							try 
+							{
+								modelo.cargarJSON(RUTA_IMPRESION);
+								IGrafoNoDirigido<Integer, UbicacionGeografica>grafoJSON=modelo.darGrafoJSON();
+								view.printMessage("Número de vértices: "+grafoJSON.V());
+								view.printMessage("Número de arcos: "+grafoJSON.E()+"\n");
+								cargadoJson = true;
+								
+							} 
+							catch (Exception e) 
+							{
+								view.printMessage("Error al cargar el grafo.\n");
+								e.printStackTrace();
+							} 
+						}
+						else
+						{
+							view.printMessage("Ya cargo el grafo del JSON");
+						}
+					}
+					else
+					{
+						view.printMessage("Por favor cree el archivo JSON.");
+					}
 					break;
 					
-				case 3:
+				case 4:
+					if(cargadoJson)
+					{
+						modelo.generarMapa();
+					}
+					else
+					{
+						view.printMessage("Por favor cargue el archivo JSON.");
+					}
+					break;
+					
+				case 5:
+					if(cargadoJson)
+					{
+						if(est)
+						{
+							modelo.generarMapaConEstaciones();
+						}
+						else
+						{
+							view.printMessage("Por favor cargue las estaciones.");
+						}
+					}
+					else
+					{
+						view.printMessage("Por favor cargue el archivo JSON.");
+					}
+					break;
+					
+				case 6:
 					view.printMessage("--------- \n Hasta pronto !! \n---------"); 
 					lector.close();
 					fin = true;

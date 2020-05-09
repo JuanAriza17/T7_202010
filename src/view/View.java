@@ -21,10 +21,13 @@ public class View
 	 */
 	public void printMenu()
 	{
-		System.out.println("0. (Requerimiento 00) Cargar ubicaciones en el grafo.");
-		System.out.println("1. (Requerimiento 1A) Cargar estaciones de policía.");
-		System.out.println("2. (Requerimiento 1A) Imprimir grafo.");
-		System.out.println("3. Exit");
+		System.out.println("0. Cargar ubicaciones en el grafo.");
+		System.out.println("1. Cargar estaciones de policía.");
+		System.out.println("2. Imprimir archivo JSON con el grafo.");
+		System.out.println("3. Cargar archivo JSON con el grafo.");
+		System.out.println("4. Generar mapa del grafo.");
+		System.out.println("5. Generar mapa del grafo con estaciones de policía.");
+		System.out.println("6. Exit");
 		System.out.println("Dar el numero de opcion a resolver, luego oprimir tecla Return: (e.g., 1):");
 	}
 

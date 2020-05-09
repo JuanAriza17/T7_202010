@@ -71,11 +71,23 @@ public class GrafoNoDirigido <K extends Comparable<K>, V extends Comparable<V>> 
 	/**
 	 * Método que obtiene la información de un vértice. Si el vértice no existe retorna null
 	 * @param idVertex Llave de identificación del vértice.
-	 * @return Vértice encontrado.
+	 * @return Información del vértice encontrado.
 	 */
 	public V getInfoVertex(K idVertex) 
 	{
-		return tabla.getSet(idVertex).next().darInfo();
+		Iterator<Vertice<K, V>> it = tabla.getSet(idVertex);
+		return it!=null?it.next().darInfo():null;
+	}
+	
+	/**
+	 * Método que retorna un vértice. Si el vértice no existe retorna null
+	 * @param idVertex Llave de identificación del vértice.
+	 * @return Vértice encontrado.
+	 */
+	public Vertice<K, V> getVertex(K idVertex) 
+	{
+		Iterator<Vertice<K, V>> it = tabla.getSet(idVertex);
+		return it!=null?it.next():null;
 	}
 
 	/**

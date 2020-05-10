@@ -446,6 +446,9 @@ public class Modelo {
 		}
 	}
 	
+	/**
+	 * Método que genera el mapa de arcos y vértices.  Ya se encuentran inicializados.
+	 */
 	public void generarMapa()
 	{
 		Maps mapa = new Maps(grafoJSON, null);
@@ -453,6 +456,9 @@ public class Modelo {
 		
 	}
 	
+	/**
+	 * Método que genera el mapa de arcos, vértices y estaciones de policía. Ya se encuentran inicializados.
+	 */
 	public void generarMapaConEstaciones()
 	{
 		Maps mapa = new Maps(grafoJSON, listaEstaciones);

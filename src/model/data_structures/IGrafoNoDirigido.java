@@ -102,6 +102,12 @@ public interface IGrafoNoDirigido <K extends Comparable<K>, V extends Comparable
 	 * @return Vértice encontrado.
 	 */
 	public Vertice<K, V> getVertex(K idVertex);
+	
+	/**
+	 * Método que retorna la lista de arcos.
+	 * @return Lista de arcos.
+	 */
+	public IListaEncadenada<Arco<K,V>> darListaArcos();
 
 	
 	

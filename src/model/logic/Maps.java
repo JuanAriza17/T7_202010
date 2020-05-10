@@ -33,6 +33,26 @@ public class Maps extends MapView {
 	private Map map;
 	
 	/**
+	 *Constante de la latitud mínima.
+	 */
+	private final static double LAT_MIN=4.597714;
+	
+	/**
+	 *Constante de la longitud mínima.
+	 */
+	private final static double LONG_MIN=-74.094723;
+	
+	/**
+	 *Constante de la latitud máxima.
+	 */
+	private final static double LAT_MAX=4.621360;
+	
+	/**
+	 *Constante de la longitud mínima.
+	 */
+	private final static double LONG_MAX=-74.062707;
+	
+	/**
 	 * Visualizacion Google map con camino, marcas, circulos y texto de localizacion
 	 * @param idReq
 	 */
@@ -48,49 +68,53 @@ public class Maps extends MapView {
 			        	 
 			        	 // Configuracion de localizaciones del path (circulos)
 			        	 CircleOptions vertexLocOpt= new CircleOptions(); 
-			        	 vertexLocOpt.setFillColor("#000000");  // color de relleno
-			        	 vertexLocOpt.setFillOpacity(0.5);
-			        	 vertexLocOpt.setStrokeWeight(1.0);
-			        	 
+			        	         	 
 			        	//Configuracion de la linea del camino
 			        	 PolylineOptions pathOpt = new PolylineOptions();
-			        	 pathOpt.setStrokeColor("#0000==");	  // color de linea	
-			        	 pathOpt.setStrokeOpacity(1.75);
-			        	 pathOpt.setStrokeWeight(1.5);
-			        	 pathOpt.setGeodesic(false);
+			        	 pathOpt.setStrokeColor("#000000");	 // color de linea	
+			        	 
 			        	 
 			        	 for (int i = 0; i < grafo.V(); i++) 
 			        	 {
-			        		 LatLng ubi = new LatLng(grafo.getInfoVertex(i).darLatidud(), grafo.getInfoVertex(i).darLongitud());
+			        		 double latitud=grafo.getInfoVertex(i).darLatidud();
+			        		 double longitud=grafo.getInfoVertex(i).darLongitud();
+			        		 LatLng ubi = new LatLng(latitud, longitud);
+			        		 if(latitud>=LAT_MIN && latitud<=LAT_MAX && longitud >=LONG_MIN && longitud <=LONG_MAX)
+			        		 {
+			        			 // Localizacion inicial
+					        	 Circle startLoc = new Circle(map);
+					        	 startLoc.setOptions(vertexLocOpt);
+					        	 startLoc.setCenter(ubi); 
+					        	 startLoc.setRadius(7); //Radio del circulo
+					        	 
+					        	 
+					        	 Vertice<Integer,UbicacionGeografica> v = grafo.getVertex(i);
+					        	 Iterator<Arco<Integer,UbicacionGeografica>> it = v.darAdyacentes();
+					        	 
+				        		 LatLng[] arco = new LatLng[2];
+				        		 arco[0]= new LatLng(v.darInfo().darLatidud(), v.darInfo().darLongitud());
 
-				        	 // Localizacion inicial
-				        	 Circle startLoc = new Circle(map);
-				        	 startLoc.setOptions(vertexLocOpt);
-				        	 startLoc.setCenter(ubi); 
-				        	 startLoc.setRadius(30); //Radio del circulo
-				        	 
-				        	 
-				        	 Vertice<Integer,UbicacionGeografica> v = grafo.getVertex(i);
-				        	 Iterator<Arco<Integer,UbicacionGeografica>> it = v.darAdyacentes();
-				        	 
-			        		 LatLng[] arco = new LatLng[2];
-			        		 arco[0]= new LatLng(v.darInfo().darLatidud(), v.darInfo().darLongitud());
+					        	 while(it.hasNext())
+					        	 {
+					        		 Arco<Integer,UbicacionGeografica> a = it.next();
+					        		 Polyline path = new Polyline(map); 
+					        		 arco[1]= new LatLng(a.darDestino().darInfo().darLatidud(), a.darDestino().darInfo().darLongitud());
+					        		 path.setOptions(pathOpt); 
+					        		 path.setPath(arco);
+					        	 } 
+			        		 }
+			        	 }
 
-				        	 while(it.hasNext())
-				        	 {
-				        		 Arco<Integer,UbicacionGeografica> a = it.next();
-				        		 Polyline path = new Polyline(map); 
-				        		 arco[1]= new LatLng(a.darDestino().darInfo().darLatidud(), a.darDestino().darInfo().darLatidud());
-				        		 path.setOptions(pathOpt); 
-				        		 path.setPath(arco);
-				        	 }
-						 }
-
+			        	 
+			        	// Configuracion de localizaciones del path (circulos)
+			        	 CircleOptions verEstaciones= new CircleOptions(); 
+			        	 verEstaciones.setFillColor("#FF0000");  // color de relleno
+			        	 verEstaciones.setFillOpacity(0.5);
+			        	 verEstaciones.setStrokeWeight(1);
+			        	 
 			        	 if(estaciones!=null)
 			        	 {
-
-				        	 vertexLocOpt.setFillColor("#0000FF");  // color de relleno
-				        	 Iterator<EstacionDePolicia> es = estaciones.iterator();
+			        	     Iterator<EstacionDePolicia> es = estaciones.iterator();
 				        	 
 				        	 while(es.hasNext())
 				        	 {
@@ -98,9 +122,9 @@ public class Maps extends MapView {
 				        		 LatLng ubi = new LatLng(e.darLatitud(), e.darLongitud());
 
 				        		 Circle startLoc = new Circle(map);
-					        	 startLoc.setOptions(vertexLocOpt);
+					        	 startLoc.setOptions(verEstaciones);
 					        	 startLoc.setCenter(ubi); 
-					        	 startLoc.setRadius(50); //Radio del circulo
+					        	 startLoc.setRadius(40); //Radio del circulo
 				        	 }
 			        	 }
 			        	 
@@ -120,11 +144,9 @@ public class Maps extends MapView {
 		controlOptions.setPosition(ControlPosition.BOTTOM_LEFT);
 		mapOptions.setMapTypeControlOptions(controlOptions);
 
-		LatLngBounds bounds = new LatLngBounds(new LatLng(4.597714, -74.094723), new LatLng(4.621360,-74.062707));
+		LatLngBounds bounds = new LatLngBounds(new LatLng(LAT_MIN, LONG_MIN), new LatLng(LAT_MAX,LONG_MAX));
 		map.setOptions(mapOptions);
         map.fitBounds(bounds);
-		map.setZoom(14.0);
-		
 	}
 	
 	public void initFrame()
@@ -132,7 +154,6 @@ public class Maps extends MapView {
 		JFrame frame = new JFrame("Mapa");
 		frame.setSize(600, 600);
 		frame.add(this, BorderLayout.CENTER);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 		

@@ -145,6 +145,7 @@ public class Controller {
 						{
 							modelo.imprimirJSON(RUTA_IMPRESION);
 							json = true;
+							view.printMessage("Se imprimió con éxito el archivo JSON.\n Por favor revise el directorio de destino: ./data/grafo.json\n");
 						} 
 						catch (Exception e) 
 						{
@@ -170,6 +171,7 @@ public class Controller {
 								view.printMessage("Número de vértices: "+grafoJSON.V());
 								view.printMessage("Número de arcos: "+grafoJSON.E()+"\n");
 								cargadoJson = true;
+								view.printMessage("Se cargó correctamente el grafo del archivo JSON.\n");
 								
 							} 
 							catch (Exception e) 
@@ -193,6 +195,8 @@ public class Controller {
 					if(cargadoJson)
 					{
 						modelo.generarMapa();
+						view.printMessage("Los arcos entre vértices están representados con líneas de color negro.");
+						view.printMessage("Los vértices de grafo están representados con circulos de color negro.\n");
 					}
 					else
 					{
@@ -206,6 +210,9 @@ public class Controller {
 						if(est)
 						{
 							modelo.generarMapaConEstaciones();
+							view.printMessage("Las estaciones de policía están representadas con circulos de color rojo.");
+							view.printMessage("Los arcos entre vértices están representados con líneas de color negro.");
+							view.printMessage("Los vértices de grafo están representados con circulos de color negro.");
 						}
 						else
 						{
@@ -223,8 +230,112 @@ public class Controller {
 					lector.close();
 					fin = true;
 					break;
+				
+				case 9:
+					//Carga particular que acorta métodos (solo para test, no disponible para usuario).
+					if(!cargado)
+					{
+						view.printMessage("--------- \nCargando ubicaciones en mapa...");
+						try
+						{
+							modelo.cargarVertices(RUTA_VERTICES);
+							modelo.cargarArcos(RUTA_ARCOS);
+							cargado = true;
+							view.printMessage("Ubicaciones cargadas en el mapa.\n");
+							IGrafoNoDirigido<Integer, UbicacionGeografica>grafoTXT=modelo.darGrafoTXT();
+							view.printMessage("Número de vértices: "+grafoTXT.V());
+							view.printMessage("Número de arcos: "+grafoTXT.E()+"\n");
+						}
+						catch(FileNotFoundException e)
+						{
+							view.printMessage("No se encontró el archivo.\n");
+						}
+						catch(Exception e)
+						{
+							view.printMessage("Error al cargar las ubicaciones.\n");
+						}
+					}
+					else
+					{
+						view.printMessage("Ya se han cargado las ubicaciones en el mapa.\n");
+					}
 					
-
+					if(!est)
+					{
+						view.printMessage("---------\n");
+						try 
+						{
+							modelo.cargarEstacionPolicia(RUTA_ESTACIONES);
+							Iterator<EstacionDePolicia> estaciones= modelo.darListaEstaciones().iterator();
+							view.printIterator(estaciones, modelo.darListaEstaciones().darLongitud());
+							view.printMessage("Cantidad de estaciones de policía: "+modelo.darListaEstaciones().darLongitud()+"\n");
+							est=true;
+						} 
+						catch (FileNotFoundException e) 
+						{
+							view.printMessage("No se encontró el archivo.\n");
+						} 
+						catch (Exception e) 
+						{
+							view.printMessage("Error al cargar las estaciones.\n");
+						} 					
+					}
+					else
+					{
+						view.printMessage("Ya se han cargado las estaciones en la lista.\n");
+					}
+					
+					view.printMessage("---------\n"); 
+					if(cargado)
+					{
+						try 
+						{
+							modelo.imprimirJSON(RUTA_IMPRESION);
+							json = true;
+							view.printMessage("Se imprimió con éxito el archivo JSON.\nPor favor revise el directorio de destino: ./data/grafo.json\n");
+						} 
+						catch (Exception e) 
+						{
+							view.printMessage("Error al imprimir el grafo.\n");
+						} 
+					}
+					else
+					{
+						view.printMessage("Por favor cargue el grafo.");
+					}
+					
+					view.printMessage("---------\n"); 
+					if(json)
+					{
+						if(!cargadoJson)
+						{
+							try 
+							{
+								modelo.cargarJSON(RUTA_IMPRESION);
+								IGrafoNoDirigido<Integer, UbicacionGeografica>grafoJSON=modelo.darGrafoJSON();
+								view.printMessage("Número de vértices: "+grafoJSON.V());
+								view.printMessage("Número de arcos: "+grafoJSON.E()+"\n");
+								cargadoJson = true;
+								view.printMessage("Se cargó correctamente el grafo del archivo JSON.\n");
+								
+							} 
+							catch (Exception e) 
+							{
+								view.printMessage("Error al cargar el grafo.\n");
+								e.printStackTrace();
+							} 
+						}
+						else
+						{
+							view.printMessage("Ya cargo el grafo del JSON");
+						}
+					}
+					else
+					{
+						view.printMessage("Por favor cree el archivo JSON.");
+					}
+					break;
+					
 				default: 
 					view.printMessage("--------- \n Opcion Invalida !! \n---------");
 					break;

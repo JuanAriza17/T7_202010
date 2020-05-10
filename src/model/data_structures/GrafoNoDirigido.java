@@ -18,6 +18,11 @@ public class GrafoNoDirigido <K extends Comparable<K>, V extends Comparable<V>> 
 	 * Tabla de Hash de los vértices.
 	 */
 	private IHashTable<K,Vertice<K,V>> tabla;
+	
+	/**
+	 * Lista de arcos del grafo.
+	 */
+	private IListaEncadenada<Arco<K,V>>listaArcos;
 
 	/**
 	 * Método constructor que crea un arco no dirigido de tamaño de n vértices.
@@ -28,6 +33,7 @@ public class GrafoNoDirigido <K extends Comparable<K>, V extends Comparable<V>> 
 		vertices=0;
 		arcos=0;
 		tabla=new HashSeparateChaining<K,Vertice<K,V>>(n);
+		listaArcos=new ListaEncadenada<Arco<K,V>>();
 	}
 
 	/**
@@ -37,6 +43,15 @@ public class GrafoNoDirigido <K extends Comparable<K>, V extends Comparable<V>> 
 	public int V() 
 	{
 		return vertices;
+	}
+	
+	/**
+	 * Método que retorna la lista de arcos.
+	 * @return Lista de arcos.
+	 */
+	public IListaEncadenada<Arco<K,V>> darListaArcos()
+	{
+		return listaArcos;
 	}
 
 	/**
@@ -58,13 +73,33 @@ public class GrafoNoDirigido <K extends Comparable<K>, V extends Comparable<V>> 
 	{
 		if(getInfoVertex(idVertexIni)!=null && getInfoVertex(idVertexFin)!=null)
 		{
-			++arcos;
+			boolean sumarArco=true;
 			Vertice<K,V>verticeIni=tabla.getSet(idVertexIni).next();
 			Vertice<K,V>verticeFin=tabla.getSet(idVertexFin).next();
+			Iterator<Arco<K,V>> it=verticeIni.darAdyacentes(); 
+			while(it.hasNext())
+			{
+				Arco<K,V>a=it.next();
+				if(a.darDestino().darId().compareTo(verticeFin.darId())==0)
+				{
+					sumarArco=false;
+					break;
+				}
+			}
 			Arco<K,V>arco=new Arco<K,V>(verticeIni,verticeFin,cost);
+			if(sumarArco)
+			{
+				listaArcos.agregarFinal(arco);
+				++arcos;
+			}
+			else
+			{
+				listaArcos.buscar(arco).cambiarCosto(arco.darCosto());
+			}
 			verticeIni.agregarArco(arco);
 			arco=new Arco<K,V>(verticeFin,verticeIni,cost);
 			verticeFin.agregarArco(arco);
+			
 		}
 	}
 
@@ -78,7 +113,7 @@ public class GrafoNoDirigido <K extends Comparable<K>, V extends Comparable<V>> 
 		Iterator<Vertice<K, V>> it = tabla.getSet(idVertex);
 		return it!=null?it.next().darInfo():null;
 	}
-	
+
 	/**
 	 * Método que retorna un vértice. Si el vértice no existe retorna null
 	 * @param idVertex Llave de identificación del vértice.
@@ -93,11 +128,15 @@ public class GrafoNoDirigido <K extends Comparable<K>, V extends Comparable<V>> 
 	/**
 	 * Modifica la información del vértice idVertex.
 	 * @param idVertex  Vértice que será modificado.
-	 * @param infoVertex 
+	 * @param infoVertex Información del vértice
 	 */
 	public void setInfoVertex(K idVertex, V infoVertex)
 	{
-		tabla.getSet(idVertex).next().cambiarInformacion(infoVertex);
+		Iterator<Vertice<K, V>> it = tabla.getSet(idVertex);
+		if(it!=null)
+		{
+			tabla.getSet(idVertex).next().cambiarInformacion(infoVertex);
+		}
 	}
 
 	/**
@@ -227,7 +266,7 @@ public class GrafoNoDirigido <K extends Comparable<K>, V extends Comparable<V>> 
 				actual.dfs(contador, null);
 			}
 		}
-		
+
 		return contador+1;
 	}
 
@@ -253,7 +292,7 @@ public class GrafoNoDirigido <K extends Comparable<K>, V extends Comparable<V>> 
 		}
 		return (Iterable<K>) CC;
 	}
-	
+
 	/**
 	 * Método que retorna la tabla de Hash que implementa el grafo.
 	 * @return Tabla de Hash del grafo.
@@ -262,5 +301,5 @@ public class GrafoNoDirigido <K extends Comparable<K>, V extends Comparable<V>> 
 	{
 		return tabla;
 	}
-	
+
 }

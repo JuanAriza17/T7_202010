@@ -64,7 +64,7 @@ public class Arco <K extends Comparable<K>, V extends Comparable<V>> implements 
 	@Override
 	public int compareTo(Arco<K, V> arg0) 
 	{
-		return 0;
+		return (arg0.darOrigen().compareTo(this.darOrigen())+arg0.darDestino().compareTo(this.darDestino()));
 	}
 	
 	/**

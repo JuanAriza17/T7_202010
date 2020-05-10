@@ -74,7 +74,14 @@ public class Vertice <K extends Comparable<K>, V extends Comparable<V>> implemen
 	 */
 	public void agregarArco(Arco<K,V>arco)
 	{
-		adyacentes.agregarFinal(arco);
+		if(adyacentes.buscar(arco)!=null)
+		{
+			adyacentes.buscar(arco).cambiarCosto(arco.darCosto());
+		}
+		else
+		{
+			adyacentes.agregarFinal(arco);
+		}
 	}
 	
 	/**
@@ -179,7 +186,7 @@ public class Vertice <K extends Comparable<K>, V extends Comparable<V>> implemen
 	@Override
 	public int compareTo(Vertice<K, V> o) 
 	{
-		return 0;
+		return o.darId().compareTo(idVtce);
 	}
 	
 	/**

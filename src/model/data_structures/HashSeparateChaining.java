@@ -233,7 +233,7 @@ public class HashSeparateChaining<K extends Comparable<K>, V extends Comparable<
 		ListaEncadenada<K> lista = new ListaEncadenada<K>();
 		for (int i = 0; i < m; i++)
 			if (st[i] != null) lista.agregarFinal(st[i].key);
-		return lista.iterator();
+		return (darTamano()==0)?null:lista.iterator();
 	}
 
 	/**

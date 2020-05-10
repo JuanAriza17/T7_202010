@@ -222,4 +222,22 @@ public class Vertice <K extends Comparable<K>, V extends Comparable<V>> implemen
 	{
 		arcoLlegada=pArco;
 	}
+	
+	/**
+	 * Método que retorna el color del vértice.
+	 * @return Método que retorna el color. 
+	 */
+	public int darColor()
+	{
+		return color;
+	}
+	
+	/**
+	 * Método que retorna el arco de llegada del vértice.
+	 * @return Método que retorna el arco de llegada del vértice. 
+	 */
+	public Arco<K,V> darArcoLlegada()
+	{
+		return arcoLlegada;
+	}
 }

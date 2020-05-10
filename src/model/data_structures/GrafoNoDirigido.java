@@ -18,7 +18,7 @@ public class GrafoNoDirigido <K extends Comparable<K>, V extends Comparable<V>> 
 	 * Tabla de Hash de los vértices.
 	 */
 	private IHashTable<K,Vertice<K,V>> tabla;
-	
+
 	/**
 	 * Lista de arcos del grafo.
 	 */
@@ -44,7 +44,7 @@ public class GrafoNoDirigido <K extends Comparable<K>, V extends Comparable<V>> 
 	{
 		return vertices;
 	}
-	
+
 	/**
 	 * Método que retorna la lista de arcos.
 	 * @return Lista de arcos.
@@ -99,7 +99,7 @@ public class GrafoNoDirigido <K extends Comparable<K>, V extends Comparable<V>> 
 			verticeIni.agregarArco(arco);
 			arco=new Arco<K,V>(verticeFin,verticeIni,cost);
 			verticeFin.agregarArco(arco);
-			
+
 		}
 	}
 
@@ -147,15 +147,20 @@ public class GrafoNoDirigido <K extends Comparable<K>, V extends Comparable<V>> 
 	 */
 	public double getCostArc(K idVertexIni, K idVertexFin) 
 	{
-		Vertice<K,V> verticeIni=tabla.getSet(idVertexIni).next();
-		Vertice<K,V> verticeFin=tabla.getSet(idVertexFin).next();
-		Iterator<Arco<K,V>> iterator=verticeIni.darAdyacentes();
-		while(iterator.hasNext())
+		Iterator<Vertice<K,V>> itIni=tabla.getSet(idVertexIni);
+		Iterator<Vertice<K,V>> itFin=tabla.getSet(idVertexFin);
+		if(itIni!=null && itFin!=null)
 		{
-			Arco<K,V>actual=iterator.next();
-			if(actual.darDestino().compareTo(verticeFin)==0)
+			Vertice<K,V> verticeIni=itIni.next();
+			Vertice<K,V> verticeFin=itFin.next();
+			Iterator<Arco<K,V>> iterator=verticeIni.darAdyacentes();
+			while(iterator.hasNext())
 			{
-				return actual.darCosto();
+				Arco<K,V>actual=iterator.next();
+				if(actual.darDestino().compareTo(verticeFin)==0)
+				{
+					return actual.darCosto();
+				}
 			}
 		}
 		return -1.0;
@@ -214,14 +219,22 @@ public class GrafoNoDirigido <K extends Comparable<K>, V extends Comparable<V>> 
 	 */
 	public Iterable<K> adj (K idVertex)
 	{
-		Iterator<Arco<K, V>>arcos=tabla.getSet(idVertex).next().darAdyacentes();
-		IListaEncadenada<Arco<K,V>>listaArcos=new ListaEncadenada<Arco<K,V>>();
-		while(arcos.hasNext())
+		if(tabla.getSet(idVertex)!=null)
 		{
-			Arco<K,V>actual=arcos.next();
-			listaArcos.agregarFinal(actual);
+			Iterator<Arco<K, V>>arcos=tabla.getSet(idVertex).next().darAdyacentes();
+			IListaEncadenada<K>listaVertices=new ListaEncadenada<K>();
+			while(arcos.hasNext())
+			{
+				Arco<K,V>actual=arcos.next();
+				listaVertices.agregarFinal(actual.darDestino().darId());
+			}
+			return (Iterable<K>) listaVertices;
 		}
-		return (Iterable<K>) listaArcos;
+		else
+		{
+			return null;
+		}
+
 	}
 
 	/**
@@ -229,11 +242,14 @@ public class GrafoNoDirigido <K extends Comparable<K>, V extends Comparable<V>> 
 	 */
 	public void uncheck()
 	{
-		Iterator<K> iterator=tabla.keys();
-		while(iterator.hasNext())
+		if(tabla.darNumPares()!=0)
 		{
-			K actual=iterator.next();
-			tabla.getSet(actual).next().desmarcar();
+			Iterator<K> iterator=tabla.keys();
+			while(iterator.hasNext())
+			{
+				K actual=iterator.next();
+				tabla.getSet(actual).next().desmarcar();
+			}
 		}
 	}
 
@@ -243,7 +259,13 @@ public class GrafoNoDirigido <K extends Comparable<K>, V extends Comparable<V>> 
 	 */
 	public void dfs(K s) 
 	{
-		tabla.getSet(s).next().dfs(0,null);
+		if(tabla.darNumPares()!=0)
+		{
+			if(getVertex(s)!=null)
+			{
+				tabla.getSet(s).next().dfs(0,null);
+			}
+		}
 	}
 
 	/**
@@ -254,20 +276,26 @@ public class GrafoNoDirigido <K extends Comparable<K>, V extends Comparable<V>> 
 	{
 		uncheck();
 		int contador=0;
-		Iterator<K>iterator=tabla.keys();
-		dfs(iterator.next());
-		while(iterator.hasNext())
+		if(tabla.darNumPares()!=0)
 		{
-			K llave=iterator.next();
-			Vertice<K,V>actual=tabla.getSet(llave).next();
-			if(!actual.estaMarcado())
+			Iterator<K>iterator=tabla.keys();
+			dfs(iterator.next());
+			while(iterator.hasNext())
 			{
-				++contador;
-				actual.dfs(contador, null);
+				K llave=iterator.next();
+				Vertice<K,V>actual=tabla.getSet(llave).next();
+				if(!actual.estaMarcado())
+				{
+					++contador;
+					actual.dfs(contador, null);
+				}
 			}
+			return contador+1;
 		}
-
-		return contador+1;
+		else
+		{
+			return 0;
+		}
 	}
 
 	/**
@@ -277,20 +305,27 @@ public class GrafoNoDirigido <K extends Comparable<K>, V extends Comparable<V>> 
 	 */
 	public Iterable<K> getCC(K idVertex)
 	{
-		uncheck();
-		dfs(idVertex);
-		Iterator<K>iterator=tabla.keys();
-		IListaEncadenada<Vertice<K,V>> CC=new ListaEncadenada<Vertice<K,V>>();
-		while(iterator.hasNext())
+		if(getVertex(idVertex)!=null)
 		{
-			K llave=iterator.next();
-			Vertice<K,V>actual=tabla.getSet(llave).next();
-			if(actual.estaMarcado())
+			uncheck();
+			dfs(idVertex);
+			Iterator<K>iterator=tabla.keys();
+			IListaEncadenada<K> CC=new ListaEncadenada<K>();
+			while(iterator.hasNext())
 			{
-				CC.agregarFinal(actual);
+				K llave=iterator.next();
+				Vertice<K,V>actual=tabla.getSet(llave).next();
+				if(actual.estaMarcado())
+				{
+					CC.agregarFinal(actual.darId());
+				}
 			}
+			return (Iterable<K>) CC;
 		}
-		return (Iterable<K>) CC;
+		else
+		{
+			return null;
+		}
 	}
 
 	/**

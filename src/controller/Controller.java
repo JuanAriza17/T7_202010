@@ -145,7 +145,7 @@ public class Controller {
 						{
 							modelo.imprimirJSON(RUTA_IMPRESION);
 							json = true;
-							view.printMessage("Se imprimió con éxito el archivo JSON.\n Por favor revise el directorio de destino: ./data/grafo.json\n");
+							view.printMessage("Se imprimió con éxito el archivo JSON.\nPor favor revise el directorio de destino: ./data/grafo.json\n");
 						} 
 						catch (Exception e) 
 						{
@@ -212,7 +212,7 @@ public class Controller {
 							modelo.generarMapaConEstaciones();
 							view.printMessage("Las estaciones de policía están representadas con circulos de color rojo.");
 							view.printMessage("Los arcos entre vértices están representados con líneas de color negro.");
-							view.printMessage("Los vértices de grafo están representados con circulos de color negro.");
+							view.printMessage("Los vértices de grafo están representados con circulos de color negro.\n");
 						}
 						else
 						{

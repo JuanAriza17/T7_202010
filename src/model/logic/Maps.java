@@ -73,8 +73,8 @@ public class Maps extends MapView {
 			        	 PolylineOptions pathOpt = new PolylineOptions();
 			        	 pathOpt.setStrokeColor("#000000");	 // color de linea	
 			        	 
-			        	 
-			        	 for (int i = 0; i < grafo.V(); i++) 
+			        	 int numeroMaxVertices=50000;//SE IMPRIMEN SOLAMENTE 50000 PUNTOS DEBIDO A FALTA DE MEMORIA
+			        	 for (int i = 0; i < numeroMaxVertices; i++) 
 			        	 {
 			        		 double latitud=grafo.getInfoVertex(i).darLatidud();
 			        		 double longitud=grafo.getInfoVertex(i).darLongitud();
